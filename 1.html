@@ -11,6 +11,21 @@
             flex-direction: column;
             align-items: center;
             padding: 20px;
+            background-image: url('https://keaido666.github.io/1/bg.png');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            position: relative;
+        }
+       body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.2); /* 50%透明度的白色遮罩 */
+            z-index: -1;
         }
         .board {
             display: grid;
@@ -89,8 +104,10 @@
     </style>
 </head>
 <body>
-    <h1>九宫格黑白棋</h1>
-  <p>抖音：可爱多天禹</p>
+    <h1 style="color: #FFF; text-shadow: 1px 1px 2px white;">完美国际2艺陵魂境 九曜星阵</h1>
+  <p style="color: #FFF; text-shadow: 1px 1px 2px white;">抖音：可爱多天禹</p>
+  <div><img src="https://keaido666.github.io/1/2.jpg" width="400em" ></div>
+  <div><img src="https://keaido666.github.io/1/1.jpg" width="300em" ></div>
     <div class="controls">
         <button id="reset">重置游戏</button>
         <button id="random">随机布局</button>
@@ -100,7 +117,7 @@
     <div class="mode-info" id="modeInfo">当前模式: 手动布局模式 - 点击格子可单独翻转该格子</div>
     <div class="board" id="board"></div>
     <div class="solution">
-        <h3>解法提示:</h3>
+        <h3 style="color: #FFF; text-shadow: 1px 1px 2px white;">解法提示:</h3>
         <p id="allBlackSolution">设置好布局后点击"开始游戏"显示解法</p>
         <p id="allWhiteSolution">设置好布局后点击"开始游戏"显示解法</p>
     </div>
