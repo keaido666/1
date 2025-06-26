@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>九宫格黑白棋</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 80px);
+            grid-template-rows: repeat(3, 80px);
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+        .cell {
+            width: 80px;
+            height: 80px;
+            background-color: #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            position: relative;
+        }
+        .cell-number {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 12px;
+            color: #666;
+        }
+        .black {
+            background-color: #000;
+            color: white;
+        }
+        .black .cell-number {
+            color: #ccc;
+        }
+        .white {
+            background-color: #fff;
+            color: black;
+            border: 1px solid #ccc;
+        }
+        .controls {
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 8px 16px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+        .solution {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 500px;
+        }
+        .solution h3 {
+            margin-bottom: 10px;
+        }
+        .solution p {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>九宫格黑白棋</h1>
+    <div class="controls">
+        <button id="reset">重置游戏</button>
+        <button id="random">随机布局</button>
+    </div>
+    <div class="board" id="board"></div>
+    <div class="solution">
+        <h3>解法提示:</h3>
+        <p id="allBlackSolution">点击"随机布局"或"重置游戏"后显示全黑解法</p>
+        <p id="allWhiteSolution">点击"随机布局"或"重置游戏"后显示全白解法</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const board = document.getElementById('board');
+            const resetBtn = document.getElementById('reset');
+            const randomBtn = document.getElementById('random');
+            const allBlackSolution = document.getElementById('allBlackSolution');
+            const allWhiteSolution = document.getElementById('allWhiteSolution');
+            
+            let cells = [];
+            let moves = [];
+            let currentState = Array(9).fill(0); // 0表示白色，1表示黑色
+            
+            // 初始化棋盘
+            function initializeBoard() {
+                board.innerHTML = '';
+                cells = [];
+                moves = [];
+                for (let i = 0; i < 9; i++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell white';
+                    cell.dataset.index = i;
+                    
+                    // 添加数字编号
+                    const number = document.createElement('div');
+                    number.className = 'cell-number';
+                    number.textContent = i + 1;
+                    cell.appendChild(number);
+                    
+                    cell.addEventListener('click', () => makeMove(i));
+                    board.appendChild(cell);
+                    cells.push(cell);
+                }
+                currentState = Array(9).fill(0);
+                updateSolution();
+            }
+            
+            // 随机布局
+            function randomizeBoard() {
+                moves = [];
+                for (let i = 0; i < 9; i++) {
+                    const randomState = Math.random() > 0.5 ? 1 : 0;
+                    currentState[i] = randomState;
+                    cells[i].className = randomState ? 'cell black' : 'cell white';
+                }
+                updateSolution();
+            }
+            
+            // 执行移动
+            function makeMove(index) {
+                toggleCell(index);
+                // 相邻的格子也会翻转
+                const adjacent = getAdjacentCells(index);
+                adjacent.forEach(i => toggleCell(i));
+                
+                moves.push(index + 1); // 记录移动(1-9)
+                checkWinCondition();
+                updateSolution();
+            }
+            
+            // 翻转格子
+            function toggleCell(index) {
+                currentState[index] = currentState[index] ? 0 : 1;
+                cells[index].className = currentState[index] ? 'cell black' : 'cell white';
+            }
+            
+            // 获取相邻格子索引
+            function getAdjacentCells(index) {
+                const adjacent = [];
+                const row = Math.floor(index / 3);
+                const col = index % 3;
+                
+                if (row > 0) adjacent.push(index - 3); // 上
+                if (row < 2) adjacent.push(index + 3); // 下
+                if (col > 0) adjacent.push(index - 1); // 左
+                if (col < 2) adjacent.push(index + 1); // 右
+                
+                return adjacent;
+            }
+            
+            // 检查胜利条件
+            function checkWinCondition() {
+                const allBlack = currentState.every(cell => cell === 1);
+                const allWhite = currentState.every(cell => cell === 0);
+                
+                if (allBlack) {
+                    setTimeout(() => alert('恭喜！你已将所有格子变为黑色！'), 100);
+                } else if (allWhite) {
+                    setTimeout(() => alert('恭喜！你已将所有格子变为白色！'), 100);
+                }
+            }
+            
+            // 计算解法
+            function calculateSolutions() {
+                // 使用广度优先搜索(BFS)寻找最短解法
+                const initialState = currentState.join('');
+                
+                // 全黑解法
+                const blackSolution = bfs(initialState, '111111111');
+                // 全白解法
+                const whiteSolution = bfs(initialState, '000000000');
+                
+                return {
+                    black: blackSolution,
+                    white: whiteSolution
+                };
+            }
+            
+            // 广度优先搜索
+            function bfs(start, target) {
+                const queue = [{ state: start, path: [] }];
+                const visited = new Set();
+                visited.add(start);
+                
+                while (queue.length > 0) {
+                    const current = queue.shift();
+                    
+                    if (current.state === target) {
+                        return current.path; // 返回位置索引(0-8)
+                    }
+                    
+                    // 尝试所有可能的移动
+                    for (let i = 0; i < 9; i++) {
+                        const newState = applyMove(current.state, i);
+                        if (!visited.has(newState)) {
+                            visited.add(newState);
+                            queue.push({
+                                state: newState,
+                                path: [...current.path, i]
+                            });
+                        }
+                    }
+                }
+                
+                return []; // 无解(理论上不会出现)
+            }
+            
+            // 应用移动到状态
+            function applyMove(state, position) {
+                const newState = state.split('');
+                // 翻转点击的格子
+                newState[position] = newState[position] === '0' ? '1' : '0';
+                // 翻转相邻格子
+                const adjacent = getAdjacentCells(position);
+                adjacent.forEach(i => {
+                    newState[i] = newState[i] === '0' ? '1' : '0';
+                });
+                return newState.join('');
+            }
+            
+            // 更新解法提示
+            function updateSolution() {
+                const solutions = calculateSolutions();
+                allBlackSolution.textContent = solutions.black.length > 0 
+                    ? `全黑解法: 按顺序点击 ${solutions.black.map(pos => pos + 1).join(' → ')}` 
+                    : '已经是全黑状态';
+                allWhiteSolution.textContent = solutions.white.length > 0 
+                    ? `全白解法: 按顺序点击 ${solutions.white.map(pos => pos + 1).join(' → ')}` 
+                    : '已经是全白状态';
+            }
+            
+            // 事件监听
+            resetBtn.addEventListener('click', initializeBoard);
+            randomBtn.addEventListener('click', randomizeBoard);
+            
+            // 初始化游戏
+            initializeBoard();
+        });
+    </script>
+</body>
+</html>
