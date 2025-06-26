@@ -77,7 +77,7 @@
             padding: 10px;
             border-radius: 5px;
         }
-        .edit-mode {
+        .active-mode {
             background-color: #4CAF50;
             color: white;
         }
@@ -89,21 +89,20 @@
     </style>
 </head>
 <body>
-    <h1>完美国际2艺陵魂境 九曜星阵</h1>
-    <p>抖音：可爱多天禹</p>
-  
+    <h1>九宫格黑白棋</h1>
+  <p>抖音：可爱多天禹</p>
     <div class="controls">
         <button id="reset">重置游戏</button>
         <button id="random">随机布局</button>
-        <button id="edit">手动布局</button>
+        <button id="edit" class="active-mode">手动布局</button>
         <button id="play">开始游戏</button>
     </div>
-    <div class="mode-info" id="modeInfo">当前模式: 游戏模式 - 点击格子会翻转该格子及其相邻格子</div>
+    <div class="mode-info" id="modeInfo">当前模式: 手动布局模式 - 点击格子可单独翻转该格子</div>
     <div class="board" id="board"></div>
     <div class="solution">
         <h3>解法提示:</h3>
-        <p id="allBlackSolution">点击"随机布局"或"重置游戏"后显示全黑解法</p>
-        <p id="allWhiteSolution">点击"随机布局"或"重置游戏"后显示全白解法</p>
+        <p id="allBlackSolution">设置好布局后点击"开始游戏"显示解法</p>
+        <p id="allWhiteSolution">设置好布局后点击"开始游戏"显示解法</p>
     </div>
 
     <script>
@@ -120,7 +119,7 @@
             let cells = [];
             let moves = [];
             let currentState = Array(9).fill(0); // 0表示白色，1表示黑色
-            let isEditMode = false;
+            let isEditMode = true; // 默认进入手动布局模式
             
             // 初始化棋盘
             function initializeBoard() {
@@ -138,7 +137,7 @@
                     number.textContent = i + 1;
                     cell.appendChild(number);
                     
-                    cell.addEventListener('click', () => {
+                    cell.addEventListener('click', function() {
                         if (isEditMode) {
                             toggleCell(i);
                         } else {
@@ -172,7 +171,9 @@
                 toggleCell(index);
                 // 相邻的格子也会翻转
                 const adjacent = getAdjacentCells(index);
-                adjacent.forEach(i => toggleCell(i));
+                adjacent.forEach(function(i) {
+                    toggleCell(i);
+                });
                 
                 moves.push(index + 1); // 记录移动(1-9)
                 checkWinCondition();
@@ -201,38 +202,49 @@
             
             // 检查胜利条件
             function checkWinCondition() {
-                const allBlack = currentState.every(cell => cell === 1);
-                const allWhite = currentState.every(cell => cell === 0);
+                const allBlack = currentState.every(function(cell) {
+                    return cell === 1;
+                });
+                const allWhite = currentState.every(function(cell) {
+                    return cell === 0;
+                });
                 
                 if (allBlack) {
-                    setTimeout(() => alert('恭喜！你已将所有格子变为黑色！'), 100);
+                    setTimeout(function() {
+                        alert('恭喜！你已将所有格子变为黑色！');
+                    }, 100);
                 } else if (allWhite) {
-                    setTimeout(() => alert('恭喜！你已将所有格子变为白色！'), 100);
+                    setTimeout(function() {
+                        alert('恭喜！你已将所有格子变为白色！');
+                    }, 100);
                 }
             }
             
             // 进入编辑模式
             function enterEditMode() {
                 isEditMode = true;
-                editBtn.classList.add('edit-mode');
-                playBtn.classList.remove('edit-mode');
+                editBtn.classList.add('active-mode');
+                playBtn.classList.remove('active-mode');
                 updateModeInfo();
+                allBlackSolution.textContent = '设置好布局后点击"开始游戏"显示解法';
+                allWhiteSolution.textContent = '设置好布局后点击"开始游戏"显示解法';
             }
             
             // 退出编辑模式
             function exitEditMode() {
                 isEditMode = false;
-                editBtn.classList.remove('edit-mode');
-                playBtn.classList.add('edit-mode');
+                editBtn.classList.remove('active-mode');
+                playBtn.classList.add('active-mode');
                 updateModeInfo();
+                updateSolution();
             }
             
             // 更新模式信息
             function updateModeInfo() {
                 if (isEditMode) {
-                    modeInfo.textContent = "当前模式: 编辑模式 - 点击格子可单独翻转该格子";
+                    modeInfo.textContent = '当前模式: 手动布局模式 - 点击格子可单独翻转该格子';
                 } else {
-                    modeInfo.textContent = "当前模式: 游戏模式 - 点击格子会翻转该格子及其相邻格子";
+                    modeInfo.textContent = '当前模式: 游戏模式 - 点击格子会翻转该格子及其相邻格子';
                 }
             }
             
@@ -288,7 +300,7 @@
                 newState[position] = newState[position] === '0' ? '1' : '0';
                 // 翻转相邻格子
                 const adjacent = getAdjacentCells(position);
-                adjacent.forEach(i => {
+                adjacent.forEach(function(i) {
                     newState[i] = newState[i] === '0' ? '1' : '0';
                 });
                 return newState.join('');
@@ -296,24 +308,33 @@
             
             // 更新解法提示
             function updateSolution() {
+                if (isEditMode) return;
+                
                 const solutions = calculateSolutions();
                 allBlackSolution.textContent = solutions.black.length > 0 
-                    ? `全黑解法: 按顺序点击 ${solutions.black.map(pos => pos + 1).join(' → ')}` 
+                    ? '全黑解法: 按顺序点击 ' + solutions.black.map(function(pos) {
+                        return pos + 1;
+                    }).join(' → ') 
                     : '已经是全黑状态';
                 allWhiteSolution.textContent = solutions.white.length > 0 
-                    ? `全白解法: 按顺序点击 ${solutions.white.map(pos => pos + 1).join(' → ')}` 
+                    ? '全白解法: 按顺序点击 ' + solutions.white.map(function(pos) {
+                        return pos + 1;
+                    }).join(' → ') 
                     : '已经是全白状态';
             }
             
             // 事件监听
-            resetBtn.addEventListener('click', initializeBoard);
+            resetBtn.addEventListener('click', function() {
+                initializeBoard();
+                enterEditMode();
+            });
             randomBtn.addEventListener('click', randomizeBoard);
             editBtn.addEventListener('click', enterEditMode);
             playBtn.addEventListener('click', exitEditMode);
             
             // 初始化游戏
             initializeBoard();
-            playBtn.classList.add('edit-mode'); // 初始时"开始游戏"按钮高亮
+            enterEditMode(); // 默认进入手动布局模式
         });
     </script>
 </body>
