@@ -16,24 +16,32 @@
             background-attachment: fixed;
             background-position: center;
             position: relative;
+            min-height: 100vh;
+            margin: 0;
         }
-       body::before {
+        
+        body::before {
             content: "";
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(255, 255, 255, 0.2); /* 50%透明度的白色遮罩 */
+            background-color: rgba(255, 255, 255, 0.2);
             z-index: -1;
         }
+        
         .board {
             display: grid;
             grid-template-columns: repeat(3, 80px);
             grid-template-rows: repeat(3, 80px);
             gap: 5px;
             margin-bottom: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 10px;
         }
+        
         .cell {
             width: 80px;
             height: 80px;
@@ -44,9 +52,19 @@
             font-size: 24px;
             cursor: pointer;
             border-radius: 5px;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
             position: relative;
         }
+        
+        .cell.highlight-hover {
+            box-shadow: inset 0px 0px 30px yellow;
+            transform: scale(1.05);
+        }
+        
+        .cell.highlight-adjacent {
+            box-shadow: inset 0px 0px 30px yellow;
+        }
+        
         .cell-number {
             position: absolute;
             top: 5px;
@@ -72,23 +90,32 @@
             flex-wrap: wrap;
             justify-content: center;
             gap: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 10px;
         }
         button {
             padding: 8px 16px;
             cursor: pointer;
             min-width: 100px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 0px solid #ccc;
+            border-radius: 5px;
         }
         .solution {
-            margin-top: 20px;
+            margin: 10px;
             width: 100%;
             max-width: 500px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
         }
         .solution h3 {
             margin-bottom: 10px;
             text-align: center;
         }
         .solution p {
-            background-color: #f5f5f5;
+            background-color: rgba(245, 245, 245, 0.7);
             padding: 10px;
             border-radius: 5px;
         }
@@ -99,32 +126,34 @@
         .mode-info {
             margin-top: 10px;
             font-style: italic;
-            color: #666;
+            color: #FFF;            
+            padding: 5px 10px;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-    <h1 style="color: #FFF; text-shadow: 1px 1px 2px white;">完美国际2艺陵魂境 九曜星阵</h1>
-  <p style="color: #FFF; text-shadow: 1px 1px 2px white;">抖音：可爱多【天禹】</p>
+   <h1 style="color: #FFF; margin-bottom: 0px; padding-bottom: 0px;">完美国际2艺陵魂境</h1>
+  <h1 style="color: #FFF;margin-top: 0px;">九曜星阵</h1>
+  <p style="color: #FFF;margin-top: 0px;">抖音：可爱多【天禹】</p>
     <div class="controls">
         <button id="reset">重置游戏</button>
         <button id="random">随机布局</button>
         <button id="edit" class="active-mode">手动布局</button>
         <button id="play">开始游戏</button>
     </div>
-    <div class="mode-info" id="modeInfo">当前模式: 手动布局模式 - 点击格子可单独翻转该格子</div>
     <div class="board" id="board"></div>
     <div class="solution">
-        <h3 style="color: #FFF; text-shadow: 1px 1px 2px white;">解法提示:</h3>
+        <h3 style="color: #FFF;">解法提示:</h3>
         <p id="allBlackSolution">设置好布局后点击"开始游戏"显示解法</p>
         <p id="allWhiteSolution">设置好布局后点击"开始游戏"显示解法</p>
     </div>
-    
   <table>
     <tr>
 <td><img src="https://keaido666.github.io/1/2.jpg" width="300em" ></td><td><img src="https://keaido666.github.io/1/1.jpg" width="200em" ></td>
 </tr>
   </table>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const board = document.getElementById('board');
@@ -138,10 +167,9 @@
             
             let cells = [];
             let moves = [];
-            let currentState = Array(9).fill(0); // 0表示白色，1表示黑色
-            let isEditMode = true; // 默认进入手动布局模式
+            let currentState = Array(9).fill(0);
+            let isEditMode = true;
             
-            // 初始化棋盘
             function initializeBoard() {
                 board.innerHTML = '';
                 cells = [];
@@ -151,12 +179,40 @@
                     cell.className = 'cell white';
                     cell.dataset.index = i;
                     
-                    // 添加数字编号
                     const number = document.createElement('div');
                     number.className = 'cell-number';
                     number.textContent = i + 1;
                     cell.appendChild(number);
                     
+                    // 鼠标移入事件 - 显示高亮提示
+                    cell.addEventListener('mouseenter', function() {
+                        if (!isEditMode) {
+                            // 高亮当前棋子
+                            cell.classList.add('highlight-hover');
+                            
+                            // 高亮相邻棋子
+                            const adjacent = getAdjacentCells(i);
+                            adjacent.forEach(index => {
+                                cells[index].classList.add('highlight-adjacent');
+                            });
+                        }
+                    });
+                    
+                    // 鼠标移出事件 - 移除高亮提示
+                    cell.addEventListener('mouseleave', function() {
+                        if (!isEditMode) {
+                            // 移除当前棋子高亮
+                            cell.classList.remove('highlight-hover');
+                            
+                            // 移除相邻棋子高亮
+                            const adjacent = getAdjacentCells(i);
+                            adjacent.forEach(index => {
+                                cells[index].classList.remove('highlight-adjacent');
+                            });
+                        }
+                    });
+                    
+                    // 点击事件
                     cell.addEventListener('click', function() {
                         if (isEditMode) {
                             toggleCell(i);
@@ -164,6 +220,7 @@
                             makeMove(i);
                         }
                     });
+                    
                     board.appendChild(cell);
                     cells.push(cell);
                 }
@@ -172,9 +229,7 @@
                 updateModeInfo();
             }
             
-            // 随机布局
             function randomizeBoard() {
-                exitEditMode();
                 moves = [];
                 for (let i = 0; i < 9; i++) {
                     const randomState = Math.random() > 0.5 ? 1 : 0;
@@ -184,63 +239,47 @@
                 updateSolution();
             }
             
-            // 执行移动
             function makeMove(index) {
                 if (isEditMode) return;
                 
                 toggleCell(index);
-                // 相邻的格子也会翻转
                 const adjacent = getAdjacentCells(index);
-                adjacent.forEach(function(i) {
-                    toggleCell(i);
-                });
+                adjacent.forEach(i => toggleCell(i));
                 
-                moves.push(index + 1); // 记录移动(1-9)
+                moves.push(index + 1);
                 checkWinCondition();
                 updateSolution();
             }
             
-            // 翻转格子
             function toggleCell(index) {
                 currentState[index] = currentState[index] ? 0 : 1;
                 cells[index].className = currentState[index] ? 'cell black' : 'cell white';
             }
             
-            // 获取相邻格子索引
             function getAdjacentCells(index) {
                 const adjacent = [];
                 const row = Math.floor(index / 3);
                 const col = index % 3;
                 
-                if (row > 0) adjacent.push(index - 3); // 上
-                if (row < 2) adjacent.push(index + 3); // 下
-                if (col > 0) adjacent.push(index - 1); // 左
-                if (col < 2) adjacent.push(index + 1); // 右
+                if (row > 0) adjacent.push(index - 3);
+                if (row < 2) adjacent.push(index + 3);
+                if (col > 0) adjacent.push(index - 1);
+                if (col < 2) adjacent.push(index + 1);
                 
                 return adjacent;
             }
             
-            // 检查胜利条件
             function checkWinCondition() {
-                const allBlack = currentState.every(function(cell) {
-                    return cell === 1;
-                });
-                const allWhite = currentState.every(function(cell) {
-                    return cell === 0;
-                });
+                const allBlack = currentState.every(cell => cell === 1);
+                const allWhite = currentState.every(cell => cell === 0);
                 
                 if (allBlack) {
-                    setTimeout(function() {
-                        alert('恭喜！你已将所有格子变为黑色！');
-                    }, 100);
+                    setTimeout(() => alert('恭喜！你已将所有格子变为黑色！'), 100);
                 } else if (allWhite) {
-                    setTimeout(function() {
-                        alert('恭喜！你已将所有格子变为白色！');
-                    }, 100);
+                    setTimeout(() => alert('恭喜！你已将所有格子变为白色！'), 100);
                 }
             }
             
-            // 进入编辑模式
             function enterEditMode() {
                 isEditMode = true;
                 editBtn.classList.add('active-mode');
@@ -248,9 +287,13 @@
                 updateModeInfo();
                 allBlackSolution.textContent = '设置好布局后点击"开始游戏"显示解法';
                 allWhiteSolution.textContent = '设置好布局后点击"开始游戏"显示解法';
+                
+                // 移除所有高亮
+                cells.forEach(cell => {
+                    cell.classList.remove('highlight-hover', 'highlight-adjacent');
+                });
             }
             
-            // 退出编辑模式
             function exitEditMode() {
                 isEditMode = false;
                 editBtn.classList.remove('active-mode');
@@ -259,7 +302,6 @@
                 updateSolution();
             }
             
-            // 更新模式信息
             function updateModeInfo() {
                 if (isEditMode) {
                     modeInfo.textContent = '当前模式: 手动布局模式 - 点击格子可单独翻转该格子';
@@ -268,14 +310,9 @@
                 }
             }
             
-            // 计算解法
             function calculateSolutions() {
-                // 使用广度优先搜索(BFS)寻找最短解法
                 const initialState = currentState.join('');
-                
-                // 全黑解法
                 const blackSolution = bfs(initialState, '111111111');
-                // 全白解法
                 const whiteSolution = bfs(initialState, '000000000');
                 
                 return {
@@ -284,7 +321,6 @@
                 };
             }
             
-            // 广度优先搜索
             function bfs(start, target) {
                 const queue = [{ state: start, path: [] }];
                 const visited = new Set();
@@ -294,10 +330,9 @@
                     const current = queue.shift();
                     
                     if (current.state === target) {
-                        return current.path; // 返回位置索引(0-8)
+                        return current.path;
                     }
                     
-                    // 尝试所有可能的移动
                     for (let i = 0; i < 9; i++) {
                         const newState = applyMove(current.state, i);
                         if (!visited.has(newState)) {
@@ -310,41 +345,32 @@
                     }
                 }
                 
-                return []; // 无解(理论上不会出现)
+                return [];
             }
             
-            // 应用移动到状态
             function applyMove(state, position) {
                 const newState = state.split('');
-                // 翻转点击的格子
                 newState[position] = newState[position] === '0' ? '1' : '0';
-                // 翻转相邻格子
                 const adjacent = getAdjacentCells(position);
-                adjacent.forEach(function(i) {
+                adjacent.forEach(i => {
                     newState[i] = newState[i] === '0' ? '1' : '0';
                 });
                 return newState.join('');
             }
             
-            // 更新解法提示
             function updateSolution() {
                 if (isEditMode) return;
                 
                 const solutions = calculateSolutions();
                 allBlackSolution.textContent = solutions.black.length > 0 
-                    ? '全黑解法: 按顺序点击 ' + solutions.black.map(function(pos) {
-                        return pos + 1;
-                    }).join(' → ') 
+                    ? '全黑解法: 按顺序点击 ' + solutions.black.map(pos => pos + 1).join(' → ') 
                     : '已经是全黑状态';
                 allWhiteSolution.textContent = solutions.white.length > 0 
-                    ? '全白解法: 按顺序点击 ' + solutions.white.map(function(pos) {
-                        return pos + 1;
-                    }).join(' → ') 
+                    ? '全白解法: 按顺序点击 ' + solutions.white.map(pos => pos + 1).join(' → ') 
                     : '已经是全白状态';
             }
             
-            // 事件监听
-            resetBtn.addEventListener('click', function() {
+            resetBtn.addEventListener('click', () => {
                 initializeBoard();
                 enterEditMode();
             });
@@ -352,9 +378,8 @@
             editBtn.addEventListener('click', enterEditMode);
             playBtn.addEventListener('click', exitEditMode);
             
-            // 初始化游戏
             initializeBoard();
-            enterEditMode(); // 默认进入手动布局模式
+            enterEditMode();
         });
     </script>
 </body>
