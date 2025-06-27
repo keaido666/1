@@ -15,6 +15,8 @@
             padding: 20px;
             background-image: url('http://w2i.wanmei.com/resources/jpg/161107/10021478509671901.jpg');
             margin: 0;
+          background-repeat:no-repeat;
+          background-size:cover;
         }
         body::before {
             content: "";
@@ -278,7 +280,7 @@
             background-color: rgba(0, 0, 0, 0.5);
             padding: 15px;
             border-radius: 5px;
-            margin-bottom: 20px;
+            margin-bottom: 0px;
             font-size: 14px;
             line-height: 1.5;
             order: 0;
@@ -287,6 +289,7 @@
             color:#fff;
             width: 410px;
         }
+      .instructions p{padding:0; margin:0.3em;}
         
         .disabled {
             opacity: 0.6;
@@ -355,7 +358,7 @@
             <div id="player-line1" class="line green"></div>
             <div id="player-line2" class="line green"></div>
             <div id="player-line3" class="line green"></div>
-        </div>
+        
         
         <div class="balls">
             <div id="ball1" class="ball disabled">
@@ -370,6 +373,8 @@
                 <div class="ball-number">3</div>
                 <div class="click-counter">点击: 0/3</div>
             </div>
+        </div>
+          
         </div>
         
         <div class="target">
