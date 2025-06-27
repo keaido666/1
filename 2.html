@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>完美国际2梦挽澜亭 鬼王八卦 可爱多天禹</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f5f5f5;
+            padding: 20px;
+            background-image: url('http://w2i.wanmei.com/resources/jpg/161107/10021478509671901.jpg');
+            margin: 0;
+        }
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.2);
+            z-index: -1;
+        }
+        
+        /* 浮动按钮样式 */
+        .floating-buttons {
+            position: fixed;
+            top: 10px;
+            left: 00px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        .floating-btn {            
+            border-radius: 10%;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s;
+            font-size: 16px;
+            writing-mode:vertical-rl;
+          padding:10px 10px 10px 5px; 
+          text-decoration:none;
+        }
+        
+        .floating-btn:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+        
+        .floating-btn i {
+            pointer-events: none;
+        }
+        
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 350px;
+            margin-top: 20px;
+        }
+        
+        .target, .player {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        
+        .target {
+            background-color: #fff9e6;
+            order: 3;
+        }
+        
+        .player {
+            background-color: #e6ffe6;
+            order: 1;
+        }
+        
+        .line {
+            height: 20px;
+            width: 100%;
+            position: relative;
+            margin: 5px 0;
+        }
+        
+        .yellow {
+            background-color: #ffcc00;
+        }
+        
+        .green {
+            background-color: #66cc66;
+        }
+        
+        .broken {
+            background-color: transparent;
+        }
+        
+        .broken::before, .broken::after {
+            content: '';
+            position: absolute;
+            height: 20px;
+            width: 45%;
+            top: 0;
+        }
+        
+        .yellow.broken::before, .yellow.broken::after {
+            background-color: #ffcc00;
+        }
+        
+        .green.broken::before, .green.broken::after {
+            background-color: #66cc66;
+        }
+        
+        .broken::before {
+            left: 0;
+        }
+        
+        .broken::after {
+            right: 0;
+        }
+        
+        .balls {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            padding: 20px 0;
+            order: 2;
+        }
+        
+        .ball {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-weight: bold;
+            user-select: none;
+            transition: all 0.3s;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        
+        .ball:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        }
+        
+        .white {
+            background-color: white;
+            border: 2px solid #333;
+            color: #333;
+        }
+        
+        .black {
+            background-color: #333;
+            border: 2px solid #fff;
+            color: white;
+        }
+        
+        .click-counter {
+            font-size: 12px;
+            margin-top: 3px;
+            opacity: 0.8;
+        }
+        
+        .ball-number {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .message {
+            margin-top: 15px;
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            display: none;
+            order: 4;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            order: 5;
+            margin-top: 15px;
+        }
+        
+        .btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .generate-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .generate-btn:hover {
+            background-color: #5a6268;
+        }
+        
+        .start-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .start-btn:hover {
+            background-color: #218838;
+        }
+        
+        .reset-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .reset-btn:hover {
+            background-color: #c82333;
+        }
+        
+        .title {
+            color: #FFF;
+            margin-bottom: 0px;
+            text-align: center;
+        }
+        .title p {
+            color: #FFF;
+            margin: 0 0 10px 0;
+            text-align: center;
+            font-size:18px
+        }
+        h3 { 
+            padding:0; 
+            margin:0.5em;
+        }
+        
+        .instructions {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.5;
+            order: 0;
+            width: 100%;
+            box-sizing: border-box;
+            color:#fff;
+            width: 410px;
+        }
+        
+        .disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .images-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .images-container img {
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            max-width: 100%;
+            height: auto;
+        }
+        
+        #music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+        
+        #music-control:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+        
+        #music-control i {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 浮动按钮 -->
+    <div class="floating-buttons">
+        <a class="floating-btn" title="盗墓黑白棋" href="https://keaido666.github.io/1/1.html">
+            <i>盗墓黑白棋</i>
+        </a>
+    </div>
+
+    <h1 class="title">完美国际2梦挽澜亭</h1>
+    <h1 class="title">鬼王八卦<p>抖音：可爱多【天禹】</p></h1>    
+    <div class="instructions">
+        <p><strong>游戏规则：</strong>通过点击三个球改变上方绿色图形的状态，使其与下方黄色目标图形完全一致。</p>
+        <p>• 白球：打断</p>
+        <p>• 黑球：连接</p>
+    </div>
+    
+    <div class="game-container">
+        <div class="player">
+            <h3>你的图形</h3>
+            <div id="player-line1" class="line green"></div>
+            <div id="player-line2" class="line green"></div>
+            <div id="player-line3" class="line green"></div>
+        </div>
+        
+        <div class="balls">
+            <div id="ball1" class="ball disabled">
+                <div class="ball-number">1</div>
+                <div class="click-counter">点击: 0/3</div>
+            </div>
+            <div id="ball2" class="ball disabled">
+                <div class="ball-number">2</div>
+                <div class="click-counter">点击: 0/3</div>
+            </div>
+            <div id="ball3" class="ball disabled">
+                <div class="ball-number">3</div>
+                <div class="click-counter">点击: 0/3</div>
+            </div>
+        </div>
+        
+        <div class="target">
+            <h3>目标图形</h3>
+            <div id="target-line1" class="line yellow"></div>
+            <div id="target-line2" class="line yellow"></div>
+            <div id="target-line3" class="line yellow"></div>
+        </div>
+        
+        <div id="message" class="message"></div>
+        
+        <div class="btn-group">
+            <button id="generateBtn" class="btn generate-btn" onclick="generateGame()">生成</button>
+            <button id="startBtn" class="btn start-btn disabled" onclick="startGame()">开始</button>
+            <button id="resetBtn" class="btn reset-btn disabled" onclick="resetGame()">放弃</button>
+        </div>
+    </div>
+    
+    <div class="images-container">
+        <img src="https://keaido666.github.io/1/2.jpg" width="300">
+        <img src="https://keaido666.github.io/1/1.jpg" width="200">
+    </div>
+    
+    <!-- 音乐控制按钮 -->
+    <div id="music-control" onclick="toggleMusic()">
+        <i id="music-icon" class="fas fa-volume-up"></i>
+        <span id="music-text">关闭音乐</span>
+    </div>
+    
+    <!-- 背景音乐 -->
+    <audio id="bg-music" loop>
+        <source src="https://yeyems.com/static/music/city_a1.mp3" type="audio/ogg">       
+        <source src="https://yeyems.com/static/music/common_a1.mp3" type="audio/ogg">
+        <source src="https://yeyems.com/static/music/city_b1_jp.mp3" type="audio/ogg"> 
+        您的浏览器不支持音频元素。
+    </audio>
+                                                               
+    <script>
+        // 音乐控制功能
+        const music = document.getElementById('bg-music');
+        const musicIcon = document.getElementById('music-icon');
+        const musicText = document.getElementById('music-text');
+        const floatMusicIcon = document.getElementById('float-music-icon');
+        
+        // 尝试播放音乐（可能被浏览器阻止）
+        function tryPlayMusic() {
+            music.volume = 0.5; // 设置音量（0-1）
+            const promise = music.play();
+            
+            if (promise !== undefined) {
+                promise.then(_ => {
+                    // 自动播放成功
+                    music.muted = false;
+                    updateMusicUI();
+                }).catch(error => {
+                    // 自动播放被阻止
+                    console.log('自动播放被阻止，需要用户交互');
+                    music.muted = true;
+                    updateMusicUI();
+                });
+            }
+        }
+        
+        // 更新音乐控制UI
+        function updateMusicUI() {
+            if (music.muted) {
+                musicIcon.className = 'fas fa-volume-mute';
+                musicText.textContent = '开启音乐';
+                floatMusicIcon.className = 'fas fa-volume-mute';
+            } else {
+                musicIcon.className = 'fas fa-volume-up';
+                musicText.textContent = '关闭音乐';
+                floatMusicIcon.className = 'fas fa-volume-up';
+            }
+        }
+        
+        // 切换音乐状态
+        function toggleMusic() {
+            music.muted = !music.muted;
+            if (!music.muted && music.paused) {
+                music.play();
+            }
+            updateMusicUI();
+        }
+        
+        // 页面加载后尝试播放音乐
+        window.addEventListener('DOMContentLoaded', () => {
+            tryPlayMusic();
+        });
+        
+        // 点击页面任意位置尝试播放音乐（解决自动播放限制）
+        document.addEventListener('click', function() {
+            if (music.paused) {
+                music.play();
+            }
+            // 只执行一次
+            document.removeEventListener('click', arguments.callee);
+        });
+        
+        // 游戏逻辑  
+        // 游戏状态
+        const gameState = {
+            targetLines: [],   // 目标图形状态 (true=完整, false=断裂)
+            playerLines: [],   // 玩家图形状态
+            ballStates: [],    // 球的状态 (true=白球, false=黑球)
+            clickCounts: [0, 0, 0], // 每个球的点击次数
+            ballToLine: [],    // 每个球对应的线索引
+            isPlaying: false   // 游戏是否进行中
+        };
+        
+        // DOM元素
+        const generateBtn = document.getElementById('generateBtn');
+        const startBtn = document.getElementById('startBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        
+        // 生成游戏
+        function generateGame() {
+            // 随机生成目标图形 (3条黄线)
+            gameState.targetLines = [
+                Math.random() < 0.5,
+                Math.random() < 0.5,
+                Math.random() < 0.5
+            ];
+            
+            // 随机生成玩家图形 (3条绿线)
+            gameState.playerLines = [
+                Math.random() < 0.5,
+                Math.random() < 0.5,
+                Math.random() < 0.5
+            ];
+            
+            // 初始化球的状态和对应关系
+            gameState.ballStates = [];
+            gameState.clickCounts = [0, 0, 0];
+            gameState.ballToLine = [];
+            gameState.isPlaying = false;
+            
+            // 随机分配球到线，确保初始时白球对应完整线，黑球对应断裂线
+            const availableLines = [0, 1, 2];
+            shuffleArray(availableLines);
+            
+            for (let ballIdx = 0; ballIdx < 3; ballIdx++) {
+                let lineAssigned = false;
+                
+                // 尝试为球找到匹配的线
+                for (let i = 0; i < availableLines.length; i++) {
+                    const lineIdx = availableLines[i];
+                    const wantWhite = Math.random() < 0.5; // 随机决定球颜色
+                    
+                    if ((wantWhite && gameState.playerLines[lineIdx]) || 
+                        (!wantWhite && !gameState.playerLines[lineIdx])) {
+                        // 匹配成功
+                        gameState.ballStates[ballIdx] = wantWhite;
+                        gameState.ballToLine[ballIdx] = lineIdx;
+                        availableLines.splice(i, 1);
+                        lineAssigned = true;
+                        break;
+                    }
+                }
+                
+                // 如果没有找到匹配的线，强制分配并调整球颜色
+                if (!lineAssigned && availableLines.length > 0) {
+                    const lineIdx = availableLines.shift();
+                    gameState.ballStates[ballIdx] = gameState.playerLines[lineIdx];
+                    gameState.ballToLine[ballIdx] = lineIdx;
+                }
+            }
+            
+            // 更新按钮状态
+            startBtn.classList.remove('disabled');
+            resetBtn.classList.add('disabled');
+            
+            // 禁用球点击
+            document.querySelectorAll('.ball').forEach(ball => {
+                ball.classList.add('disabled');
+                ball.onclick = null;
+            });
+            
+            renderGame();
+        }
+        
+        // 开始游戏
+        function startGame() {
+            gameState.isPlaying = true;
+            
+            // 更新按钮状态
+            startBtn.classList.add('disabled');
+            resetBtn.classList.remove('disabled');
+            
+            // 启用球点击
+            document.querySelectorAll('.ball').forEach((ball, index) => {
+                ball.classList.remove('disabled');
+                ball.onclick = function() { handleBallClick(index); };
+            });
+        }
+        
+        // 洗牌数组
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        
+        // 渲染游戏状态
+        function renderGame() {
+            // 渲染目标图形
+            renderLines('target', gameState.targetLines, 'yellow');
+            
+            // 渲染玩家图形
+            renderLines('player', gameState.playerLines, 'green');
+            
+            // 渲染球
+            for (let i = 0; i < 3; i++) {
+                const ball = document.getElementById(`ball${i+1}`);
+                const isWhite = gameState.ballStates[i];
+                ball.className = isWhite ? 'ball white' : 'ball black';
+                if (!gameState.isPlaying) {
+                    ball.classList.add('disabled');
+                }
+                ball.innerHTML = `
+                    <div class="ball-number">${i+1}</div>
+                    <div class="click-counter">点击: ${gameState.clickCounts[i]}/3</div>
+                `;
+            }
+            
+            // 检查是否胜利
+            checkWin();
+        }
+        
+        // 渲染线条
+        function renderLines(prefix, lines, colorClass) {
+            for (let i = 0; i < 3; i++) {
+                const line = document.getElementById(`${prefix}-line${i+1}`);
+                line.className = `line ${colorClass}`;
+                if (!lines[i]) {
+                    line.classList.add('broken');
+                } else {
+                    line.classList.remove('broken');
+                }
+            }
+        }
+        
+        // 处理球点击事件
+        function handleBallClick(ballIndex) {
+            if (!gameState.isPlaying) return;
+            
+            gameState.clickCounts[ballIndex]++;
+            
+            if (gameState.clickCounts[ballIndex] >= 3) {
+                // 第三次点击，改变对应的线状态并重置计数器
+                const lineIndex = gameState.ballToLine[ballIndex];
+                
+                if (gameState.ballStates[ballIndex]) {
+                    // 白球：将线从完整变为断裂
+                    gameState.playerLines[lineIndex] = false;
+                } else {
+                    // 黑球：将线从断裂变为完整
+                    gameState.playerLines[lineIndex] = true;
+                }
+                
+                // 改变球颜色
+                gameState.ballStates[ballIndex] = !gameState.ballStates[ballIndex];
+                gameState.clickCounts[ballIndex] = 0;
+            }
+            
+            renderGame();
+        }
+        
+        // 检查是否胜利
+        function checkWin() {
+            if (!gameState.isPlaying) return;
+            
+            const isWin = gameState.playerLines.every((line, i) => line === gameState.targetLines[i]);
+            const message = document.getElementById('message');
+            
+            if (isWin) {
+                message.textContent = '🎉 恭喜你赢了！图形匹配成功！ 🎉';
+                message.className = 'message success';
+                gameState.isPlaying = false;
+                
+                // 禁用球点击
+                document.querySelectorAll('.ball').forEach(ball => {
+                    ball.classList.add('disabled');
+                    ball.onclick = null;
+                });
+                
+                // 更新按钮状态
+                resetBtn.classList.add('disabled');
+            } else {
+                message.textContent = '';
+                message.className = 'message';
+            }
+        }
+        
+        // 重置游戏
+        function resetGame() {
+            if (!gameState.isPlaying) return;
+            
+            gameState.isPlaying = false;
+            
+            // 更新按钮状态
+            startBtn.classList.remove('disabled');
+            resetBtn.classList.add('disabled');
+            
+            // 禁用球点击
+            document.querySelectorAll('.ball').forEach(ball => {
+                ball.classList.add('disabled');
+                ball.onclick = null;
+            });
+            
+            document.getElementById('message').textContent = '游戏已重置';
+            setTimeout(() => {
+                document.getElementById('message').textContent = '';
+            }, 2000);
+        }
+        
+        // 初始化游戏
+        window.onload = function() {
+            generateGame();
+        };
+    </script>
+</body>
+</html>
