@@ -37,22 +37,23 @@
         .floating-buttons {
             position: fixed;
             top: 10px;
-            left: 00px;
+            left: 0px;
             display: flex;
             flex-direction: column;
             gap: 10px;
             z-index: 1000;
+           border-radius: 0 10% 10% 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
         
         .floating-btn {            
             border-radius: 10%;
-            background-color: rgba(0, 0, 0, 0.5);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             transition: all 0.3s;
             font-size: 16px;
             writing-mode:vertical-rl;
@@ -204,11 +205,7 @@
             height: auto;
         }
         
-        #music-control {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: rgba(0, 0, 0, 0.7);
+        #music-control {            
             color: white;
             padding: 10px 15px;
             border-radius: 20px;
@@ -235,6 +232,10 @@
         <a class="floating-btn" title="鬼王八卦" href="https://keaido666.github.io/1/2.html">
             <i>鬼王八卦</i>
         </a>
+      <!-- 音乐控制按钮 -->
+       <div id="music-control" onclick="toggleMusic()">
+        <i id="music-icon" class="fas fa-volume-up"></i>
+       </div>
     </div>
     <h1>完美国际2艺陵魂境</h1>
     <h1>九曜星阵</h1>
@@ -260,11 +261,7 @@
         <img src="https://keaido666.github.io/1/1.jpg" width="200">
     </div>
     
-     <!-- 音乐控制按钮 -->
-    <div id="music-control" onclick="toggleMusic()">
-        <i id="music-icon" class="fas fa-volume-up"></i>
-        <span id="music-text">关闭音乐</span>
-    </div>
+     
     
     <!-- 背景音乐 -->
     <audio id="bg-music" loop>        
