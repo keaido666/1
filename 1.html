@@ -32,6 +32,42 @@
             background-color: rgba(0, 0, 0, 0.2);
             z-index: -1;
         }
+      
+      /* 浮动按钮样式 */
+        .floating-buttons {
+            position: fixed;
+            top: 10px;
+            left: 00px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        .floating-btn {            
+            border-radius: 10%;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s;
+            font-size: 16px;
+            writing-mode:vertical-rl;
+          padding:10px 10px 10px 5px; 
+          text-decoration:none;
+        }
+        
+        .floating-btn:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+        
+        .floating-btn i {
+            pointer-events: none;
+        }
         
         h1 {
             margin: 5px 0;
@@ -194,6 +230,12 @@
     </style>
 </head>
 <body>
+     <!-- 浮动按钮 -->
+    <div class="floating-buttons">
+        <a class="floating-btn" title="鬼王八卦" href="https://keaido666.github.io/1/2.html">
+            <i>鬼王八卦</i>
+        </a>
+    </div>
     <h1>完美国际2艺陵魂境</h1>
     <h1>九曜星阵</h1>
     <p>抖音：可爱多【天禹】</p>
@@ -225,10 +267,9 @@
     </div>
     
     <!-- 背景音乐 -->
-    <audio id="bg-music" loop>
-        <source src=“https://yeyems.com/static/music/city_a1.mp3" type="audio/ogg">
-        <source src="https://keaido666.github.io/1/yf.m4a" type="audio/mpeg">
+    <audio id="bg-music" loop>        
         <source src="https://yeyems.com/static/music/common_a1.mp3" type="audio/ogg">
+        <source src="https://yeyems.com/static/music/city_a1.mp3" type="audio/ogg">
         <source src="https://yeyems.com/static/music/city_b1_jp.mp3" type="audio/ogg">        
         <!-- 可以添加多个格式的音频源 -->
         <!-- <source src="your-music-file.ogg" type="audio/ogg"> -->
