@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>完美国际2艺陵魂境 九曜星阵 可爱多天禹</title>
+    <!-- 引入Font Awesome图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -130,6 +132,24 @@
             padding: 5px 10px;
             border-radius: 5px;
         }
+         #music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        #music-control i {
+            font-size: 20px;
+        }
     </style>
 </head>
 <body>
@@ -153,7 +173,60 @@
 <td><img src="https://keaido666.github.io/1/2.jpg" width="300em" ></td><td><img src="https://keaido666.github.io/1/1.jpg" width="200em" ></td>
 </tr>
   </table>
-
+<!-- 音乐控制按钮 -->
+  <div id="music-control" onclick="toggleMusic()">
+        <i id="music-icon" class="fas fa-volume-up"></i>
+        <span id="music-text">关闭音乐</span>
+    </div>
+  <!-- 背景音乐（默认静音，用户交互后播放） -->
+    <audio id="bg-music" loop>
+        <source src="https://keaido666.github.io/1/yf.m4a" type="audio/mpeg">
+        <!-- 可以添加多个格式的音频源 -->
+        <!-- <source src="your-music-file.ogg" type="audio/ogg"> -->
+        您的浏览器不支持音频元素。
+    </audio>
+    
+    <script>
+        const music = document.getElementById('bg-music');
+        const musicIcon = document.getElementById('music-icon');
+        const musicText = document.getElementById('music-text');
+        
+        // 初始设置为静音，避免自动播放问题
+        music.muted = true;
+        
+        // 尝试播放音乐（需要用户交互）
+        function tryPlayMusic() {
+            const promise = music.play();
+            
+            if (promise !== undefined) {
+                promise.catch(error => {
+                    // 自动播放被阻止
+                    console.log('自动播放被阻止，需要用户交互');
+                });
+            }
+        }
+        
+        // 切换音乐状态
+        function toggleMusic() {
+            if (music.muted) {
+                music.muted = false;
+                musicIcon.className = 'fas fa-volume-up';
+                musicText.textContent = '关闭音乐';
+                tryPlayMusic();
+            } else {
+                music.muted = true;
+                musicIcon.className = 'fas fa-volume-mute';
+                musicText.textContent = '开启音乐';
+            }
+        }
+        
+        // 点击页面任意位置尝试播放音乐（解决自动播放限制）
+        document.addEventListener('click', function() {
+            tryPlayMusic();
+            // 只执行一次
+            document.removeEventListener('click', arguments.callee);
+        });
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const board = document.getElementById('board');
