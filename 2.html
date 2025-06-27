@@ -15,9 +15,9 @@
             padding: 20px;
             background-image: url('http://w2i.wanmei.com/resources/jpg/161107/10021478509671901.jpg');
             margin: 0;
-          background-repeat:no-repeat;
-          background-size:cover;
-          background-attachment: fixed;
+            background-repeat:no-repeat;
+            background-size:cover;
+            background-attachment: fixed;
         }
         body::before {
             content: "";
@@ -34,27 +34,27 @@
         .floating-buttons {
             position: fixed;
             top: 10px;
-            left: 00px;
+            left: 10px;
             display: flex;
             flex-direction: column;
             gap: 10px;
             z-index: 1000;
+            border-radius: 0 10% 10% 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
         
         .floating-btn {            
-            border-radius: 10%;
-            background-color: rgba(0, 0, 0, 0.5);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            cursor: pointer;            
             transition: all 0.3s;
             font-size: 16px;
             writing-mode:vertical-rl;
-          padding:10px 10px 10px 5px; 
-          text-decoration:none;
+            padding:10px 10px 10px 5px; 
+            text-decoration:none;
         }
         
         .floating-btn:hover {
@@ -64,6 +64,27 @@
         
         .floating-btn i {
             pointer-events: none;
+        }
+        
+        /* 音乐控制按钮 */
+        #music-control {                        
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+        
+        #music-control:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+        
+        #music-control i {
+            font-size: 20px;
         }
         
         .game-container {
@@ -290,7 +311,7 @@
             color:#fff;
             width: 410px;
         }
-      .instructions p{padding:0; margin:0.3em;}
+        .instructions p{padding:0; margin:0.3em;}
         
         .disabled {
             opacity: 0.6;
@@ -311,30 +332,6 @@
             max-width: 100%;
             height: auto;
         }
-        
-        #music-control {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 1000;
-            transition: all 0.3s;
-        }
-        
-        #music-control:hover {
-            background-color: rgba(0, 0, 0, 0.9);
-        }
-        
-        #music-control i {
-            font-size: 20px;
-        }
     </style>
 </head>
 <body>
@@ -343,14 +340,20 @@
         <a class="floating-btn" title="盗墓黑白棋" href="https://keaido666.github.io/1/1.html">
             <i>盗墓黑白棋</i>
         </a>
+      <!-- 音乐控制按钮 -->
+        <div id="music-control" onclick="toggleMusic()">
+        <i id="music-icon" class="fas fa-volume-up"></i>
+        </div>
     </div>
+
+    
 
     <h1 class="title">完美国际2梦挽澜亭</h1>
     <h1 class="title">鬼王八卦<p>抖音：可爱多【天禹】</p></h1>    
     <div class="instructions">
         <p><strong>游戏规则：</strong>通过点击三个球改变上方绿色图形的状态，使其与下方黄色目标图形完全一致。</p>
-        <p>• 白球：打断</p>
-        <p>• 黑球：连接</p>
+        <p>• 白球：将线打断</p>
+        <p>• 黑球：将连接</p>
     </div>
     
     <div class="game-container">
@@ -359,7 +362,6 @@
             <div id="player-line1" class="line green"></div>
             <div id="player-line2" class="line green"></div>
             <div id="player-line3" class="line green"></div>
-        
         
         <div class="balls">
             <div id="ball1" class="ball disabled">
@@ -375,7 +377,6 @@
                 <div class="click-counter">点击: 0/3</div>
             </div>
         </div>
-          
         </div>
         
         <div class="target">
@@ -399,12 +400,6 @@
         <img src="https://keaido666.github.io/1/1.jpg" width="200">
     </div>
     
-    <!-- 音乐控制按钮 -->
-    <div id="music-control" onclick="toggleMusic()">
-        <i id="music-icon" class="fas fa-volume-up"></i>
-        <span id="music-text">关闭音乐</span>
-    </div>
-    
     <!-- 背景音乐 -->
     <audio id="bg-music" loop>
         <source src="https://yeyems.com/static/music/city_a1.mp3" type="audio/ogg">       
@@ -418,7 +413,6 @@
         const music = document.getElementById('bg-music');
         const musicIcon = document.getElementById('music-icon');
         const musicText = document.getElementById('music-text');
-        const floatMusicIcon = document.getElementById('float-music-icon');
         
         // 尝试播放音乐（可能被浏览器阻止）
         function tryPlayMusic() {
@@ -444,11 +438,9 @@
             if (music.muted) {
                 musicIcon.className = 'fas fa-volume-mute';
                 musicText.textContent = '开启音乐';
-                floatMusicIcon.className = 'fas fa-volume-mute';
             } else {
                 musicIcon.className = 'fas fa-volume-up';
                 musicText.textContent = '关闭音乐';
-                floatMusicIcon.className = 'fas fa-volume-up';
             }
         }
         
@@ -490,9 +482,24 @@
         const generateBtn = document.getElementById('generateBtn');
         const startBtn = document.getElementById('startBtn');
         const resetBtn = document.getElementById('resetBtn');
+        const message = document.getElementById('message');
+        
+        // 清除胜利消息
+        function clearWinMessage() {
+            message.textContent = '';
+            message.className = 'message';
+        }
+        
+        // 检查两个图形是否相同
+        function isSamePattern(lines1, lines2) {
+            return lines1.every((line, i) => line === lines2[i]);
+        }
         
         // 生成游戏
         function generateGame() {
+            // 清除胜利消息
+            clearWinMessage();
+            
             // 随机生成目标图形 (3条黄线)
             gameState.targetLines = [
                 Math.random() < 0.5,
@@ -500,12 +507,14 @@
                 Math.random() < 0.5
             ];
             
-            // 随机生成玩家图形 (3条绿线)
-            gameState.playerLines = [
-                Math.random() < 0.5,
-                Math.random() < 0.5,
-                Math.random() < 0.5
-            ];
+            // 随机生成玩家图形 (3条绿线)，确保不与目标图形相同
+            do {
+                gameState.playerLines = [
+                    Math.random() < 0.5,
+                    Math.random() < 0.5,
+                    Math.random() < 0.5
+                ];
+            } while (isSamePattern(gameState.targetLines, gameState.playerLines));
             
             // 初始化球的状态和对应关系
             gameState.ballStates = [];
@@ -539,7 +548,7 @@
                 // 如果没有找到匹配的线，强制分配并调整球颜色
                 if (!lineAssigned && availableLines.length > 0) {
                     const lineIdx = availableLines.shift();
-                    gameState.ballStates[ballIdx] = gameState.playerLines[lineIdx];
+                    gameState.playerLines[lineIdx] = gameState.ballStates[ballIdx];
                     gameState.ballToLine[ballIdx] = lineIdx;
                 }
             }
@@ -559,6 +568,9 @@
         
         // 开始游戏
         function startGame() {
+            // 清除胜利消息
+            clearWinMessage();
+            
             gameState.isPlaying = true;
             
             // 更新按钮状态
@@ -650,7 +662,6 @@
             if (!gameState.isPlaying) return;
             
             const isWin = gameState.playerLines.every((line, i) => line === gameState.targetLines[i]);
-            const message = document.getElementById('message');
             
             if (isWin) {
                 message.textContent = '🎉 恭喜你赢了！图形匹配成功！ 🎉';
@@ -665,9 +676,6 @@
                 
                 // 更新按钮状态
                 resetBtn.classList.add('disabled');
-            } else {
-                message.textContent = '';
-                message.className = 'message';
             }
         }
         
@@ -687,9 +695,9 @@
                 ball.onclick = null;
             });
             
-            document.getElementById('message').textContent = '游戏已重置';
+            message.textContent = '游戏已重置';
             setTimeout(() => {
-                document.getElementById('message').textContent = '';
+                message.textContent = '';
             }, 2000);
         }
         
