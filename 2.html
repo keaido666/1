@@ -35,10 +35,11 @@
         }
         
         /* 浮动按钮样式 */
+        
         .floating-buttons {
             position: fixed;
             top: 10px;
-            left: 10px;
+            left: 0px;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -49,11 +50,12 @@
         }
         
         .floating-btn {            
+            border-radius: 10%;
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;            
+            cursor: pointer;
             transition: all 0.3s;
             font-size: 16px;
             writing-mode:vertical-rl;
@@ -72,15 +74,7 @@
         
         /* 音乐控制按钮 */
         #music-control {                        
-            color: white;
-            padding: 10px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 1000;
-            transition: all 0.3s;
+            
         }
         
         #music-control:hover {
@@ -88,7 +82,7 @@
         }
         
         #music-control i {
-            font-size: 20px;
+            font-size: 16px;
         }
         
         .game-container {
@@ -336,18 +330,67 @@
             max-width: 100%;
             height: auto;
         }
+      .images-container2 {
+        display: none; }
+      
+      .images-container2 img {            
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            max-width: 100%;
+            height: auto;
+            position: fixed;
+            top:1em;
+            left:50%
+            display: absolute;
+            place-items: center;
+            justify-content: center;
+            transform: translate(-50%, 10%);
+        }
+      
+      .floating-buttons i,.image-but {
+            font-size: 16px;
+            padding: 10px 0 10px 0;
+            color: white;            
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            z-index: 1000;
+            transition: all 0.3s;
+            background:none;
+            border:0;
+        }
+      
+      @font-face {
+  font-family: 'iconfont';  /* Project id 1764074 */
+  src: url('//at.alicdn.com/t/c/font_1764074_4344pxe5pa4.woff2?t=1751082178752') format('woff2'),
+       url('//at.alicdn.com/t/c/font_1764074_4344pxe5pa4.woff?t=1751082178752') format('woff'),
+       url('//at.alicdn.com/t/c/font_1764074_4344pxe5pa4.ttf?t=1751082178752') format('truetype');
+}
+      .iconfont{
+    font-family:"iconfont" !important;
+    font-size:16px;font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;}
     </style>
 </head>
 <body>
-    <!-- 浮动按钮 -->
-    <div class="floating-buttons">
-        <a class="floating-btn" title="盗墓黑白棋" href="https://keaido666.github.io/1/1.html">
-            <i>盗墓黑白棋</i>
+    <div id="leftnav" class="floating-buttons">
+        <a class="floating-btn" title="鬼王八卦" href="https://keaido666.github.io/1/1.html">
+            盗墓黑白棋
         </a>
       <!-- 音乐控制按钮 -->
-        <div id="music-control" onclick="toggleMusic()">
-        <i id="music-icon" class="fas fa-volume-up"></i>
-        </div>
+       <div class="" id="music-control" onclick="toggleMusic()">
+        <i id="music-icon" class="fas fa-volume-up "></i>
+       </div>
+      <!-- 微信 -->
+      <button class="image-but iconfont floating-btn" data-target="image1">&#xe600;</button>
+      <!-- 抖音 -->
+      <button class="image-but iconfont floating-btn" data-target="image2">&#xe8db;</button>
+      <button class="image-but iconfont floating-btn" data-target="image3">微信扫码收藏</button>
     </div>
 
     
@@ -403,7 +446,19 @@
         <img src="https://keaido666.github.io/1/2.jpg" width="300">
         <img src="https://keaido666.github.io/1/1.jpg" width="200">
     </div>
-    
+    <div>
+        <div id="image1" class="images-container2" >
+           <img src="https://keaido666.github.io/1/2.jpg" alt="微信" name="weixin" width="300">
+          <p> </p>
+        </div>
+        <div id="image2" class="images-container2">
+           <img src="https://keaido666.github.io/1/1.jpg" alt="抖音" name="weixin" width="300">
+          <p> </p>
+        </div>
+      <div id="image3" class="images-container2">
+           <img src="https://keaido666.github.io/1/dmad.png" alt="抖音" name="weixin" width="300">
+          <p> </p>
+        </div>
     <!-- 背景音乐 -->
     <audio id="bg-music" loop>
         <source src="https://yeyems.com/static/music/city_a1.mp3" type="audio/ogg">       
@@ -413,6 +468,54 @@
     </audio>
                                                                
     <script>
+      document.addEventListener('DOMContentLoaded', function() {
+            // 获取所有按钮和图片容器
+            const buttons = document.querySelectorAll('.image-but');
+            const containers = document.querySelectorAll('.images-container2');
+            
+            // 为每个按钮添加点击事件
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const targetContainer = document.getElementById(targetId);
+                    
+                    // 如果当前图片已显示，则隐藏
+                    if (this.classList.contains('active')) {
+                        targetContainer.style.display = 'none';
+                        this.classList.remove('active');
+                        return;
+                    }
+                    
+                    // 隐藏所有图片和取消所有按钮激活状态
+                    containers.forEach(container => {
+                        container.style.display = 'none';
+                    });
+                    buttons.forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // 显示当前图片并激活按钮
+                    targetContainer.style.display = 'block';
+                    this.classList.add('active');
+                });
+            });
+            
+            // 为每个图片容器添加点击事件（点击图片隐藏）
+            containers.forEach(container => {
+                container.addEventListener('click', function() {
+                    this.style.display = 'none';
+                    const targetId = this.id;
+                    
+                    // 找到对应的按钮并取消激活状态
+                    buttons.forEach(button => {
+                        if (button.getAttribute('data-target') === targetId) {
+                            button.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        });
+      
         // 音乐控制功能
         const music = document.getElementById('bg-music');
         const musicIcon = document.getElementById('music-icon');
