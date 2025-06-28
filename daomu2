@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>完美国际2艺陵魂境 九曜星阵 可爱多天禹</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3MdOX17VFgXw8u7Y",ck:"3MdOX17VFgXw8u7Y"})</script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            //background-image: url('https://keaido666.github.io/1/bg.png');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            position: relative;
+            min-height: 100vh;
+            margin: 0;
+            color: white;
+        }
+        
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.2);
+            z-index: -1;
+        }
+      
+      /* 浮动按钮样式 */
+        .floating-buttons {
+            position: fixed;
+            top: 10px;
+            left: 0px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+            border-radius: 0 10% 10% 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .floating-btn {            
+            border-radius: 10%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            writing-mode:vertical-rl;
+            padding:10px 10px 10px 5px; 
+            text-decoration:none;
+        }
+        
+        .floating-btn:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+        
+        .floating-btn i {
+            pointer-events: none;
+        }
+        
+        h1 {
+            margin: 5px 0;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 80px);
+            grid-template-rows: repeat(3, 80px);
+            gap: 5px;
+            margin: 20px 0;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .cell {
+            width: 80px;
+            height: 80px;
+            background-color: rgba(221, 221, 221, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .cell.highlight-hover {
+            box-shadow: inset 0 0 20px yellow;
+            transform: scale(1.05);
+        }
+        
+        .cell.highlight-adjacent {
+            box-shadow: inset 0 0 15px orange;
+        }
+        
+        .cell-number {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .black {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+        }
+        
+        .black .cell-number {
+            color: #ccc;
+        }
+        
+        .white {
+            background-color: rgba(255, 255, 255, 0.9);
+            color: black;
+            border: 1px solid #ccc;
+        }
+        
+        .controls {
+            margin: 15px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .controls button {
+            padding: 10px 20px;
+            cursor: pointer;
+            min-width: 120px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .controls button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        .controls .active-mode {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .solution {
+            margin: 15px 0;
+            width: 100%;
+            max-width: 500px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .solution h3{
+            margin: 0px;
+            text-align: center;
+            color: white;
+            padding:0;
+        }
+        
+        .solution p {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+            color: white;
+        }
+        
+        .images-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .images-container img {
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            max-width: 100%;
+            height: auto;
+        }
+      
+      .images-container2 {
+        display: none; }
+      
+      .images-container2 img {            
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            max-width: 100%;
+            height: auto;
+            position: fixed;
+            top:1em;
+            left:50%
+            display: absolute;
+            place-items: center;
+            justify-content: center;
+            transform: translate(-50%, 10%);
+        }
+        
+        #music-control {            
+            
+        }
+        
+        #music-control:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+        
+        .floating-buttons i,.image-but {
+            font-size: 16px;
+            padding: 10px 0 10px 0;
+            color: white;            
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            z-index: 1000;
+            transition: all 0.3s;
+            background:none;
+            border:0;
+        }
+      
+    @font-face {
+  font-family: 'iconfont';  /* Project id 1764074 */
+  src: url('//at.alicdn.com/t/c/font_1764074_4344pxe5pa4.woff2?t=1751082178752') format('woff2'),
+       url('//at.alicdn.com/t/c/font_1764074_4344pxe5pa4.woff?t=1751082178752') format('woff'),
+       url('//at.alicdn.com/t/c/font_1764074_4344pxe5pa4.ttf?t=1751082178752') format('truetype');
+}
+      .iconfont{
+    font-family:"iconfont" !important;
+    font-size:16px;font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;}
+    </style>
+</head>
+<body>
+     <!-- 浮动按钮 -->
+    <div id="leftnav" class="floating-buttons">
+        <a class="floating-btn" title="鬼王八卦" href="https://keaido666.github.io/1/2.html">
+            鬼王八卦
+        </a>
+      <!-- 音乐控制按钮 -->
+       <div class="" id="music-control" onclick="toggleMusic()">
+        <i id="music-icon" class="fas fa-volume-up "></i>
+       </div>
+      <!-- 微信 -->
+      <button class="image-but iconfont floating-btn" data-target="image1">&#xe600;</button>
+      <!-- 抖音 -->
+      <button class="image-but iconfont floating-btn" data-target="image2">&#xe8db;</button>
+      <button class="image-but iconfont floating-btn" data-target="image3">微信收藏</button>
+    </div>
+    <h1>完美国际2艺陵魂境</h1>
+    <h1>九曜星阵</h1>
+    <p>抖音：可爱多【天禹】</p>
+    <p>建议微信打开后收藏，方便打本时使用</p>    
+    <div class="controls">
+        <button id="reset"><i class="fas fa-redo"></i> 重置游戏</button>
+        <button id="random"><i class="fas fa-random"></i> 随机布局</button>
+        <button id="edit" class="active-mode"><i class="fas fa-edit"></i> 手动布局</button>
+        <button id="play"><i class="fas fa-play"></i> 开始游戏</button>
+    </div>
+    
+    <div class="board" id="board"></div>
+    
+    <div class="solution">
+        <h3><i class="fas fa-lightbulb"></i> 解法提示:</h3>
+        <p id="allBlackSolution">设置好布局后点击"开始游戏"显示解法</p>
+        <p id="allWhiteSolution">设置好布局后点击"开始游戏"显示解法</p>
+    </div>
+    
+    <div class="images-container">
+        <img src="https://keaido666.github.io/1/2.jpg" name="weixin" width="300">
+        <img src="https://keaido666.github.io/1/1.jpg" name="douyin" width="200">
+    </div>
+    <div>
+        <div id="image1" class="images-container2" >
+           <img src="https://keaido666.github.io/1/2.jpg" alt="微信" name="weixin" width="300">
+          <p> </p>
+        </div>
+        <div id="image2" class="images-container2">
+           <img src="https://keaido666.github.io/1/1.jpg" alt="抖音" name="weixin" width="300">
+          <p> </p>
+        </div>
+      
+    </div>
+    <!-- 背景音乐 -->
+    <audio id="bg-music" loop>        
+        <source src="https://yeyems.com/static/music/common_a1.mp3" type="audio/ogg">
+        <source src="https://yeyems.com/static/music/city_a1.mp3" type="audio/ogg">
+        <source src="https://yeyems.com/static/music/city_b1_jp.mp3" type="audio/ogg">        
+        <!-- 可以添加多个格式的音频源 -->
+        <!-- <source src="your-music-file.ogg" type="audio/ogg"> -->
+        您的浏览器不支持音频元素。
+    </audio>    
+    <script>   
+      document.addEventListener('DOMContentLoaded', function() {
+            // 获取所有按钮和图片容器
+            const buttons = document.querySelectorAll('.image-but');
+            const containers = document.querySelectorAll('.images-container2');
+            
+            // 为每个按钮添加点击事件
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const targetContainer = document.getElementById(targetId);
+                    
+                    // 如果当前图片已显示，则隐藏
+                    if (this.classList.contains('active')) {
+                        targetContainer.style.display = 'none';
+                        this.classList.remove('active');
+                        return;
+                    }
+                    
+                    // 隐藏所有图片和取消所有按钮激活状态
+                    containers.forEach(container => {
+                        container.style.display = 'none';
+                    });
+                    buttons.forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // 显示当前图片并激活按钮
+                    targetContainer.style.display = 'block';
+                    this.classList.add('active');
+                });
+            });
+            
+            // 为每个图片容器添加点击事件（点击图片隐藏）
+            containers.forEach(container => {
+                container.addEventListener('click', function() {
+                    this.style.display = 'none';
+                    const targetId = this.id;
+                    
+                    // 找到对应的按钮并取消激活状态
+                    buttons.forEach(button => {
+                        if (button.getAttribute('data-target') === targetId) {
+                            button.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        });
+        
+        // 更新音乐控制UI
+        function updateMusicUI() {
+            if (music.muted) {
+                musicIcon.className = 'fas fa-volume-mute';
+                musicText.textContent = '开启音乐';
+            } else {
+                musicIcon.className = 'fas fa-volume-up';
+                musicText.textContent = '关闭音乐';
+            }
+        }
+        
+        // 切换音乐状态
+        function toggleMusic() {
+            music.muted = !music.muted;
+            if (!music.muted && music.paused) {
+                music.play();
+            }
+            updateMusicUI();
+        }
+        
+        // 页面加载后尝试播放音乐
+        window.addEventListener('DOMContentLoaded', () => {
+            tryPlayMusic();
+        });
+        
+        // 点击页面任意位置尝试播放音乐（解决自动播放限制）
+        document.addEventListener('click', function() {
+            if (music.paused) {
+                music.play();
+            }
+            // 只执行一次
+            document.removeEventListener('click', arguments.callee);
+        });
+        
+        // 游戏逻辑
+        document.addEventListener('DOMContentLoaded', function() {
+            const board = document.getElementById('board');
+            const resetBtn = document.getElementById('reset');
+            const randomBtn = document.getElementById('random');
+            const editBtn = document.getElementById('edit');
+            const playBtn = document.getElementById('play');
+            const allBlackSolution = document.getElementById('allBlackSolution');
+            const allWhiteSolution = document.getElementById('allWhiteSolution');
+            
+            let cells = [];
+            let moves = [];
+            let currentState = Array(9).fill(0);
+            let isEditMode = true;
+            
+            function initializeBoard() {
+                board.innerHTML = '';
+                cells = [];
+                moves = [];
+                
+                for (let i = 0; i < 9; i++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell white';
+                    cell.dataset.index = i;
+                    
+                    const number = document.createElement('div');
+                    number.className = 'cell-number';
+                    number.textContent = i + 1;
+                    cell.appendChild(number);
+                    
+                    cell.addEventListener('mouseenter', function() {
+                        if (!isEditMode) {
+                            cell.classList.add('highlight-hover');
+                            getAdjacentCells(i).forEach(index => {
+                                cells[index].classList.add('highlight-adjacent');
+                            });
+                        }
+                    });
+                    
+                    cell.addEventListener('mouseleave', function() {
+                        if (!isEditMode) {
+                            cell.classList.remove('highlight-hover');
+                            getAdjacentCells(i).forEach(index => {
+                                cells[index].classList.remove('highlight-adjacent');
+                            });
+                        }
+                    });
+                    
+                    cell.addEventListener('click', function() {
+                        if (isEditMode) {
+                            toggleCell(i);
+                        } else {
+                            makeMove(i);
+                        }
+                    });
+                    
+                    board.appendChild(cell);
+                    cells.push(cell);
+                }
+                
+                currentState = Array(9).fill(0);
+                updateSolution();
+            }
+            
+            function randomizeBoard() {
+                moves = [];
+                for (let i = 0; i < 9; i++) {
+                    const randomState = Math.random() > 0.5 ? 1 : 0;
+                    currentState[i] = randomState;
+                    cells[i].className = randomState ? 'cell black' : 'cell white';
+                }
+                updateSolution();
+            }
+            
+            function makeMove(index) {
+                if (isEditMode) return;
+                
+                toggleCell(index);
+                getAdjacentCells(index).forEach(i => toggleCell(i));
+                
+                moves.push(index + 1);
+                checkWinCondition();
+                updateSolution();
+            }
+            
+            function toggleCell(index) {
+                currentState[index] = currentState[index] ? 0 : 1;
+                cells[index].className = currentState[index] ? 'cell black' : 'cell white';
+            }
+            
+            function getAdjacentCells(index) {
+                const adjacent = [];
+                const row = Math.floor(index / 3);
+                const col = index % 3;
+                
+                if (row > 0) adjacent.push(index - 3);
+                if (row < 2) adjacent.push(index + 3);
+                if (col > 0) adjacent.push(index - 1);
+                if (col < 2) adjacent.push(index + 1);
+                
+                return adjacent;
+            }
+            
+            function checkWinCondition() {
+                const allBlack = currentState.every(cell => cell === 1);
+                const allWhite = currentState.every(cell => cell === 0);
+                
+                if (allBlack) {
+                    setTimeout(() => alert('恭喜！你已将所有格子变为黑色！'), 100);
+                } else if (allWhite) {
+                    setTimeout(() => alert('恭喜！你已将所有格子变为白色！'), 100);
+                }
+            }
+            
+            function enterEditMode() {
+                isEditMode = true;
+                editBtn.classList.add('active-mode');
+                playBtn.classList.remove('active-mode');
+                allBlackSolution.textContent = '设置好布局后点击"开始游戏"显示解法';
+                allWhiteSolution.textContent = '设置好布局后点击"开始游戏"显示解法';
+                
+                cells.forEach(cell => {
+                    cell.classList.remove('highlight-hover', 'highlight-adjacent');
+                });
+            }
+            
+            function exitEditMode() {
+                isEditMode = false;
+                editBtn.classList.remove('active-mode');
+                playBtn.classList.add('active-mode');
+                updateSolution();
+            }
+            
+            function calculateSolutions() {
+                const initialState = currentState.join('');
+                const blackSolution = bfs(initialState, '111111111');
+                const whiteSolution = bfs(initialState, '000000000');
+                
+                return {
+                    black: blackSolution,
+                    white: whiteSolution
+                };
+            }
+            
+            function bfs(start, target) {
+                const queue = [{ state: start, path: [] }];
+                const visited = new Set();
+                visited.add(start);
+                
+                while (queue.length > 0) {
+                    const current = queue.shift();
+                    
+                    if (current.state === target) {
+                        return current.path;
+                    }
+                    
+                    for (let i = 0; i < 9; i++) {
+                        const newState = applyMove(current.state, i);
+                        if (!visited.has(newState)) {
+                            visited.add(newState);
+                            queue.push({
+                                state: newState,
+                                path: [...current.path, i]
+                            });
+                        }
+                    }
+                }
+                
+                return [];
+            }
+            
+            function applyMove(state, position) {
+                const newState = state.split('');
+                newState[position] = newState[position] === '0' ? '1' : '0';
+                const adjacent = getAdjacentCells(position);
+                adjacent.forEach(i => {
+                    newState[i] = newState[i] === '0' ? '1' : '0';
+                });
+                return newState.join('');
+            }
+            
+            function updateSolution() {
+                if (isEditMode) return;
+                
+                const solutions = calculateSolutions();
+                allBlackSolution.textContent = solutions.black.length > 0 
+                    ? '全黑解法: 按顺序点击 ' + solutions.black.map(pos => pos + 1).join(' → ') 
+                    : '已经是全黑状态';
+                allWhiteSolution.textContent = solutions.white.length > 0 
+                    ? '全白解法: 按顺序点击 ' + solutions.white.map(pos => pos + 1).join(' → ') 
+                    : '已经是全白状态';
+            }
+            
+            resetBtn.addEventListener('click', () => {
+                initializeBoard();
+                enterEditMode();
+            });
+            
+            randomBtn.addEventListener('click', randomizeBoard);
+            editBtn.addEventListener('click', enterEditMode);
+            playBtn.addEventListener('click', exitEditMode);
+            
+            initializeBoard();
+            enterEditMode();
+        });
+
+    </script>
+</body>
+</html>
