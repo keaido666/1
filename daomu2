@@ -312,6 +312,10 @@
            <img src="https://keaido666.github.io/1/1.jpg" alt="抖音" name="weixin" width="300">
           <p> </p>
         </div>
+      <div id="image3" class="images-container2">
+           <img src="https://keaido666.github.io/1/dmad.png" alt="抖音" name="weixin" width="300">
+          <p> </p>
+        </div>
       
     </div>
     <!-- 背景音乐 -->
