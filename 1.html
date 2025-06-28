@@ -376,6 +376,30 @@
             });
         });
         
+        // 音乐控制功能
+        const music = document.getElementById('bg-music');
+        const musicIcon = document.getElementById('music-icon');
+        const musicText = document.getElementById('music-text');
+        
+        // 尝试播放音乐（可能被浏览器阻止）
+        function tryPlayMusic() {
+            music.volume = 0.5; // 设置音量（0-1）
+            const promise = music.play();
+            
+            if (promise !== undefined) {
+                promise.then(_ => {
+                    // 自动播放成功
+                    music.muted = false;
+                    updateMusicUI();
+                }).catch(error => {
+                    // 自动播放被阻止
+                    console.log('自动播放被阻止，需要用户交互');
+                    music.muted = true;
+                    updateMusicUI();
+                });
+            }
+        }
+        
         // 更新音乐控制UI
         function updateMusicUI() {
             if (music.muted) {
