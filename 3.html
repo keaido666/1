@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>完美国际2东路魂器计算器 可爱多天禹</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>LA.init({id:"3MdOX17VFgXw8u7Y",ck:"3MdOX17VFgXw8u7Y"})</script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 配置Tailwind自定义颜色和字体 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB',
+                        secondary: '#4F46E5',
+                        accent: '#F59E0B',
+                        neutral: '#F8FAFC'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .card-elevation {
+                box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+            }
+            .input-focus {
+                @apply focus:ring-2 focus:ring-primary/40 focus:border-primary focus:outline-none;
+            }
+            .swap-animation {
+                animation: swap 0.6s ease-in-out;
+            }
+            @keyframes swap {
+                0% { transform: rotate(0deg); }
+                50% { transform: rotate(180deg) scale(1.1); }
+                100% { transform: rotate(360deg); }
+            }
+            .value-animation {
+                animation: valueChange 0.4s ease-out;
+            }
+            @keyframes valueChange {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
+            }
+        }
+
+    
+      
+       /* 浮动按钮样式 */
+        .floating-buttons {
+            position: fixed;
+            top: 10px;
+            left: 0px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+            border-radius: 0 10% 10% 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .floating-btn {            
+            border-radius: 10%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            writing-mode:vertical-rl;
+            padding:10px 10px 10px 5px; 
+            text-decoration:none;
+        }
+        
+        .floating-btn:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+        
+        .floating-btn i {
+            pointer-events: none;
+        }
+        
+        h1 {
+            margin: 5px 0;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+      
+       #music-control {            
+            
+        }
+        
+        #music-control:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+        
+        .floating-buttons i,.image-but {
+            font-size: 16px;
+            padding: 10px 0 10px 0;
+            color: white;            
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            z-index: 1000;
+            transition: all 0.3s;
+            background:none;
+            border:0;
+        }
+      
+      @font-face {
+  font-family: 'iconfont';  /* Project id 1764074 */
+  src: url('//at.alicdn.com/t/c/font_1764074_4344pxe5pa4.woff2?t=1751082178752') format('woff2'),
+       url('//at.alicdn.com/t/c/font_1764074_4344pxe5pa4.woff?t=1751082178752') format('woff'),
+       url('//at.alicdn.com/t/c/font_1764074_4344pxe5pa4.ttf?t=1751082178752') format('truetype');
+}
+      .iconfont{
+    font-family:"iconfont" !important;
+    font-size:16px;font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;}
+      /* 浮动按钮样式 */
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-50 min-h-screen font-inter text-gray-800 flex flex-col">
+    <!-- 顶部导航 -->
+    <header class="bg-white/80 backdrop-blur-sm shadow-sm py-4 px-6 sticky top-0 z-10 transition-all duration-300">
+        <div class="container mx-auto flex justify-between items-center ">
+            <h1 class="text-[clamp(1.4rem,3vw,1.8rem)] font-bold text-primary flex items-center">
+                <i class="fa fa-calculator mr-3 text-primary/90"></i>
+                <span>东路魂器计算器</span>
+            </h1>
+            <div class="bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium flex items-center">
+                <i class="fa fa-percent mr-1.5"></i>
+                <span>税率: 8%</span>
+            </div>
+        </div>
+    </header>
+    <!-- 浮动按钮 -->
+    <div id="leftnav" class="floating-buttons">
+        <a class="floating-btn" title="鬼王八卦" href="https://keaido666.github.io/1/1.html">
+            盗墓黑白棋
+        </a>
+        <a class="floating-btn" title="鬼王八卦" href="https://keaido666.github.io/1/2.html">
+            鬼王八卦
+        </a>
+      <!-- 音乐控制按钮 -->
+       <div class="" id="music-control" onclick="toggleMusic()">
+        <i id="music-icon" class="fas fa-volume-up "></i>
+       </div>
+      <!-- 微信 -->
+      <button class="image-but iconfont floating-btn" data-target="image1">&#xe600;</button>
+      <!-- 抖音 -->
+      <button class="image-but iconfont floating-btn" data-target="image2">&#xe8db;</button>
+      <button class="image-but iconfont floating-btn" data-target="image3">微信扫码收藏</button>
+    </div>
+ 
+    <!-- 主要内容 -->
+    <main class="flex-grow container mx-auto px-4 py-8 md:py-16">
+        <div class="max-w-md mx-auto">
+            <div class="bg-white rounded-2xl p-5 mb-6 card-elevation transform transition-all duration-300 hover:shadow-lg">
+                <h2 class="text-lg font-semibold mb-2 flex items-center text-gray-700">
+                    <i class="iconfont text-primary mr-2">&#xe8db;</i>
+                    抖音：可爱多【天禹】
+                </h2>
+            </div>
+            <!-- 介绍卡片 -->
+            <div class="bg-white rounded-2xl p-5 mb-6 card-elevation transform transition-all duration-300 hover:shadow-lg">
+                <h2 class="text-lg font-semibold mb-2 flex items-center text-gray-700">
+                    <i class="fa fa-info-circle text-primary mr-2"></i>
+                    东路魂器计算器说明
+                </h2>
+                <p class="text-gray-600 text-sm">本计算器用于含税价格与不含税价格之间的相互换算，税率固定为8%。</p>
+                <p class="text-gray-600 text-sm mt-1">计算公式: <span class="font-medium text-primary">物品售价 = 不含税价格 × 1.08</span></p>
+            </div>
+            
+            <!-- 计算器卡片 -->
+            <div class="bg-white rounded-2xl p-6 md:p-7 card-elevation transform transition-all duration-300 hover:shadow-lg">
+                <form id="calculatorForm" class="space-y-6">
+                    <!-- 价格输入容器 -->
+                    <div class="space-y-6" id="priceContainer">
+                        <!-- 含税价格输入 (默认在上方) -->
+                        <div class="price-input-group space-y-2" data-type="including">
+                            <label class="block text-sm font-medium text-gray-700 flex items-center">
+                                <i class="fa fa-shopping-bag text-primary mr-2"></i>
+                                物品售价 (含税)
+                            </label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-500">¥</span>
+                                <input 
+                                    type="number" 
+                                    id="includingTax" 
+                                    class="w-full pl-10 pr-4 py-3.5 border border-gray-300 rounded-xl input-focus transition-all duration-200 bg-neutral"
+                                    placeholder="输入含税售价"
+                                    step="0.01"
+                                    min="0"
+                                >
+                            </div>
+                        </div>
+                        
+                        <!-- 转换控制器 -->
+                        <div class="flex justify-center">
+                            <button 
+                                type="button" 
+                                id="swapButton" 
+                                class="bg-primary/10 hover:bg-primary/20 text-primary p-3 rounded-full transition-all duration-300 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                                aria-label="交换价格位置"
+                            >
+                                <i class="fa fa-exchange text-xl"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- 不含税价格输入 (默认在下方) -->
+                        <div class="price-input-group space-y-2" data-type="excluding">
+                            <label class="block text-sm font-medium text-gray-700 flex items-center">
+                                <i class="fa fa-tag text-secondary mr-2"></i>
+                                不含税价格
+                            </label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-500">¥</span>
+                                <input 
+                                    type="number" 
+                                    id="excludingTax" 
+                                    class="w-full pl-10 pr-4 py-3.5 border border-gray-300 rounded-xl input-focus transition-all duration-200 bg-neutral"
+                                    placeholder="输入不含税价格"
+                                    step="0.01"
+                                    min="0"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 税额显示 -->
+                    <div class="pt-2">
+                        <div class="bg-neutral rounded-xl p-4 border border-gray-100">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600 flex items-center">
+                                    <i class="fa fa-percent text-accent mr-2"></i>税额
+                                </span>
+                                <span id="taxAmount" class="font-semibold text-accent text-lg">¥0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 操作按钮 -->
+                    <div class="pt-3 grid grid-cols-2 gap-4">
+                        <button 
+                            type="button" 
+                            id="resetButton" 
+                            class="bg-gray-100 hover:bg-gray-200 text-gray-700 py-3.5 px-4 rounded-xl transition-all duration-200 flex items-center justify-center font-medium"
+                        >
+                            <i class="fa fa-refresh mr-2"></i>
+                            重置
+                        </button>
+                        <button 
+                            type="button" 
+                            id="copyButton" 
+                            class="bg-primary hover:bg-primary/90 text-white py-3.5 px-4 rounded-xl transition-all duration-200 flex items-center justify-center font-medium shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30"
+                        >
+                            <i class="fa fa-copy mr-2"></i>
+                            复制结果
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- 计算历史 -->
+            <div class="bg-white rounded-2xl p-5 mt-6 card-elevation">
+                <h3 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
+                    <i class="fa fa-history text-gray-500 mr-2"></i>
+                    最近计算
+                </h3>
+                <div id="historyContainer" class="space-y-2 max-h-40 overflow-y-auto pr-1 text-sm">
+                    <p class="text-gray-500 italic text-center text-sm">暂无计算记录</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-white/80 backdrop-blur-sm py-5 px-6 border-t border-gray-100 mt-8">
+        <div class="container mx-auto text-center text-gray-500 text-sm">
+            <p>物品价格计算器 | 税率固定为8%</p>
+        </div>
+    </footer>
+
+    <!-- 通知提示 -->
+    <div id="notification" class="fixed bottom-5 right-5 bg-gray-800 text-white px-4 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 flex items-center">
+        <i class="fa fa-check-circle mr-2 text-green-400"></i>
+        <span id="notificationText">操作成功</span>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const excludingTaxInput = document.getElementById('excludingTax');
+        const includingTaxInput = document.getElementById('includingTax');
+        const taxAmountElement = document.getElementById('taxAmount');
+        const swapButton = document.getElementById('swapButton');
+        const resetButton = document.getElementById('resetButton');
+        const copyButton = document.getElementById('copyButton');
+        const priceContainer = document.getElementById('priceContainer');
+        const historyContainer = document.getElementById('historyContainer');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
+        
+        // 税率
+        const TAX_RATE = 0.08;
+        // 计算历史记录
+        let calculationHistory = [];
+        
+        // 显示通知
+        function showNotification(message) {
+            notificationText.textContent = message;
+            notification.classList.remove('translate-y-20', 'opacity-0');
+            notification.classList.add('translate-y-0', 'opacity-100');
+            
+            setTimeout(() => {
+                notification.classList.remove('translate-y-0', 'opacity-100');
+                notification.classList.add('translate-y-20', 'opacity-0');
+            }, 2000);
+        }
+        
+        // 格式化金额为两位小数
+        function formatCurrency(amount) {
+            return '¥' + parseFloat(amount).toFixed(2);
+        }
+        
+        // 从不含税价格计算含税价格
+        function calculateIncludingTax(excludingTax) {
+            const tax = excludingTax * TAX_RATE;
+            const includingTax = excludingTax + tax;
+            return { includingTax, tax };
+        }
+        
+        // 从含税价格计算不含税价格
+        function calculateExcludingTax(includingTax) {
+            const excludingTax = includingTax / (1 + TAX_RATE);
+            const tax = includingTax - excludingTax;
+            return { excludingTax, tax };
+        }
+        
+        // 更新税额显示
+        function updateTaxDisplay(tax) {
+            taxAmountElement.textContent = formatCurrency(tax);
+            taxAmountElement.classList.add('value-animation');
+            setTimeout(() => {
+                taxAmountElement.classList.remove('value-animation');
+            }, 400);
+        }
+        
+        // 添加到计算历史
+        function addToHistory(including, excluding, tax) {
+            const date = new Date();
+            const timeString = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+            
+            const historyItem = {
+                including: formatCurrency(including),
+                excluding: formatCurrency(excluding),
+                tax: formatCurrency(tax),
+                time: timeString
+            };
+            
+            calculationHistory.unshift(historyItem);
+            // 限制历史记录数量
+            if (calculationHistory.length > 5) {
+                calculationHistory.pop();
+            }
+            
+            renderHistory();
+        }
+        
+        // 渲染历史记录
+        function renderHistory() {
+            if (calculationHistory.length === 0) {
+                historyContainer.innerHTML = '<p class="text-gray-500 italic text-center text-sm">暂无计算记录</p>';
+                return;
+            }
+            
+            historyContainer.innerHTML = '';
+            calculationHistory.forEach(item => {
+                const historyElement = document.createElement('div');
+                historyElement.className = 'p-2.5 bg-neutral rounded-lg border border-gray-100';
+                historyElement.innerHTML = `
+                    <div class="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>${item.time}</span>
+                        <span class="text-accent">税: ${item.tax}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-primary">${item.including}</span>
+                        <span class="text-secondary">${item.excluding}</span>
+                    </div>
+                `;
+                historyContainer.appendChild(historyElement);
+            });
+        }
+        
+        // 当含税价格变化时
+        includingTaxInput.addEventListener('input', function() {
+            const value = parseFloat(this.value) || 0;
+            if (!isNaN(value) && value >= 0) {
+                const { excludingTax, tax } = calculateExcludingTax(value);
+                // 防止循环触发
+                excludingTaxInput.removeEventListener('input', excludingTaxInputHandler);
+                excludingTaxInput.value = excludingTax.toFixed(2);
+                excludingTaxInput.addEventListener('input', excludingTaxInputHandler);
+                
+                updateTaxDisplay(tax);
+                this.classList.add('border-primary/70');
+                
+                // 添加到历史记录
+                if (value > 0) {
+                    addToHistory(value, excludingTax, tax);
+                }
+                
+                setTimeout(() => {
+                    this.classList.remove('border-primary/70');
+                }, 300);
+            }
+        });
+        
+        // 当不含税价格变化时
+        function excludingTaxInputHandler() {
+            const value = parseFloat(this.value) || 0;
+            if (!isNaN(value) && value >= 0) {
+                const { includingTax, tax } = calculateIncludingTax(value);
+                // 防止循环触发
+                includingTaxInput.removeEventListener('input', includingTaxInputHandler);
+                includingTaxInput.value = includingTax.toFixed(2);
+                includingTaxInput.addEventListener('input', includingTaxInputHandler);
+                
+                updateTaxDisplay(tax);
+                this.classList.add('border-secondary/70');
+                
+                // 添加到历史记录
+                if (value > 0) {
+                    addToHistory(includingTax, value, tax);
+                }
+                
+                setTimeout(() => {
+                    this.classList.remove('border-secondary/70');
+                }, 300);
+            }
+        }
+        
+        // 保存事件处理函数引用，便于移除和重新添加
+        const includingTaxInputHandler = includingTaxInput.oninput;
+        excludingTaxInput.addEventListener('input', excludingTaxInputHandler);
+        
+        // 交换按钮 - 交换两个输入框的位置和值
+        swapButton.addEventListener('click', function() {
+            // 添加交换动画
+            this.classList.add('swap-animation');
+            setTimeout(() => {
+                this.classList.remove('swap-animation');
+            }, 600);
+            
+            // 获取两个价格输入组
+            const inputGroups = priceContainer.querySelectorAll('.price-input-group');
+            const firstGroup = inputGroups[0];
+            const secondGroup = inputGroups[1];
+            
+            // 交换DOM位置
+            priceContainer.insertBefore(secondGroup, firstGroup);
+            
+            // 交换值
+            const tempValue = includingTaxInput.value;
+            includingTaxInput.value = excludingTaxInput.value;
+            excludingTaxInput.value = tempValue;
+            
+            // 触发计算（如果有值）
+            if (includingTaxInput.value) {
+                includingTaxInput.dispatchEvent(new Event('input'));
+            } else if (excludingTaxInput.value) {
+                excludingTaxInput.dispatchEvent(new Event('input'));
+            }
+            
+            showNotification('已交换价格位置');
+        });
+        
+        // 重置按钮
+        resetButton.addEventListener('click', function() {
+            // 添加按钮点击动画
+            this.classList.add('bg-gray-200');
+            setTimeout(() => {
+                this.classList.remove('bg-gray-200');
+            }, 200);
+            
+            // 清空输入
+            includingTaxInput.value = '';
+            excludingTaxInput.value = '';
+            taxAmountElement.textContent = '¥0.00';
+            
+            showNotification('已重置计算');
+        });
+        
+        // 复制结果按钮
+        copyButton.addEventListener('click', function() {
+            const including = includingTaxInput.value ? `含税价格: ¥${includingTaxInput.value}` : '';
+            const excluding = excludingTaxInput.value ? `不含税价格: ¥${excludingTaxInput.value}` : '';
+            const tax = taxAmountElement.textContent !== '¥0.00' ? `税额: ${taxAmountElement.textContent}` : '';
+            
+            if (including || excluding || tax) {
+                const textToCopy = [including, excluding, tax].filter(item => item).join('\n');
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    // 按钮动画
+                    this.classList.add('bg-green-600');
+                    setTimeout(() => {
+                        this.classList.remove('bg-green-600');
+                    }, 300);
+                    
+                    showNotification('计算结果已复制');
+                });
+            } else {
+                showNotification('没有可复制的结果');
+            }
+        });
+        
+        // 添加输入框获取焦点时的效果
+        [excludingTaxInput, includingTaxInput].forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('ring-1', 'ring-primary/20');
+                this.classList.add('bg-white');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('ring-1', 'ring-primary/20');
+                if (!this.value) {
+                    this.classList.remove('bg-white');
+                }
+            });
+        });
+        
+        // 初始化历史记录
+        renderHistory();
+    </script>
+</body>
+</html>
