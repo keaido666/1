@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>四年级口算挑战模式</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 全局样式重置 + 字体统一（和原有页面保持一致） */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        .answer-input {
+            -webkit-user-select: auto;
+            user-select: auto;
+        }
+
+        body {
+            background-color: #fef7ff;
+            background-image: 
+                radial-gradient(#ffd166 5px, transparent 5px),
+                radial-gradient(#ffd166 5px, transparent 5px);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            padding-bottom: 100px;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+        }
+        .header {
+            text-align: center;
+            background-color: #ff8fab;
+            color: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(255,143,171,0.3);
+            margin-bottom: 20px;
+            position: relative; /* 新增：用于定位普通模式按钮 */
+        }
+        /* 新增：普通模式跳转按钮样式 */
+        .normal-mode-btn {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255,255,255,0.8);
+            color: #ff8fab;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        .normal-mode-btn:hover {
+            background-color: white;
+            transform: translateY(-50%) scale(1.05);
+        }
+        .header h1 {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .header p {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+        }
+
+        /* 挑战设置区域（和原有设置区风格统一） */
+        .settings-area {
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .setting-group {
+            margin-bottom: 15px;
+        }
+        .setting-title {
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            color: #2b2d42;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .option-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .option-btn {
+            background-color: #f8edeb;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 80px;
+        }
+        .option-btn.active {
+            background-color: #06d6a0;
+            color: white;
+            border-color: #06d6a0;
+        }
+        .option-btn:hover {
+            transform: translateY(-2px);
+        }
+        .start-btn {
+            background-color: #ffd166;
+            color: #2b2d42;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            cursor: pointer;
+            display: block;
+            margin: 10px auto 0;
+            box-shadow: 0 3px 10px rgba(255,209,102,0.3);
+            transition: all 0.3s;
+        }
+        .start-btn:hover {
+            background-color: #ffc107;
+            transform: translateY(-2px);
+        }
+
+        /* 挑战进度区域（新增） */
+        .progress-area {
+            background-color: #83c5be;
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(131,197,190,0.3);
+            display: none;
+        }
+        .progress-number {
+            color: #ffd166;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: bold;
+        }
+
+        /* 单题展示区域（适配挑战模式，每次只显示一题） */
+        .question-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            display: none;
+        }
+        .question-text {
+            font-size: clamp(1.5rem, 5vw, 2rem);
+            color: #2b2d42;
+            text-align: center;
+        }
+        .answer-input {
+            width: clamp(120px, 25vw, 180px);
+            height: 60px;
+            border: 3px solid #ddd;
+            border-radius: 10px;
+            text-align: center;
+            font-size: clamp(1.5rem, 5vw, 2rem);
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .answer-input:focus {
+            border-color: #06d6a0;
+        }
+        /* 统一按钮样式（提交/重新挑战） */
+        .action-btn {
+            background-color: #118ab2;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 40px;
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(17,138,178,0.3);
+            transition: all 0.3s;
+            min-width: 180px;
+        }
+        .action-btn:hover {
+            background-color: #073b4c;
+            transform: translateY(-2px);
+        }
+        /* 重新挑战按钮特殊样式 */
+        .retry-btn {
+            background-color: #ffd166;
+            color: #2b2d42;
+            box-shadow: 0 5px 15px rgba(255,209,102,0.3);
+        }
+        .retry-btn:hover {
+            background-color: #ffc107;
+        }
+
+        /* 挑战结果展示区 */
+        .result-area {
+            background-color: #fff;
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none;
+            width: 100%;
+            text-align: center;
+        }
+        .result-title {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            margin-bottom: 20px;
+            color: #ff8fab;
+        }
+        .comment-box {
+            background-color: #f8edeb;
+            border-radius: 15px;
+            padding: 20px;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            text-align: center;
+            color: #2b2d42;
+            margin-bottom: 20px;
+        }
+        .reset-btn {
+            background-color: #ffd166;
+            color: #2b2d42;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 3px 10px rgba(255,209,102,0.3);
+            transition: all 0.3s;
+            min-width: 180px;
+        }
+        .reset-btn:hover {
+            background-color: #ffc107;
+            transform: translateY(-2px);
+        }
+
+        /* 反馈提示样式（正确/错误） */
+        .feedback {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            margin-bottom: 15px;
+            min-height: 4rem; /* 增加最小高度，防止布局跳动 */
+            line-height: 1.5; /* 多行文字行高 */
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            width: 100%;
+        }
+        .correct-feedback {
+            color: #06d6a0;
+            background-color: rgba(6,214,160,0.05);
+        }
+        .error-feedback {
+            color: #ef476f;
+            background-color: rgba(239,71,111,0.05);
+        }
+
+        /* 多终端适配（和原有页面保持一致） */
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            .header {
+                padding: 15px 15px 15px 70px; /* 适配左侧按钮 */
+            }
+            .normal-mode-btn {
+                left: 10px;
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+            .settings-area {
+                padding: 15px;
+            }
+            .option-group {
+                gap: 10px;
+            }
+            .option-btn {
+                padding: 8px 15px;
+                min-width: 70px;
+            }
+            .question-card {
+                padding: 20px 15px;
+                gap: 15px;
+            }
+            .answer-input {
+                height: 50px;
+            }
+            .result-area {
+                padding: 20px;
+            }
+            .feedback {
+                min-height: 5rem; /* 手机端增加最小高度 */
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .container {
+                max-width: 700px;
+                padding: 25px;
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .container {
+                max-width: 800px;
+            }
+            .question-card:hover {
+                box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            }
+        }
+
+        @media (orientation: landscape) and (max-height: 500px) {
+            body {
+                padding-bottom: 80px;
+            }
+            .header {
+                padding: 15px 15px 15px 70px;
+                margin-bottom: 15px;
+            }
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            .settings-area {
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            .progress-area {
+                padding: 10px;
+                margin-bottom: 15px;
+            }
+            .question-card {
+                padding: 15px;
+                margin-bottom: 10px;
+            }
+            .answer-input {
+                height: 45px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 页面头部（增加普通模式按钮） -->
+        <div class="header">
+            <!-- 新增：普通模式跳转按钮 -->
+            <button class="normal-mode-btn" onclick="window.location.href='https://keaido666.github.io/1/x4.html'">
+                ← 普通模式
+            </button>
+            <h1>🏆 四年级口算挑战模式 🏆</h1>
+            <p>连续答对指定数量题目即为挑战成功！</p>
+        </div>
+
+        <!-- 挑战设置区域 -->
+        <div class="settings-area" id="settings-area">
+            <div class="setting-group">
+                <div class="setting-title">🎯 选择挑战数量</div>
+                <div class="option-group" id="challenge-options">
+                    <button class="option-btn" data-count="15">15题</button>
+                    <button class="option-btn active" data-count="20">20题</button>
+                    <button class="option-btn" data-count="25">25题</button>
+                    <button class="option-btn" data-count="30">30题</button>
+                </div>
+            </div>
+            <button class="start-btn" id="start-btn">开始挑战 🚀</button>
+        </div>
+
+        <!-- 挑战进度区域 -->
+        <div class="progress-area" id="progress-area">
+            当前连续正确：<span class="progress-number" id="current-correct">0</span> / 
+            <span id="target-count">20</span>（目标）
+        </div>
+
+        <!-- 单题展示区域 -->
+        <div class="question-card" id="question-card">
+            <div class="feedback" id="feedback"></div>
+            <div class="question-text" id="current-question"></div>
+            <input type="text" class="answer-input" id="single-answer-input" placeholder="输入答案">
+            <!-- 修改：统一按钮ID，动态切换样式和文本 -->
+            <button class="action-btn" id="action-btn">提交本题 ✨</button>
+        </div>
+
+        <!-- 挑战结果展示区 -->
+        <div class="result-area" id="result-area">
+            <div class="result-title" id="result-title">🎉 挑战成功！</div>
+            <div class="comment-box" id="result-comment"></div>
+            <button class="reset-btn" id="reset-btn">重新挑战 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let targetChallengeCount = 20; // 默认挑战目标数量
+        let currentCorrectCount = 0;    // 当前连续正确数
+        let currentQuestion = '';       // 当前题目
+        let currentAnswer = '';         // 当前题正确答案
+        let isChallenging = false;      // 是否正在挑战中
+        let isErrorState = false;       // 是否处于错误提示状态
+
+        // 初始化页面
+        window.onload = function() {
+            bindSettingEvents();  // 绑定挑战数量选择事件
+            bindStartEvent();     // 绑定开始挑战事件
+            bindResetEvent();     // 绑定重新挑战事件
+            bindActionBtnEvent(); // 绑定操作按钮事件（提交/重新挑战）
+            
+            // 输入框交互：聚焦时清除错误提示
+            document.getElementById('single-answer-input').addEventListener('focus', function() {
+                if (isErrorState) {
+                    document.getElementById('feedback').textContent = '';
+                    document.getElementById('feedback').className = 'feedback';
+                    isErrorState = false;
+                    // 恢复提交按钮样式
+                    resetActionBtn();
+                }
+            });
+            
+            // 输入框回车提交（提升体验）
+            document.getElementById('single-answer-input').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && isChallenging && !isErrorState) {
+                    document.getElementById('action-btn').click();
+                    e.preventDefault();
+                }
+            });
+        };
+
+        // 绑定挑战数量选择事件
+        function bindSettingEvents() {
+            const challengeBtns = document.querySelectorAll('#challenge-options .option-btn');
+            challengeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    challengeBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    targetChallengeCount = parseInt(this.dataset.count);
+                    document.getElementById('target-count').textContent = targetChallengeCount;
+                });
+            });
+        }
+
+        // 绑定开始挑战事件
+        function bindStartEvent() {
+            document.getElementById('start-btn').addEventListener('click', function() {
+                // 初始化挑战状态
+                isChallenging = true;
+                isErrorState = false;
+                currentCorrectCount = 0;
+                
+                // 更新UI
+                document.getElementById('settings-area').style.display = 'none';
+                document.getElementById('progress-area').style.display = 'block';
+                document.getElementById('question-card').style.display = 'flex';
+                document.getElementById('feedback').textContent = '';
+                document.getElementById('feedback').className = 'feedback';
+                document.getElementById('current-correct').textContent = '0';
+                
+                // 恢复提交按钮样式
+                resetActionBtn();
+                
+                // 生成第一道题
+                generateSingleQuestion();
+                
+                // 聚焦输入框
+                document.getElementById('single-answer-input').focus();
+                
+                // 滚动到题目区域
+                document.getElementById('question-card').scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+
+        // 生成单题（四年级下册难度，和原有中等难度一致）
+        function generateSingleQuestion() {
+            let question, answer;
+            const type = Math.floor(Math.random() * 4); // 随机选择题目类型
+
+            switch (type) {
+                case 0: // 两位数乘一位数 (10-99 × 1-9)
+                    const num1 = Math.floor(Math.random() * 90) + 10;
+                    const num2 = Math.floor(Math.random() * 9) + 1;
+                    question = `${num1} × ${num2} =`;
+                    answer = (num1 * num2).toString();
+                    break;
+                case 1: // 除数是一位数的除法 (结果为整数，被除数10-999)
+                    let divisor, dividend;
+                    do {
+                        divisor = Math.floor(Math.random() * 9) + 1;
+                        const quotient = Math.floor(Math.random() * 100) + 10;
+                        dividend = divisor * quotient;
+                    } while (dividend > 999);
+                    question = `${dividend} ÷ ${divisor} =`;
+                    answer = (dividend / divisor).toString();
+                    break;
+                case 2: // 小数加减法 (1位小数，0.1-99.9)
+                    const num3 = (Math.floor(Math.random() * 999) + 1) / 10;
+                    const num4 = (Math.floor(Math.random() * 999) + 1) / 10;
+                    const op = Math.random() > 0.5 ? '+' : '-';
+                    // 减法确保结果为正数
+                    question = op === '+' 
+                        ? `${num3.toFixed(1)} + ${num4.toFixed(1)} =` 
+                        : num3 >= num4 
+                            ? `${num3.toFixed(1)} - ${num4.toFixed(1)} =` 
+                            : `${num4.toFixed(1)} - ${num3.toFixed(1)} =`;
+                    answer = op === '+' 
+                        ? (num3 + num4).toFixed(1) 
+                        : num3 >= num4 
+                            ? (num3 - num4).toFixed(1) 
+                            : (num4 - num3).toFixed(1);
+                    // 处理末尾的.0，如5.0转为5
+                    if (answer.endsWith('.0')) {
+                        answer = answer.replace('.0', '');
+                    }
+                    break;
+                case 3: // 整十数乘两位数 (10-90 × 10-99)
+                    const num5 = Math.floor(Math.random() * 9) * 10;
+                    const num6 = Math.floor(Math.random() * 90) + 10;
+                    question = `${num5} × ${num6} =`;
+                    answer = (num5 * num6).toString();
+                    break;
+            }
+
+            // 保存当前题目和答案
+            currentQuestion = question;
+            currentAnswer = answer;
+            
+            // 更新UI显示题目
+            document.getElementById('current-question').textContent = question;
+            // 清空输入框
+            document.getElementById('single-answer-input').value = '';
+        }
+
+        // 重置操作按钮为提交状态
+        function resetActionBtn() {
+            const btn = document.getElementById('action-btn');
+            btn.textContent = '提交本题 ✨';
+            btn.className = 'action-btn'; // 移除retry-btn类
+        }
+
+        // 切换操作按钮为重新挑战状态
+        function switchToRetryBtn() {
+            const btn = document.getElementById('action-btn');
+            btn.textContent = '重新挑战 🔄';
+            btn.className = 'action-btn retry-btn'; // 添加retry-btn类
+        }
+
+        // 绑定操作按钮事件（提交/重新挑战）
+        function bindActionBtnEvent() {
+            document.getElementById('action-btn').addEventListener('click', function() {
+                if (!isChallenging) return;
+
+                // 如果处于错误状态 - 重新开始挑战
+                if (isErrorState) {
+                    // 重置状态
+                    isErrorState = false;
+                    currentCorrectCount = 0;
+                    document.getElementById('current-correct').textContent = '0';
+                    
+                    // 清除提示
+                    document.getElementById('feedback').textContent = '';
+                    document.getElementById('feedback').className = 'feedback';
+                    
+                    // 恢复提交按钮
+                    resetActionBtn();
+                    
+                    // 生成新题
+                    generateSingleQuestion();
+                    document.getElementById('single-answer-input').focus();
+                    return;
+                }
+
+                // 获取用户答案
+                const userAnswer = document.getElementById('single-answer-input').value.trim();
+                if (!userAnswer) {
+                    // 空答案提示（显示在页面）
+                    document.getElementById('feedback').textContent = '😯 请输入答案后再提交哦！';
+                    document.getElementById('feedback').className = 'feedback error-feedback';
+                    document.getElementById('single-answer-input').focus();
+                    return;
+                }
+
+                // 验证答案
+                if (userAnswer === currentAnswer) {
+                    // 答案正确
+                    currentCorrectCount++;
+                    document.getElementById('feedback').textContent = '✅ 回答正确！继续加油～';
+                    document.getElementById('feedback').className = 'feedback correct-feedback';
+                    document.getElementById('current-correct').textContent = currentCorrectCount;
+
+                    // 检查是否挑战成功
+                    if (currentCorrectCount === targetChallengeCount) {
+                        challengeSuccess();
+                        return;
+                    }
+
+                    // 生成下一题（延迟500ms，让用户看到正确反馈）
+                    setTimeout(() => {
+                        document.getElementById('feedback').textContent = '';
+                        document.getElementById('feedback').className = 'feedback';
+                        generateSingleQuestion();
+                        document.getElementById('single-answer-input').focus();
+                    }, 500);
+
+                } else {
+                    // 答案错误 - 重置挑战（无弹窗，直接显示在页面）
+                    isErrorState = true; // 标记错误状态
+                    currentCorrectCount = 0;
+                    
+                    // 随机获取鼓励语
+                    const encouragements = [
+                        '💪 没关系！一次失误不算什么，重新来过～',
+                        '🌟 别灰心！每一次练习都是进步，继续加油～',
+                        '🚀 小失误而已，调整状态，你一定可以的～',
+                        '🎈 失败是成功之母，重新挑战，你会更棒～'
+                    ];
+                    const randomEncourage = encouragements[Math.floor(Math.random() * encouragements.length)];
+                    
+                    // 显示错误提示+正确答案+鼓励语
+                    document.getElementById('feedback').textContent = 
+                        `❌ 回答错误！正确答案是：${currentAnswer}\n${randomEncourage}`;
+                    document.getElementById('feedback').className = 'feedback error-feedback';
+                    document.getElementById('current-correct').textContent = '0';
+
+                    // 切换按钮为重新挑战
+                    switchToRetryBtn();
+                }
+            });
+        }
+
+        // 挑战成功处理
+        function challengeSuccess() {
+            isChallenging = false;
+            isErrorState = false;
+            
+            // 更新UI
+            document.getElementById('question-card').style.display = 'none';
+            document.getElementById('result-area').style.display = 'block';
+            document.getElementById('result-title').textContent = '🎉 挑战成功！';
+            
+            // 随机生成表扬语
+            const praises = [
+                `🥳 太厉害啦！连续答对${targetChallengeCount}道题，挑战成功～`,
+                `🌟 你是口算小超人！${targetChallengeCount}道题全部答对，太棒了～`,
+                `🎖️ 挑战成功！你的口算能力真的超棒，继续保持～`,
+                `💯 完美！连续答对${targetChallengeCount}道题，不愧是口算小能手～`
+            ];
+            document.getElementById('result-comment').textContent = praises[Math.floor(Math.random() * praises.length)];
+            document.getElementById('result-comment').style.backgroundColor = 'rgba(6,214,160,0.1)';
+            
+            // 滚动到结果区域
+            document.getElementById('result-area').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 绑定重新挑战事件
+        function bindResetEvent() {
+            document.getElementById('reset-btn').addEventListener('click', function() {
+                // 重置状态
+                isChallenging = false;
+                isErrorState = false;
+                currentCorrectCount = 0;
+                targetChallengeCount = 20;
+                
+                // 重置UI
+                document.getElementById('result-area').style.display = 'none';
+                document.getElementById('progress-area').style.display = 'none';
+                document.getElementById('question-card').style.display = 'none';
+                document.getElementById('settings-area').style.display = 'block';
+                
+                // 重置挑战数量选择按钮
+                const challengeBtns = document.querySelectorAll('#challenge-options .option-btn');
+                challengeBtns.forEach(b => b.classList.remove('active'));
+                challengeBtns[1].classList.add('active'); // 默认20题
+                document.getElementById('target-count').textContent = '20';
+                
+                // 滚动到顶部
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    </script>
+</body>
+</html>
