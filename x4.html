@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>四年级口算小能手</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 全局样式重置 + 字体统一 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        .answer-input {
+            -webkit-user-select: auto;
+            user-select: auto;
+        }
+
+        body {
+            background-color: #fef7ff;
+            background-image: 
+                radial-gradient(#ffd166 5px, transparent 5px),
+                radial-gradient(#ffd166 5px, transparent 5px);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            padding-bottom: 100px;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+        }
+        .header {
+            text-align: center;
+            background-color: #ff8fab;
+            color: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(255,143,171,0.3);
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .header p {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+        }
+
+        /* 新增：难度和数量选择区域 */
+        .settings-area {
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .setting-group {
+            margin-bottom: 15px;
+        }
+        .setting-title {
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            color: #2b2d42;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .option-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .option-btn {
+            background-color: #f8edeb;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 80px;
+        }
+        .option-btn.active {
+            background-color: #06d6a0;
+            color: white;
+            border-color: #06d6a0;
+        }
+        .option-btn:hover {
+            transform: translateY(-2px);
+        }
+        .start-btn {
+            background-color: #ffd166;
+            color: #2b2d42;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            cursor: pointer;
+            display: block;
+            margin: 10px auto 0;
+            box-shadow: 0 3px 10px rgba(255,209,102,0.3);
+            transition: all 0.3s;
+        }
+        .start-btn:hover {
+            background-color: #ffc107;
+            transform: translateY(-2px);
+        }
+
+        .timer {
+            background-color: #83c5be;
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(131,197,190,0.3);
+            display: none; /* 初始隐藏，开始答题后显示 */
+        }
+        .question-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: transform 0.2s;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+        .question-card:hover {
+            transform: translateY(-3px);
+        }
+        .question-number {
+            background-color: #06d6a0;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        .question-text {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            flex: 1;
+            min-width: 150px;
+            color: #2b2d42;
+        }
+        .answer-input {
+            width: clamp(100px, 20vw, 140px);
+            height: 50px;
+            border: 3px solid #ddd;
+            border-radius: 10px;
+            text-align: center;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            outline: none;
+            transition: border-color 0.3s;
+            flex-shrink: 0;
+        }
+        .answer-input:focus {
+            border-color: #06d6a0;
+        }
+        /* 正误样式 */
+        .correct {
+            border-color: #06d6a0;
+            background-color: rgba(6,214,160,0.1);
+        }
+        .incorrect {
+            border-color: #ef476f;
+            background-color: rgba(239,71,111,0.1);
+        }
+        .correct-mark, .incorrect-mark {
+            font-size: clamp(1.5rem, 4vw, 1.8rem);
+            display: none;
+            flex-shrink: 0;
+            margin-left: 10px;
+            width: 30px;
+            text-align: center;
+        }
+        .correct-mark {
+            color: #06d6a0;
+        }
+        .incorrect-mark {
+            color: #ef476f;
+        }
+        /* 悬浮提交按钮 - 适配多终端 */
+        .submit-btn-container {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            padding: 0 20px;
+            z-index: 999;
+            display: none; /* 初始隐藏，开始答题后显示 */
+        }
+        .submit-btn {
+            background-color: #118ab2;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 40px;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(17,138,178,0.3);
+            transition: all 0.3s;
+            min-width: 200px;
+        }
+        .submit-btn:hover {
+            background-color: #073b4c;
+            transform: translateY(-2px);
+        }
+        .submit-btn:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+        }
+        /* 结果展示区 */
+        .result-area {
+            background-color: #fff;
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none;
+            width: 100%;
+        }
+        .score-box {
+            text-align: center;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            margin-bottom: 20px;
+            color: #2b2d42;
+        }
+        .score-number {
+            color: #ff8fab;
+            font-size: clamp(2rem, 6vw, 3rem);
+        }
+        .comment-box {
+            background-color: #f8edeb;
+            border-radius: 15px;
+            padding: 20px;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            text-align: center;
+            color: #2b2d42;
+            margin-bottom: 20px;
+        }
+        .reset-btn {
+            background-color: #ffd166;
+            color: #2b2d42;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 3px 10px rgba(255,209,102,0.3);
+            transition: all 0.3s;
+            min-width: 180px;
+        }
+        .reset-btn:hover {
+            background-color: #ffc107;
+            transform: translateY(-2px);
+        }
+
+        /* 针对不同设备的精细适配 */
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            .settings-area {
+                padding: 15px;
+            }
+            .option-group {
+                gap: 10px;
+            }
+            .option-btn {
+                padding: 8px 15px;
+                min-width: 70px;
+            }
+            .question-card {
+                padding: 15px;
+                gap: 10px;
+            }
+            .question-number {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+            .submit-btn {
+                padding: 12px 30px;
+            }
+            .result-area {
+                padding: 20px;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .container {
+                max-width: 700px;
+                padding: 25px;
+            }
+            .question-card {
+                gap: 20px;
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .container {
+                max-width: 800px;
+            }
+            .question-card {
+                transition: transform 0.3s, box-shadow 0.3s;
+            }
+            .question-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            }
+        }
+
+        @media (orientation: landscape) and (max-height: 500px) {
+            body {
+                padding-bottom: 80px;
+            }
+            .header {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            .settings-area {
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            .timer {
+                padding: 10px;
+                margin-bottom: 15px;
+            }
+            .question-card {
+                padding: 12px;
+                margin-bottom: 10px;
+            }
+            .answer-input {
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 页面头部 -->
+        <div class="header">
+            <h1>🧮 四年级口算小能手 🧮</h1>
+            <p>选择难度和题目数量，开始挑战吧！</p>
+        </div>
+
+        <!-- 新增：难度和数量设置区域 -->
+        <div class="settings-area" id="settings-area">
+            <!-- 难度选择 -->
+            <div class="setting-group">
+                <div class="setting-title">📊 选择难度</div>
+                <div class="option-group" id="difficulty-options">
+                    <button class="option-btn" data-difficulty="low">简单</button>
+                    <button class="option-btn active" data-difficulty="medium">中等</button>
+                    <button class="option-btn" data-difficulty="high">困难</button>
+                </div>
+            </div>
+            <!-- 数量选择 -->
+            <div class="setting-group">
+                <div class="setting-title">🔢 题目数量</div>
+                <div class="option-group" id="count-options">
+                    <button class="option-btn active" data-count="20">20题</button>
+                    <button class="option-btn" data-count="25">25题</button>
+                    <button class="option-btn" data-count="30">30题</button>
+                </div>
+            </div>
+            <!-- 开始答题按钮 -->
+            <button class="start-btn" id="start-btn">开始答题 🚀</button>
+        </div>
+
+        <!-- 计时区域 -->
+        <div class="timer" id="timer">
+            答题时长：00:00:00
+        </div>
+
+        <!-- 题目容器 -->
+        <div id="questions-container"></div>
+
+        <!-- 结果展示区 -->
+        <div class="result-area" id="result-area">
+            <div class="score-box">
+                你的得分：<span class="score-number" id="score">0</span> 分
+                <p>答题时长：<span id="total-time">00:00:00</span></p>
+                <p>总题数：<span id="total-questions">20</span> | 答对：<span id="correct-count">0</span></p>
+            </div>
+            <div class="comment-box" id="comment"></div>
+            <button class="reset-btn" id="reset-btn">重新选择 🔄</button>
+        </div>
+    </div>
+
+    <!-- 底部悬浮提交按钮 -->
+    <div class="submit-btn-container" id="submit-btn-container">
+        <button class="submit-btn" id="submit-btn">提交答案 ✨</button>
+    </div>
+
+    <script>
+        // 全局变量
+        let startTime; // 答题开始时间
+        let timerInterval; // 计时器
+        let questions = []; // 存储生成的题目和答案
+        let isAnswered = false; // 是否已经提交过答案
+        let selectedDifficulty = "medium"; // 默认难度：中等
+        let selectedQuestionCount = 20; // 默认题目数量：20
+
+        // 初始化页面
+        window.onload = function() {
+            bindSettingEvents(); // 绑定难度/数量选择事件
+            bindStartEvent(); // 绑定开始答题事件
+            bindResetEvent(); // 绑定重置事件
+            // 监听窗口大小变化
+            window.addEventListener('resize', function() {
+                if (!isAnswered && document.getElementById('timer').style.display === 'block') {
+                    const container = document.getElementById('questions-container');
+                    container.style.width = '100%';
+                }
+            });
+        };
+
+        // 绑定难度/数量选择事件
+        function bindSettingEvents() {
+            // 难度选择
+            const difficultyBtns = document.querySelectorAll('#difficulty-options .option-btn');
+            difficultyBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    difficultyBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedDifficulty = this.dataset.difficulty;
+                });
+            });
+
+            // 数量选择
+            const countBtns = document.querySelectorAll('#count-options .option-btn');
+            countBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    countBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedQuestionCount = parseInt(this.dataset.count);
+                });
+            });
+        }
+
+        // 绑定开始答题事件
+        function bindStartEvent() {
+            document.getElementById('start-btn').addEventListener('click', function() {
+                // 隐藏设置区域，显示计时器和提交按钮
+                document.getElementById('settings-area').style.display = 'none';
+                document.getElementById('timer').style.display = 'block';
+                document.getElementById('submit-btn-container').style.display = 'flex';
+                
+                // 生成题目
+                generateQuestions(selectedDifficulty, selectedQuestionCount);
+                // 启动计时器
+                startTimer();
+                // 绑定提交事件
+                bindSubmitEvent();
+                // 滚动到题目区域
+                document.getElementById('questions-container').scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+
+        // 根据难度生成对应题目
+        function generateQuestions(difficulty, count) {
+            questions = [];
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+
+            for (let i = 0; i < count; i++) {
+                let question, answer;
+                const type = Math.floor(Math.random() * 4); // 随机选择题目类型
+
+                switch (difficulty) {
+                    case "low": // 简单难度
+                        switch (type) {
+                            case 0: // 两位数乘一位数（10-50 × 1-5）
+                                const num1_low = Math.floor(Math.random() * 41) + 10;
+                                const num2_low = Math.floor(Math.random() * 5) + 1;
+                                question = `${num1_low} × ${num2_low} =`;
+                                answer = (num1_low * num2_low).toString();
+                                break;
+                            case 1: // 除数是一位数（被除数10-50，除数1-5）
+                                let divisor_low, dividend_low;
+                                do {
+                                    divisor_low = Math.floor(Math.random() * 5) + 1;
+                                    const quotient_low = Math.floor(Math.random() * 10) + 5;
+                                    dividend_low = divisor_low * quotient_low;
+                                } while (dividend_low > 50);
+                                question = `${dividend_low} ÷ ${divisor_low} =`;
+                                answer = (dividend_low / divisor_low).toString();
+                                break;
+                            case 2: // 小数加减法（0.1-9.9，一位小数）
+                                const num3_low = (Math.floor(Math.random() * 99) + 1) / 10;
+                                const num4_low = (Math.floor(Math.random() * 99) + 1) / 10;
+                                const op_low = Math.random() > 0.5 ? '+' : '-';
+                                question = op_low === '+' 
+                                    ? `${num3_low.toFixed(1)} + ${num4_low.toFixed(1)} =` 
+                                    : num3_low >= num4_low 
+                                        ? `${num3_low.toFixed(1)} - ${num4_low.toFixed(1)} =` 
+                                        : `${num4_low.toFixed(1)} - ${num3_low.toFixed(1)} =`;
+                                answer = op_low === '+' 
+                                    ? (num3_low + num4_low).toFixed(1) 
+                                    : num3_low >= num4_low 
+                                        ? (num3_low - num4_low).toFixed(1) 
+                                        : (num4_low - num3_low).toFixed(1);
+                                if (answer.endsWith('.0')) answer = answer.replace('.0', '');
+                                break;
+                            case 3: // 整十数乘整十数（10-50 × 10-50）
+                                const num5_low = Math.floor(Math.random() * 5) * 10 + 10;
+                                const num6_low = Math.floor(Math.random() * 5) * 10 + 10;
+                                question = `${num5_low} × ${num6_low} =`;
+                                answer = (num5_low * num6_low).toString();
+                                break;
+                        }
+                        break;
+
+                    case "medium": // 中等难度（原有逻辑）
+                        switch (type) {
+                            case 0: // 两位数乘一位数 (10-99 × 1-9)
+                                const num1_med = Math.floor(Math.random() * 90) + 10;
+                                const num2_med = Math.floor(Math.random() * 9) + 1;
+                                question = `${num1_med} × ${num2_med} =`;
+                                answer = (num1_med * num2_med).toString();
+                                break;
+                            case 1: // 除数是一位数的除法 (结果为整数，被除数10-999)
+                                let divisor_med, dividend_med;
+                                do {
+                                    divisor_med = Math.floor(Math.random() * 9) + 1;
+                                    const quotient_med = Math.floor(Math.random() * 100) + 10;
+                                    dividend_med = divisor_med * quotient_med;
+                                } while (dividend_med > 999);
+                                question = `${dividend_med} ÷ ${divisor_med} =`;
+                                answer = (dividend_med / divisor_med).toString();
+                                break;
+                            case 2: // 小数加减法 (1位小数，0.1-99.9)
+                                const num3_med = (Math.floor(Math.random() * 999) + 1) / 10;
+                                const num4_med = (Math.floor(Math.random() * 999) + 1) / 10;
+                                const op_med = Math.random() > 0.5 ? '+' : '-';
+                                question = op_med === '+' 
+                                    ? `${num3_med.toFixed(1)} + ${num4_med.toFixed(1)} =` 
+                                    : num3_med >= num4_med 
+                                        ? `${num3_med.toFixed(1)} - ${num4_med.toFixed(1)} =` 
+                                        : `${num4_med.toFixed(1)} - ${num3_med.toFixed(1)} =`;
+                                answer = op_med === '+' 
+                                    ? (num3_med + num4_med).toFixed(1) 
+                                    : num3_med >= num4_med 
+                                        ? (num3_med - num4_med).toFixed(1) 
+                                        : (num4_med - num3_med).toFixed(1);
+                                if (answer.endsWith('.0')) answer = answer.replace('.0', '');
+                                break;
+                            case 3: // 整十数乘两位数 (10-90 × 10-99)
+                                const num5_med = Math.floor(Math.random() * 9) * 10;
+                                const num6_med = Math.floor(Math.random() * 90) + 10;
+                                question = `${num5_med} × ${num6_med} =`;
+                                answer = (num5_med * num6_med).toString();
+                                break;
+                        }
+                        break;
+
+                    case "high": // 困难难度
+                        switch (type) {
+                            case 0: // 三位数乘一位数 (100-999 × 1-9)
+                                const num1_high = Math.floor(Math.random() * 900) + 100;
+                                const num2_high = Math.floor(Math.random() * 9) + 1;
+                                question = `${num1_high} × ${num2_high} =`;
+                                answer = (num1_high * num2_high).toString();
+                                break;
+                            case 1: // 除数是一位数（被除数500-999，除数1-9）
+                                let divisor_high, dividend_high;
+                                do {
+                                    divisor_high = Math.floor(Math.random() * 9) + 1;
+                                    const quotient_high = Math.floor(Math.random() * 100) + 50;
+                                    dividend_high = divisor_high * quotient_high;
+                                } while (dividend_high < 500 || dividend_high > 999);
+                                question = `${dividend_high} ÷ ${divisor_high} =`;
+                                answer = (dividend_high / divisor_high).toString();
+                                break;
+                            case 2: // 小数加减法（两位小数，0.01-99.99）
+                                const num3_high = (Math.floor(Math.random() * 9999) + 1) / 100;
+                                const num4_high = (Math.floor(Math.random() * 9999) + 1) / 100;
+                                const op_high = Math.random() > 0.5 ? '+' : '-';
+                                question = op_high === '+' 
+                                    ? `${num3_high.toFixed(2)} + ${num4_high.toFixed(2)} =` 
+                                    : num3_high >= num4_high 
+                                        ? `${num3_high.toFixed(2)} - ${num4_high.toFixed(2)} =` 
+                                        : `${num4_high.toFixed(2)} - ${num3_high.toFixed(2)} =`;
+                                answer = op_high === '+' 
+                                    ? (num3_high + num4_high).toFixed(2) 
+                                    : num3_high >= num4_high 
+                                        ? (num3_high - num4_high).toFixed(2) 
+                                        : (num4_high - num3_high).toFixed(2);
+                                // 处理末尾的.00或x.0
+                                if (answer.endsWith('.00')) answer = answer.replace('.00', '');
+                                else if (answer.endsWith('.0')) answer = answer.replace('.0', '');
+                                break;
+                            case 3: // 整百数乘两位数 (100-900 × 10-99)
+                                const num5_high = Math.floor(Math.random() * 9) * 100;
+                                const num6_high = Math.floor(Math.random() * 90) + 10;
+                                question = `${num5_high} × ${num6_high} =`;
+                                answer = (num5_high * num6_high).toString();
+                                break;
+                        }
+                        break;
+                }
+
+                // 存储题目和答案
+                questions.push({
+                    question: question,
+                    answer: answer
+                });
+
+                // 创建题目DOM元素
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                questionCard.innerHTML = `
+                    <div class="question-number">${i+1}</div>
+                    <div class="question-text">${question}</div>
+                    <input type="text" class="answer-input" data-index="${i}" placeholder="答案">
+                    <span class="correct-mark">✓</span>
+                    <span class="incorrect-mark">✗</span>
+                `;
+                container.appendChild(questionCard);
+            }
+
+            // 绑定输入框回车事件
+            const inputs = document.querySelectorAll('.answer-input');
+            inputs.forEach((input, index) => {
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                        e.preventDefault();
+                    }
+                });
+            });
+        }
+
+        // 启动计时器
+        function startTimer() {
+            startTime = new Date();
+            timerInterval = setInterval(() => {
+                const now = new Date();
+                const diff = new Date(now - startTime);
+                const hours = String(diff.getUTCHours()).padStart(2, '0');
+                const minutes = String(diff.getUTCMinutes()).padStart(2, '0');
+                const seconds = String(diff.getUTCSeconds()).padStart(2, '0');
+                document.getElementById('timer').textContent = `答题时长：${hours}:${minutes}:${seconds}`;
+            }, 1000);
+        }
+
+        // 停止计时器并返回总时长
+        function stopTimer() {
+            clearInterval(timerInterval);
+            const now = new Date();
+            const diff = new Date(now - startTime);
+            const hours = String(diff.getUTCHours()).padStart(2, '0');
+            const minutes = String(diff.getUTCMinutes()).padStart(2, '0');
+            const seconds = String(diff.getUTCSeconds()).padStart(2, '0');
+            const totalTime = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('total-time').textContent = totalTime;
+            return totalTime;
+        }
+
+        // 绑定提交答案事件
+        function bindSubmitEvent() {
+            document.getElementById('submit-btn').addEventListener('click', function() {
+                if (isAnswered) {
+                    alert('你已经提交过答案啦！点击"重新选择"可以重新挑战～');
+                    return;
+                }
+
+                // 获取所有输入框
+                const inputs = document.querySelectorAll('.answer-input');
+                let isAllFilled = true;
+
+                // 检查是否全部填写
+                inputs.forEach(input => {
+                    if (!input.value.trim()) {
+                        isAllFilled = false;
+                        input.focus();
+                    }
+                });
+
+                if (!isAllFilled) {
+                    alert(`😯 还有题目没做完哦！请完成所有${selectedQuestionCount}道题后再提交～`);
+                    return;
+                }
+
+                // 开始批改
+                isAnswered = true;
+                this.disabled = true;
+                stopTimer();
+
+                let correctCount = 0;
+
+                // 遍历批改
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const correctAnswer = questions[index].answer;
+                    const correctMark = input.nextElementSibling;
+                    const incorrectMark = correctMark.nextElementSibling;
+
+                    if (userAnswer === correctAnswer) {
+                        correctCount++;
+                        input.classList.add('correct');
+                        correctMark.style.display = 'inline-block';
+                    } else {
+                        input.classList.add('incorrect');
+                        incorrectMark.style.display = 'inline-block';
+                        input.title = `正确答案：${correctAnswer}`;
+                    }
+                });
+
+                // 计算得分（100分制）
+                const score = Math.round((correctCount / selectedQuestionCount) * 100);
+                document.getElementById('score').textContent = score;
+                document.getElementById('total-questions').textContent = selectedQuestionCount;
+                document.getElementById('correct-count').textContent = correctCount;
+
+                // 生成评语
+                const commentBox = document.getElementById('comment');
+                const accuracy = correctCount / selectedQuestionCount;
+                
+                if (accuracy === 1) {
+                    // 全对表扬语
+                    const praises = [
+                        '🎉 太棒啦！全部答对，你是口算小天才～',
+                        '🌟 太厉害啦！所有题目全对，简直完美～',
+                        '🥳 满分！你真的太优秀了，继续保持～'
+                    ];
+                    commentBox.textContent = praises[Math.floor(Math.random() * praises.length)];
+                    commentBox.style.backgroundColor = 'rgba(6,214,160,0.1)';
+                } else if (accuracy >= 0.8) {
+                    // 正确率80%以上
+                    const good = [
+                        `💪 超棒！答对了${correctCount}道题，正确率高达${Math.round(accuracy*100)}%～`,
+                        `✨ 太优秀了！只差${selectedQuestionCount-correctCount}道题就全对了～`,
+                        `🌟 表现超赞！继续保持这个势头～`
+                    ];
+                    commentBox.textContent = good[Math.floor(Math.random() * good.length)];
+                    commentBox.style.backgroundColor = 'rgba(6,214,160,0.05)';
+                } else if (accuracy >= 0.6) {
+                    // 正确率60%-80%
+                    const medium = [
+                        `👍 不错哦！答对了${correctCount}道题，再加把劲就能更棒～`,
+                        `💡 继续努力！还有${selectedQuestionCount-correctCount}道题可以提升～`,
+                        `🚀 做得可以！下次争取更高正确率～`
+                    ];
+                    commentBox.textContent = medium[Math.floor(Math.random() * medium.length)];
+                    commentBox.style.backgroundColor = 'rgba(255,209,102,0.1)';
+                } else {
+                    // 正确率低于60%
+                    const encourage = [
+                        `💖 没关系！答对了${correctCount}道题，多练习就会进步～`,
+                        `🌟 别灰心！每一次练习都是成长，下次一定更好～`,
+                        `🎈 继续加油！口算需要多练习，你肯定能行～`
+                    ];
+                    commentBox.textContent = encourage[Math.floor(Math.random() * encourage.length)];
+                    commentBox.style.backgroundColor = 'rgba(255,209,102,0.05)';
+                }
+
+                // 显示结果区域
+                document.getElementById('result-area').style.display = 'block';
+                document.getElementById('result-area').scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+
+        // 绑定重置事件
+        function bindResetEvent() {
+            document.getElementById('reset-btn').addEventListener('click', function() {
+                // 重置状态
+                isAnswered = false;
+                selectedDifficulty = "medium";
+                selectedQuestionCount = 20;
+                
+                // 重置UI
+                document.getElementById('submit-btn').disabled = false;
+                document.getElementById('result-area').style.display = 'none';
+                document.getElementById('timer').style.display = 'none';
+                document.getElementById('submit-btn-container').style.display = 'none';
+                document.getElementById('settings-area').style.display = 'block';
+                
+                // 重置难度/数量选择按钮
+                const difficultyBtns = document.querySelectorAll('#difficulty-options .option-btn');
+                difficultyBtns.forEach(b => b.classList.remove('active'));
+                difficultyBtns[1].classList.add('active'); // 中等难度
+                
+                const countBtns = document.querySelectorAll('#count-options .option-btn');
+                countBtns.forEach(b => b.classList.remove('active'));
+                countBtns[0].classList.add('active'); // 20题
+                
+                // 清空题目容器
+                document.getElementById('questions-container').innerHTML = '';
+                
+                // 停止计时器
+                clearInterval(timerInterval);
+                
+                // 滚动到顶部
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    </script>
+</body>
+</html>
