@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>完美世界经典服 永久称号大全</title>
+    <title>完美世界经典服 丹药生产</title>
     <style>
         * {
             margin: 0;
@@ -217,7 +217,6 @@
         .float-menu.collapsed {
             transform: translateY(-50%) translateX(calc(100% - 25px));
         }
-        /* 菜单按钮缩小一倍 */
         .menu-toggle {
             position: absolute;
             left: 0;
@@ -281,8 +280,8 @@
 </head>
 <body>
 
-    <!-- ====================== 右侧浮动菜单 ====================== -->
-    <div class="float-menu" id="floatMenu">
+    <!-- ====================== 右侧浮动菜单 默认已收起 ====================== -->
+    <div class="float-menu collapsed" id="floatMenu">
         <div class="menu-toggle" id="menuToggle">
             <span>≡</span>
         </div>
@@ -290,10 +289,10 @@
             <div class="menu-header">完美国服</div>
             <ul class="menu-list">
                 <li class="menu-item">
-                    <a href="#" class="menu-link active">永久称号大全</a>
+                    <a href="https://keaido666.github.io/1/ch.html" class="menu-link">永久称号大全</a>
                 </li>
                 <li class="menu-item">
-                    <a href="#" class="menu-link">页面2（待填）</a>
+                    <a href="https://keaido666.github.io/1/dy.html" class="menu-link active">丹药生产</a>
                 </li>
                 <li class="menu-item">
                     <a href="#" class="menu-link">页面3（待填）</a>
@@ -313,43 +312,39 @@
         <div class="header">
             <img src="https://keaido666.github.io/1/keai1.jpg" alt="头像" class="header-avatar">
             <div class="header-sub">抖音：可爱多完美</div>
-            <div class="header-main">完美世界经典服 永久称号大全</div>
+            <div class="header-main">完美世界经典服 丹药生产</div>
         </div>
         <div class="filter-bar">
             <div>
-                <label for="category-select">选择类别：</label>
+                <label for="category-select">丹药类型：</label>
                 <select id="category-select">
                     <option value="all">全部</option>
-                    <option value="剑仙城">剑仙城</option>
-                    <option value="积羽城">积羽城</option>
-                    <option value="万化城">万化城</option>
-                    <option value="寻梦港">寻梦港</option>
-                    <option value="雪霏村">雪霏村</option>
-                    <option value="碎冰村">碎冰村</option>
-                    <option value="信风镇">信风镇</option>
-                    <option value="桃园镇">桃园镇</option>
-                    <option value="时装">时装</option>
-                    <option value="挑战">挑战</option>
-                    <option value="副本">副本</option>
-                    <option value="探索">探索</option>
-                    <option value="军衔">军衔</option>
+                    <option value="回血丹药">回血丹药</option>
+                    <option value="回真气丹药">回真气丹药</option>
+                    <option value="回血真气">回血+真气</option>
+                    <option value="元气真元">元气/真元</option>
+                    <option value="移动速度">移动速度</option>
+                    <option value="防御免疫">防御/免疫</option>
+                    <option value="伤害减免">伤害减免</option>
+                    <option value="属性伤害">属性伤害</option>
+                    <option value="特殊效果">特殊效果</option>
                 </select>
             </div>
             <div>
-                <label for="search-input">搜索称号：</label>
-                <input type="text" id="search-input" placeholder="输入称号关键词搜索..." />
+                <label for="search-input">搜索丹药：</label>
+                <input type="text" id="search-input" placeholder="输入丹药名称搜索..." />
             </div>
         </div>
         <div class="table-wrapper">
-            <div id="empty-tip">请选择类别或搜索称号查看信息</div>
+            <div id="empty-tip">请选择类型或搜索丹药查看信息</div>
             <table id="data-table" class="hidden">
                 <thead>
                     <tr>
-                        <th id="th-category" class="hidden">类别</th>
-                        <th>任务名称</th>
-                        <th>称号名称（点击复制）</th>
-                        <th>属性</th>
-                        <th>任务流程（坐标点击复制）</th>
+                        <th id="th-category" class="hidden">类型</th>
+                        <th>丹药名称</th>
+                        <th>仙丹品级</th>
+                        <th>药效效果</th>
+                        <th>获取/材料</th>
                     </tr>
                 </thead>
                 <tbody id="table-body"></tbody>
@@ -365,20 +360,98 @@
             floatMenu.classList.toggle('collapsed');
         });
 
+        // 已去重、整理完成的丹药数据
         const data = [
-            { category: "剑仙城", list: [ { attr: "无", task: "御剑千山远", title: "无", process: "等级大于60级，传送到剑仙城触发任务“御剑千山远”，与NPC书商许瀚周对话完成任务，触发任务“疾风斩狂狼”（对话完在书商旁等待几秒再走）" }, { attr: "物攻+1<br>物防+1<br>碎骨+1", task: "疾风斩狂狼", title: "疾风一斩", process: "杀三个“幼狂狼”完成任务，获得称号“疾风一斩”" }, { attr: "无", task: "醉点朱颜红", title: "无", process: "到坐标<span class='coord'>(424 871)</span>卫兵龚雨，触发任务“醉点朱颜红”，在货部购买“一瓶女儿红”(52.5W)，给醉酒的武士完成任务" }, { attr: "罡气+4<br>攻等+2", task: "藏锋剑琅琊", title: "琅琊藏锋", process: "到坐标<span class='coord'>(442 892)</span>触发任务，到<span class='coord'>(443 897)</span>高廊挖“藏锋石匣”，击杀“琅琊剑魂”完成任务，获得称号“琅琊藏锋”，触发任务“覆日风歌寞”" }, { attr: "法防+2<br>物穿+2", task: "覆日风歌寞", title: "覆日风歌", process: "到<span class='coord'>(444 898)</span>梯子底下挖“破旧的丹炉”完成任务，获得称号“覆日风歌”，触发任务“静涛掩汹涌”" }, { attr: "无", task: "静涛掩汹涌", title: "无", process: "与货郎<span class='coord'>(445 901)</span>对话完成任务" }, { attr: "法防+4<br>真气+2<br>坚韧+2", task: "渊停现鱼龙", title: "渊停无迹", process: "到坐标<span class='coord'>(441 901)</span>触发任务，到<span class='coord'>(442 905)</span>瀑布中停留几秒完成任务，获得称号“渊停无迹”" }, { attr: "物防+4<br>生命+3", task: "红尘拂剑仙", title: "剑仙拂尘", process: "从瀑布原地起飞触发任务，飞到顶端挖“碎晶·剑仙城”完成任务，获得称号“剑仙拂尘”" } ] },
-            { category: "积羽城", list: [ { attr: "无", task: "暮云阡陌处", title: "无", process: "等级大于60级，传送到积羽城触发任务，与守卫暮云泽对话完成任务，触发任务“红线系白羽”" }, { attr: "物防+2<br>法防+4", task: "红线系白羽", title: "红线白羽", process: "未触发则到<span class='coord'>(321 419)</span>，到<span class='coord'>(312 435)</span>杀死“翼清铃的灵魂”，获得称号“红线白羽”，触发任务“隔岸无旧情”" }, { attr: "防等+3", task: "隔岸无旧情", title: "隔岸旧情", process: "未触发则到<span class='coord'>(314 435)</span>，到<span class='coord'>(316 451)</span>水下挖“奇怪的瓶子”，获得称号“隔岸旧情”" }, { attr: "无", task: "桥畔有钟声", title: "无", process: "浮出水面触发任务，寻找NPC卫兵冰刃对话完成，触发任务“冥火千江”" }, { attr: "法攻+1<br>法防+4", task: "冥火掩千江", title: "冥火千江", process: "击杀三个“幽冥火”完成任务，获得称号“冥火千江”" }, { attr: "防等+3<br>真气+3", task: "梦曲幻流星", title: "渺渺幻星", process: "到<span class='coord'>(347 435)</span>附近，采摘花蜜获得3个蜂蜜完成任务，获得称号“渺渺幻星”" }, { attr: "物防+4<br>生命+2", task: "积羽藏金铃", title: "积羽金铃", process: "到<span class='coord'>(355 431)</span>附近，到<span class='coord'>(351 428)</span>挖“人族战士之墓”完成任务，获得称号“积羽金铃”" } ] },
-            { category: "万化城", list: [ { attr: "法防+4<br>法穿+1", task: "巨吼惊魂", title: "神兽之慑", process: "等级大于60级，飞到<span class='coord'>(242 652)</span>建筑最高处落下触发任务，与NPC吉化对话完成，获得称号“神兽之慑”" }, { attr: "法攻+1<br>物防+4", task: "妖族古卷", title: "学究天人", process: "与书商琥珀对话，击杀3个碧磷火，完成万兽图录全卷，到<span class='coord'>(267 660)</span>挖取，回禀吉化获得称号“学究天人”" }, { attr: "法防+4<br>真气+4", task: "暂缓之法", title: "如癫如狂", process: "击杀5个绝地灵狐，回禀吉化完成任务，获得称号“如癫如狂”" }, { attr: "无", task: "直面心障", title: "无", process: "与看护族人狰狞对话完成任务，触发任务“杀伐一道”" }, { attr: "物防+4<br>生命+4<br>坚韧+1", task: "杀伐一道", title: "万化存焉", process: "到<span class='coord'>(238 653)</span>挖祭台，击杀“心之戾障”完成任务，获得称号“万化存焉”" } ] },
-            { category: "寻梦港", list: [ { attr: "物防+5<br>生命+1", task: "寻梦轶事", title: "热心肠的", process: "等级大于30级，传送到寻梦港，与织女若旨冰对话完成任务，获得称号“热心肠的”" }, { attr: "真气+5", task: "打探事件始末", title: "珍珠梦", process: "到<span class='coord'>(663 364)</span>黑市商人童无欺处触发并完成任务，获得称号“珍珠梦”" }, { attr: "攻等+2<br>防等+4", task: "寻找珍珠", title: "童叟无欺", process: "无妄海“妄”字下方下水，击杀龙宫蚌精获得5珍珠，交任务获得称号“童叟无欺”" }, { attr: "物攻+2<br>物穿+1", task: "新的线索", title: "深海旋涡", process: "到<span class='coord'>(661 375)</span>将军杜言附近触发并完成任务，获得称号“深海旋涡”" }, { attr: "法攻+2<br>法穿+1", task: "惩治偷盗者", title: "大开杀戒", process: "到<span class='coord'>(643 383)</span>击杀5个望海刀狼，完成任务获得称号“大开杀戒”" }, { attr: "生命+6", task: "真相浮现", title: "成就感爆棚", process: "到<span class='coord'>(654 368)</span>与如云对话完成任务，获得称号“成就感爆棚”" }, { attr: "罡气+3", task: "任务达成", title: "破案专家", process: "与织女若旨冰对话完成任务，获得称号“破案专家”" } ] },
-            { category: "雪霏村", list: [ { attr: "生命+3<br>真气+5", task: "雪霏之难", title: "雪域奇缘", process: "等级大于90级，传送到雪霏村，与村长对话完成任务，获得称号“雪域奇缘”" }, { attr: "物攻+1", task: "消失的救援队", title: "白首人", process: "与冰女阿采对话完成任务，获得称号“白首人”" }, { attr: "法攻+1", task: "破碎衣物", title: "一梦千寻", process: "到<span class='coord'>(122 965)</span>高度24，击杀冰凤获得5件碎衣，交任务获得称号“一梦千寻”" }, { attr: "法防+6<br>生命+2", task: "血脚印", title: "碎冰机", process: "到<span class='coord'>(122 985)</span>高度24，与副队长对话完成任务，获得称号“碎冰机”" }, { attr: "物防+6", task: "生命迹象", title: "冰封尘心", process: "到<span class='coord'>(122 965)</span>高度24，挖取泥土交任务，获得称号“冰封尘心”" }, { attr: "罡气+2", task: "救援", title: "妙手回春的", process: "到<span class='coord'>(139 932)</span>挖碎冰，与医官妙手对话，获得称号“妙手回春的”" }, { attr: "碎骨+2", task: "为害一方", title: "神志不清的", process: "到<span class='coord'>(180 980)</span>击杀千年冰灵，交任务获得称号“神志不清的”" }, { attr: "防等+3", task: "后顾之忧", title: "浮光掠影", process: "与医官妙手对话完成任务，获得称号“浮光掠影”" }, { attr: "真气+3", task: "相思成疾", title: "飞雪融情", process: "到<span class='coord'>(195 950)</span>挖相思草芯，交任务获得称号“飞雪融情”" } ] },
-            { category: "碎冰村", list: [ { attr: "物穿+1<br>真气+3", task: "误杀", title: "稳准狠", process: "等级大于90级，上古冰河“古”字跳水，水下击杀3冰鲛，交任务获得称号“稳准狠”" }, { attr: "物攻+2<br>生命+2", task: "弄巧成拙", title: "大杀特杀", process: "上古冰河跳水，击杀3雪鲛，交任务获得称号“大杀特杀”" }, { attr: "法攻+3<br>真气+2", task: "一点心意(2选1)", title: "吝啬鬼", process: "到<span class='coord'>(256 987)</span>与宠物商贩对话选“太贵了”，获得称号“吝啬鬼”" }, { attr: "法攻+3<br>真气+2", task: "一点心意(2选1)", title: "不差钱", process: "到<span class='coord'>(256 987)</span>花费2500W购买，获得称号“不差钱”" }, { attr: "罡气+3", task: "势利眼的商人", title: "小心机", process: "继续对话完成任务，获得称号“小心机”" }, { attr: "生命+2<br>法穿+2", task: "自食恶果", title: "令人头秃", process: "击杀3冰川之子，完成任务获得称号“令人头秃”" }, { attr: "物防+3<br>防等+2", task: "寻求助攻", title: "在危险的边缘反复试", process: "挖5千金子+10蜂蜜，交任务获得称号“在危险的边缘反复试”" }, { attr: "法防+3<br>真气+4", task: "成功弥补", title: "不是任性小孩", process: "传送到碎冰村对话完成，获得称号“不是任性小孩”" } ] },
-            { category: "信风镇", list: [ { attr: "无", task: "信风镇", title: "无", process: "等级100级，传送到信风镇自动触发，完成后触发祭奠任务" }, { attr: "物攻+2<br>法攻+2", task: "信风镇-祭奠", title: "信风望故人", process: "与百草仙对话，完成祭奠流程，获得称号“信风望故人”" }, { attr: "物防+3<br>法防+3", task: "信风镇西-解密", title: "解密大师", process: "按任务坐标（亥时到<span class='coord'>(441 736)</span>高度24）完成解密，获得称号“解密大师”" }, { attr: "生命+3<br>真气+5", task: "信风镇-真相", title: "真相只有一个", process: "根据竹片提示前往对应坐标触发任务，完成后获得称号“真相只有一个”" } ] },
-            { category: "桃园镇", list: [ { attr: "物攻+2<br>物防+2", task: "仙人迷路应有术", title: "桃源隐仙踪", process: "等级100级，到<span class='coord'>(644 562)</span>触发，击杀怪物完成任务，获得称号“桃源隐仙踪”" }, { attr: "法防+2<br>真气+2", task: "环佩空响桃花源", title: "荧火亦可耀", process: "到<span class='coord'>(647 540)</span>触发，击杀抱抱兔完成任务，获得称号“荧火亦可耀”" }, { attr: "生命+3<br>生命恢复+1", task: "菩萨扫雪万恶消", title: "雪涛渡恶尽", process: "到<span class='coord'>(656 566)</span>挖3千金子完成任务，获得称号“雪涛渡恶尽”" }, { attr: "法攻+2<br>真气恢复+2", task: "云化路岐月尽明", title: "灵犀脱樊笼", process: "到<span class='coord'>(642 572)</span>触发，水底挖桃源心完成任务，获得称号“灵犀脱樊笼”" } ] },
-            { category: "副本", list: [ { attr: "物防+4<br>生命+2<br>罡气+2<br>坚韧+1", task: "副本·初阶", title: "探路者", process: "进入火岩洞穴/蛇蝎谷/狂狼巢穴/青衣冢，击杀BOSS完成任务" }, { attr: "物防+5<br>攻等+2<br>真气+2", task: "副本·进阶", title: "怨灵宿敌", process: "进入幽冥居/履霜秘境，击杀BOSS完成任务" }, { attr: "法攻+2<br>法防+4<br>生命+4", task: "副本·高阶", title: "专业收割者", process: "进入怨灵之门/秘宝窟，击杀BOSS完成任务" }, { attr: "物防+6<br>防等+2<br>真气+4", task: "副本·幻天", title: "混合双打", process: "进入仙幻天/魔幻天，击杀BOSS完成任务" }, { attr: "法防+5<br>生命+2<br>罡气+5<br>碎骨+1", task: "副本·仙魔界", title: "仙魔制霸者", process: "进入天界炼狱/魔域桃源，击杀BOSS完成任务" } ] },
-            { category: "探索", list: [ { attr: "罡气+3<br>攻等+1<br>真气+4", task: "人羽之星", title: "人羽之星", process: "完成剑仙城+积羽城称号自动获得" }, { attr: "物防+4<br>法防+4<br>生命+4", task: "不负相逢", title: "不负相逢", process: "完成剑仙城+积羽城+万化城称号自动获得" }, { attr: "罡气+6", task: "天空之臣", title: "天空之臣", process: "任意地图飞到高度79停留几秒自动获得" } ] },
-            { category: "时装", list: [ { attr: "生命+1<br>真气+1", task: "竹篁闲云客", title: "竹篁闲云客", process: "时装包裹每行放1件时装即可解锁" }, { attr: "生命+2<br>真气+2", task: "青羽少年游", title: "青羽少年游", process: "时装包裹每行放1件时装即可解锁" }, { attr: "生命+3<br>真气+3", task: "银朱锦衣郎", title: "银朱锦衣郎", process: "时装包裹每行放1件时装即可解锁" }, { attr: "生命+4<br>真气+4", task: "金紫富贵侯", title: "金紫富贵侯", process: "时装包裹每行放1件时装即可解锁" } ] },
-            { category: "挑战", list: [ { attr: "物防+8<br>攻等+1<br>真气+4", task: "熔岩之王", title: "熔岩之王", process: "传送到洒火村，按顺序击杀怪物完成任务" }, { attr: "法防+6<br>罡气+5<br>物穿+2<br>坚韧+1", task: "冰雪之王", title: "冰雪之王", process: "传送到碎冰村，按顺序击杀怪物完成任务" } ] },
-            { category: "军衔", list: [ { attr: "生命+10<br>攻等+4<br>防等+4<br>真气+10", task: "二级军衔", title: "突击队长", process: "声望1000点，幽兰谷击杀15反戈蜴完成任务" }, { attr: "生命+10<br>攻等+4<br>防等+4<br>真气+10", task: "四级军衔", title: "疾行先锋", process: "声望5000点，云梦村击杀15啮甲冥鼠完成任务" } ] }
+            { category: "回血丹药", list: [
+                { name: "百转丹", level: "★★", effect: "使用后立刻回复1-2000点生命", material: "雪崩峡谷、信风镇、幽兰谷 | 绿萼梅20 养心草15" },
+                { name: "千机丸", level: "★★★", effect: "使用后立刻回复1-4000点生命", material: "四方寨、信风镇、落日高原 | 钻杆虫20 天仙子15" },
+                { name: "万化散", level: "★★★★", effect: "使用后立刻回复1-6000点生命", material: "剑仙城" },
+                { name: "太虚散", level: "★", effect: "使用后30秒内回复2000点生命", material: "所有药师和郡守" },
+                { name: "清瑶丸", level: "★★", effect: "使用后30秒内回复4000点生命", material: "残山、弱水之源、通天湖" },
+                { name: "凝碧丹", level: "★★★", effect: "使用后30秒内回复6000点生命", material: "万木岭、邻水镇、黑山 | 绿萼梅20 雄黄15" },
+                { name: "活血散", level: "★★", effect: "使用后10分钟内提升50点/秒生命回复", material: "云梦岭 | 花蜜15 千金子10" },
+                { name: "化淤丹", level: "★★★★", effect: "使用后10分钟内提升100点/秒生命回复", material: "万流城、剑仙城、万化城、祖龙城、积羽城、寻梦港" }
+            ]},
+            { category: "回真气丹药", list: [
+                { name: "玉壶散", level: "★★", effect: "使用后30秒内回复3000点真气", material: "所有药师和郡守 | 雄黄10 千金子5" },
+                { name: "冰心丸", level: "★★★", effect: "使用后30秒内回复6000点真气", material: "幽冥古道、碧涛林、通天湖 | 天仙子15 茯苓10" },
+                { name: "惊寒丹", level: "★★★★", effect: "使用后30秒内回复9000点真气", material: "剑仙城、绝龙坡 | 郁金香15 蛇含草10" },
+                { name: "聚精散", level: "★★", effect: "使用后10分钟内提升50点/秒真气回复", material: "离离草原、暗香坡、迷雾丛林 | 仙鹤草15 通经草10" },
+                { name: "会神丹", level: "★★★★", effect: "使用后10分钟内提升100点/秒真气回复", material: "万流城、剑仙城、万化城、祖龙城、积羽城、寻梦港" }
+            ]},
+            { category: "回血真气", list: [
+                { name: "归心散", level: "★★", effect: "使用后立刻回复30%的生命和真气", material: "万劫城、龙战之野、无忧小道" },
+                { name: "轮回盘", level: "★★★★", effect: "使用后立刻回复60%的生命和真气", material: "万劫城、灯笼山、南屏山 | 醍醐香25 醉仙露20" },
+                { name: "清寂露", level: "★★★★★", effect: "使用后立刻回复90%的生命和真气", material: "万流城" },
+                { name: "生机盎然丸", level: "★★★", effect: "10分钟内提升50点/秒生命+真气回复", material: "万木岭、幽兰谷、云梦岭 | 首乌20 茯苓15" },
+                { name: "枯木逢春丸", level: "★★★★★", effect: "10分钟内提升100点/秒生命+真气回复", material: "万化城" }
+            ]},
+            { category: "元气真元", list: [
+                { name: "碧螺春", level: "★★", effect: "使用后立刻增加50点元气", material: "残山、盘丝岭、埋骨之地 | 接骨木15 蜂蜜10" },
+                { name: "金镶玉", level: "★★★", effect: "使用后立刻增加一点真元", material: "冰封古道、灯笼山、迷雾丛林 | 醉仙露20 首乌15" },
+                { name: "神仙茶", level: "★★★★", effect: "使用后立刻增加1点真元+50点元气", material: "碧涛林、寻梦港 | 九里香25 郁金香20" },
+                { name: "白毫银针", level: "★★★★★", effect: "使用后立刻增加两点真元", material: "万流城、祖龙城" }
+            ]},
+            { category: "移动速度", list: [
+                { name: "乘风追月散", level: "★", effect: "15秒内提升40%移动速度", material: "所有药师和郡守 | 通经草15 藿香10" },
+                { name: "渠黄散", level: "★★", effect: "15秒内提升70%移动速度", material: "碧涛林、惊鸿岭 | 养心草15 通经草10" },
+                { name: "紫飒露", level: "★★★", effect: "15秒内提升100%移动速度", material: "四方寨、无忧小道、禹王鼎 | 绿萼梅20 接骨木15" },
+                { name: "盗骊丹", level: "★★★★★", effect: "15秒内提升200%移动速度(上限15米/秒)", material: "祖龙城" },
+                { name: "神行散", level: "★★★", effect: "8秒内自由移动，免疫行动阻碍", material: "残山、沐火村、桃花坞 | 沉香20 雄黄15" },
+                { name: "天机散", level: "★★★★", effect: "12秒内自由移动，免疫行动阻碍", material: "寻梦港 | 虎胆 牛黄" },
+                { name: "无极散", level: "★★★★★", effect: "20秒内自由移动，免疫行动阻碍", material: "古长城、盘丝岭、通天湖 | 醍醐香25 郁金香20" },
+                { name: "捕风捉影散", level: "★★★★★", effect: "15秒自由移动+提升100%移动速度", material: "摩天崖、白岭 | 醍醐香25 绿萼梅20" }
+            ]},
+            { category: "防御免疫", list: [
+                { name: "龟蛇静丸", level: "★★★", effect: "8秒内无法移动，但免疫所有伤害", material: "剑仙城" },
+                { name: "铜墙铁壁散", level: "★★★★★", effect: "12秒内无法移动，但免疫所有伤害", material: "万流城" },
+                { name: "金刚附体丸", level: "★★★★★", effect: "6秒内无敌，无视所有伤害", material: "万流城、摩天崖 | 盘龙草25 醍醐香20" }
+            ]},
+            { category: "伤害减免", list: [
+                { name: "铁甲散", level: "★★★", effect: "15秒内减少物理伤害", material: "" },
+                { name: "磐石散", level: "★★★★", effect: "15秒内大幅减少物理伤害", material: "" },
+                { name: "三清露", level: "★★★", effect: "15秒内减少法术伤害", material: "" },
+                { name: "四御露", level: "★★★★", effect: "15秒内大幅减少法术伤害", material: "" },
+                { name: "月华护身露", level: "★★★", effect: "15秒内减少物理+法术伤害", material: "" },
+                { name: "星光护身露", level: "★★★★", effect: "15秒内大幅减少物理+法术伤害", material: "" },
+                { name: "龙神散", level: "★★", effect: "8秒内受到伤害减少一半", material: "" },
+                { name: "石龟丹", level: "★★★★", effect: "12秒内受到伤害减少一半", material: "" }
+            ]},
+            { category: "属性伤害", list: [
+                { name: "红磷丹", level: "★", effect: "1分钟攻击附少量火伤害", material: "" },
+                { name: "赤焰丹", level: "★★", effect: "1分钟攻击附中量火伤害", material: "" },
+                { name: "烈阳焚空丹", level: "★★★", effect: "1分钟攻击附大量火伤害", material: "" },
+                { name: "碧波丹", level: "★", effect: "1分钟攻击附少量水伤害", material: "" },
+                { name: "青霜丹", level: "★★", effect: "1分钟攻击附中量水伤害", material: "" },
+                { name: "万载玄冰丹", level: "★★★", effect: "1分钟攻击附大量水伤害", material: "" },
+                { name: "乌藤木", level: "★", effect: "1分钟攻击附少量木伤害", material: "" },
+                { name: "鹤顶红", level: "★★", effect: "1分钟攻击附中量木伤害", material: "" },
+                { name: "碧落黄泉瘴", level: "★★★", effect: "1分钟攻击附大量木伤害", material: "" }
+            ]},
+            { category: "特殊效果", list: [
+                { name: "赤血丹", level: "★★", effect: "12秒提升攻击+吟唱15%，承受更多伤害", material: "" },
+                { name: "赤魂丹", level: "★★★★", effect: "12秒提升攻击+吟唱25%，承受更多伤害", material: "" },
+                { name: "涤魂丹", level: "★★★★", effect: "去掉身上所有负面状态", material: "" },
+                { name: "仙魔护体露", level: "★★", effect: "20秒内吸收最多500点伤害", material: "" },
+                { name: "圣兽护体露", level: "★★★", effect: "20秒内吸收最多1000点伤害", material: "" },
+                { name: "天神护体露", level: "★★★★", effect: "20秒内吸收最多1500点伤害", material: "" },
+                { name: "事半功倍丸", level: "★★★", effect: "30秒内提升命中率", material: "" },
+                { name: "百发百中散", level: "★★★★", effect: "30秒内极大提升命中率", material: "" },
+                { name: "豹胎易筋丸", level: "★★★", effect: "30秒内提升法防降低物防", material: "万化城" },
+                { name: "虎鞭洗髓露", level: "★★★", effect: "30秒内提升物防降低法防", material: "" },
+                { name: "风怒香", level: "★★★", effect: "3秒内吟唱加速一倍", material: "" },
+                { name: "雷厉风行散", level: "★★★★★", effect: "3秒内施法不用吟唱", material: "" },
+                { name: "紫貘丸", level: "★★", effect: "15秒大幅减少金系伤害", material: "" },
+                { name: "金戈铁马丸", level: "★★★★", effect: "15秒极大减少金系伤害", material: "" },
+                { name: "蕴象丸", level: "★★", effect: "15秒大幅减少木系伤害", material: "" },
+                { name: "寸草不生丸", level: "★★★★", effect: "15秒极大减少木系伤害", material: "" },
+                { name: "牵脊丸", level: "★★", effect: "15秒大幅减少水系伤害", material: "" },
+                { name: "中流砥柱丸", level: "★★★★", effect: "15秒极大减少水系伤害", material: "" },
+                { name: "獬豸丸", level: "★★", effect: "15秒大幅减少火系伤害", material: "" },
+                { name: "浴火重生丸", level: "★★★★", effect: "15秒极大减少火系伤害", material: "" },
+                { name: "饕餮丸", level: "★★", effect: "15秒大幅减少土系伤害", material: "" },
+                { name: "皇天后土丸", level: "★★★★", effect: "15秒极大减少土系伤害", material: "" }
+            ]}
         ];
 
         const categoryColors = [ "#fef0f0", "#f0f7fe", "#f0fff4", "#fff8e8", "#f5f0ff", "#fff0f6", "#f0fcff", "#f8f0e8" ];
@@ -407,7 +480,7 @@
                 data.forEach(cate => { cate.list.forEach(item => { allItems.push({ ...item, category: cate.category }); }); });
                 filteredList = allItems.filter(item => {
                     const matchCate = category === 'all' || item.category === category;
-                    const matchSearch = !keyword || (item.title && item.title.toLowerCase().includes(keyword));
+                    const matchSearch = !keyword || (item.name && item.name.toLowerCase().includes(keyword));
                     return matchCate && matchSearch;
                 });
             }
@@ -429,11 +502,9 @@
                     const isEvenRow = globalRowIndex % 2 === 0;
                     const finalBg = isEvenRow ? baseColor : `color-mix(in srgb, ${baseColor} 85%, #dcd9d0)`;
                     tr.style.backgroundColor = finalBg;
-                    const titleHtml = item.title === '无' ? '无' : `<span class="copy-title">${item.title}</span>`;
-                    const attrHtml = renderAttrHtml(item.attr);
                     let cateTd = '';
                     if (itemIdx === 0) cateTd = `<td rowspan="${items.length}" style="vertical-align:middle; font-weight:bold; color:#2d2d2d; background:${baseColor}">${cate}</td>`;
-                    tr.innerHTML = `${cateTd}<td>${item.task}</td><td>${titleHtml}</td><td class="attr-box">${attrHtml}</td><td>${item.process}</td>`;
+                    tr.innerHTML = `${cateTd}<td class="copy-title">${item.name}</td><td style="color:#c95d56; font-weight:bold">${item.level}</td><td>${item.effect}</td><td>${item.material || '-'}</td>`;
                     tableBody.appendChild(tr); globalRowIndex++;
                 });
             });
@@ -443,29 +514,9 @@
             list.forEach((item, index) => {
                 const tr = document.createElement('tr');
                 if (index % 2 === 1) tr.style.backgroundColor = '#f3f1ec';
-                const titleHtml = item.title === '无' ? '无' : `<span class="copy-title">${item.title}</span>`;
-                const attrHtml = renderAttrHtml(item.attr);
-                tr.innerHTML = `${category === 'all' ? `<td>${item.category}</td>` : ''}<td>${item.task}</td><td>${titleHtml}</td><td class="attr-box">${attrHtml}</td><td>${item.process}</td>`;
+                tr.innerHTML = `${category === 'all' ? `<td>${item.category}</td>` : ''}<td class="copy-title">${item.name}</td><td style="color:#c95d56; font-weight:bold">${item.level}</td><td>${item.effect}</td><td>${item.material || '-'}</td>`;
                 tableBody.appendChild(tr);
             });
-        }
-
-        function renderAttrHtml(attrStr) {
-            if (!attrStr || attrStr === '无') return '无';
-            return attrStr
-                .replace(/物攻\+(\d+)/g, '<span class="attr-wugong">物攻+$1</span>')
-                .replace(/法攻\+(\d+)/g, '<span class="attr-fagong">法攻+$1</span>')
-                .replace(/物防\+(\d+)/g, '<span class="attr-wufang">物防+$1</span>')
-                .replace(/法防\+(\d+)/g, '<span class="attr-fafang">法防+$1</span>')
-                .replace(/生命\+(\d+)/g, '<span class="attr-shengming">生命+$1</span>')
-                .replace(/真气\+(\d+)/g, '<span class="attr-zhenqi">真气+$1</span>')
-                .replace(/坚韧\+(\d+)/g, '<span class="attr-jianren">坚韧+$1</span>')
-                .replace(/[法物]穿\+(\d+)/g, '<span class="attr-chuan">$&</span>')
-                .replace(/罡气\+(\d+)/g, '<span class="attr-gangqi">罡气+$1</span>')
-                .replace(/碎骨\+(\d+)/g, '<span class="attr-suiji">碎骨+$1</span>')
-                .replace(/[攻防]等\+(\d+)/g, '<span class="attr-dengji">$&</span>')
-                .replace(/(生命|真气)恢复\+(\d+)/g, '<span class="attr-huifu">$1恢复+$2</span>')
-                .replace(/速度\+(\d+)/g, '<span class="attr-other">速度+$1</span>');
         }
 
         function copyText(text) {
@@ -480,8 +531,8 @@
         }
 
         function bindCopyEvents() {
-            document.querySelectorAll('.coord,.copy-title').forEach(el => {
-                el.onclick = () => copyText(el.innerText.trim().replace(/[()]/g, ''));
+            document.querySelectorAll('.copy-title').forEach(el => {
+                el.onclick = () => copyText(el.innerText.trim());
             });
         }
     </script>
