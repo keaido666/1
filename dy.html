@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>完美世界经典服 永久称号大全</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
+        }
+        body {
+            background-color: #ebebe7;
+            padding: 20px;
+            min-height: 100vh;
+            position: relative;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            background: #f8f7f4;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #91aecf, #aabfdf);
+            color: #ffffff;
+            padding: 24px 24px;
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 1px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        .header-avatar {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 4px solid #ffffff;
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .header-sub {
+            font-size: 18px;
+            font-weight: normal;
+        }
+        .header-main {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .filter-bar {
+            padding: 18px 24px;
+            background-color: #f1efe9;
+            border-bottom: 1px solid #e0ded7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .filter-bar label {
+            font-size: 16px;
+            margin-right: 8px;
+            color: #5c5c5c;
+            font-weight: 500;
+        }
+        .filter-bar select,
+        .filter-bar input {
+            padding: 8px 16px;
+            font-size: 15px;
+            border: 1px solid #d1cec7;
+            border-radius: 6px;
+            outline: none;
+            transition: all 0.2s;
+            min-width: 180px;
+            background: #fff;
+        }
+        .filter-bar select:focus,
+        .filter-bar input:focus {
+            border-color: #91aecf;
+            box-shadow: 0 0 0 2px rgba(145,174,207,0.15);
+        }
+        .table-wrapper {
+            padding: 24px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #f8f7f4;
+            border-radius: 8px;
+            overflow: hidden;
+            table-layout: auto;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 14px;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        th {
+            background: linear-gradient(135deg, #d8d9e0, #c8c9d2);
+            color: #2d2d2d;
+            font-weight: 700;
+            border: none;
+            border-bottom: 2px solid #b5b7c3;
+            text-shadow: 0 1px 1px rgba(255,255,255,0.3);
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        td {
+            background: transparent;
+            border-bottom: 1px solid #e8e6e0;
+            transition: background-color 0.2s ease;
+        }
+
+        td:last-child {
+            white-space: normal !important;
+            width: 9999px;
+        }
+
+        tr:hover {
+            background-color: #e6eaf1 !important;
+            transition: background-color 0.2s;
+        }
+        .attr-box {
+            background: transparent !important;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+        .attr-wugong { color: #c95d56; }
+        .attr-fagong { color: #9359b5; }
+        .attr-wufang  { color: #4b8ac9; }
+        .attr-fafang { color: #59886b; }
+        .attr-shengming{ color: #c9884b; }
+        .attr-zhenqi { color: #8883c1; }
+        .attr-jianren { color: #869897; }
+        .attr-chuan  { color: #b25978; }
+        .attr-other  { color: #666666; }
+        .attr-gangqi { color: #c95d56; }
+        .attr-suiji { color: #b25978; }
+        .attr-dengji { color: #9359b5; }
+        .attr-huifu { color: #59886b; }
+
+        .coord, .copy-title {
+            color: #c97c7c;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: underline;
+            transition: color 0.2s;
+        }
+        .coord:hover, .copy-title:hover {
+            color: #b66464;
+        }
+        .hidden {
+            display: none !important;
+        }
+        #empty-tip {
+            text-align: center;
+            padding: 60px 20px;
+            color: #a8a59e;
+            font-size: 16px;
+        }
+        .copy-tip {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #96b886;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(150,184,134,0.25);
+        }
+        .copy-tip.show {
+            opacity: 1;
+            top: 40px;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d1cec7;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #b8b4ac;
+        }
+
+        /* ====================== 右侧浮动菜单 ====================== */
+        .float-menu {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            z-index: 999;
+            width: 220px;
+            transition: all 0.3s ease;
+        }
+        .float-menu.collapsed {
+            transform: translateY(-50%) translateX(calc(100% - 25px));
+        }
+        /* 菜单按钮缩小一倍 */
+        .menu-toggle {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 25px;
+            height: 60px;
+            background: linear-gradient(135deg, #91aecf, #aabfdf);
+            border-radius: 12px 0 0 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+            user-select: none;
+        }
+        .menu-content {
+            width: 170px;
+            background: #fff;
+            margin-left: 25px;
+            border-radius: 12px 0 0 12px;
+            box-shadow: -2px 2px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .menu-header {
+            background: linear-gradient(135deg, #91aecf, #aabfdf);
+            color: #fff;
+            padding: 14px 16px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 15px;
+        }
+        .menu-list {
+            list-style: none;
+            padding: 8px 0;
+        }
+        .menu-item {
+            padding: 0;
+        }
+        .menu-link {
+            display: block;
+            padding: 12px 18px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .menu-link:hover {
+            background: #f0f4fa;
+            color: #91aecf;
+        }
+        .menu-link.active {
+            background: linear-gradient(135deg, #91aecf, #aabfdf);
+            color: #fff;
+            font-weight: bold;
+            border-left: 4px solid #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====================== 右侧浮动菜单 ====================== -->
+    <div class="float-menu" id="floatMenu">
+        <div class="menu-toggle" id="menuToggle">
+            <span>≡</span>
+        </div>
+        <div class="menu-content">
+            <div class="menu-header">完美国服</div>
+            <ul class="menu-list">
+                <li class="menu-item">
+                    <a href="#" class="menu-link active">永久称号大全</a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link">页面2（待填）</a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link">页面3（待填）</a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link">页面4（待填）</a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link">页面5（待填）</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="copy-tip" id="copyTip">复制成功！</div>
+    <div class="container">
+        <div class="header">
+            <img src="https://keaido666.github.io/1/keai1.jpg" alt="头像" class="header-avatar">
+            <div class="header-sub">抖音：可爱多完美</div>
+            <div class="header-main">完美世界经典服 永久称号大全</div>
+        </div>
+        <div class="filter-bar">
+            <div>
+                <label for="category-select">选择类别：</label>
+                <select id="category-select">
+                    <option value="all">全部</option>
+                    <option value="剑仙城">剑仙城</option>
+                    <option value="积羽城">积羽城</option>
+                    <option value="万化城">万化城</option>
+                    <option value="寻梦港">寻梦港</option>
+                    <option value="雪霏村">雪霏村</option>
+                    <option value="碎冰村">碎冰村</option>
+                    <option value="信风镇">信风镇</option>
+                    <option value="桃园镇">桃园镇</option>
+                    <option value="时装">时装</option>
+                    <option value="挑战">挑战</option>
+                    <option value="副本">副本</option>
+                    <option value="探索">探索</option>
+                    <option value="军衔">军衔</option>
+                </select>
+            </div>
+            <div>
+                <label for="search-input">搜索称号：</label>
+                <input type="text" id="search-input" placeholder="输入称号关键词搜索..." />
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <div id="empty-tip">请选择类别或搜索称号查看信息</div>
+            <table id="data-table" class="hidden">
+                <thead>
+                    <tr>
+                        <th id="th-category" class="hidden">类别</th>
+                        <th>任务名称</th>
+                        <th>称号名称（点击复制）</th>
+                        <th>属性</th>
+                        <th>任务流程（坐标点击复制）</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // 浮动菜单展开/收起
+        const floatMenu = document.getElementById('floatMenu');
+        const menuToggle = document.getElementById('menuToggle');
+        menuToggle.addEventListener('click', () => {
+            floatMenu.classList.toggle('collapsed');
+        });
+
+        const data = [
+            { category: "剑仙城", list: [ { attr: "无", task: "御剑千山远", title: "无", process: "等级大于60级，传送到剑仙城触发任务“御剑千山远”，与NPC书商许瀚周对话完成任务，触发任务“疾风斩狂狼”（对话完在书商旁等待几秒再走）" }, { attr: "物攻+1<br>物防+1<br>碎骨+1", task: "疾风斩狂狼", title: "疾风一斩", process: "杀三个“幼狂狼”完成任务，获得称号“疾风一斩”" }, { attr: "无", task: "醉点朱颜红", title: "无", process: "到坐标<span class='coord'>(424 871)</span>卫兵龚雨，触发任务“醉点朱颜红”，在货部购买“一瓶女儿红”(52.5W)，给醉酒的武士完成任务" }, { attr: "罡气+4<br>攻等+2", task: "藏锋剑琅琊", title: "琅琊藏锋", process: "到坐标<span class='coord'>(442 892)</span>触发任务，到<span class='coord'>(443 897)</span>高廊挖“藏锋石匣”，击杀“琅琊剑魂”完成任务，获得称号“琅琊藏锋”，触发任务“覆日风歌寞”" }, { attr: "法防+2<br>物穿+2", task: "覆日风歌寞", title: "覆日风歌", process: "到<span class='coord'>(444 898)</span>梯子底下挖“破旧的丹炉”完成任务，获得称号“覆日风歌”，触发任务“静涛掩汹涌”" }, { attr: "无", task: "静涛掩汹涌", title: "无", process: "与货郎<span class='coord'>(445 901)</span>对话完成任务" }, { attr: "法防+4<br>真气+2<br>坚韧+2", task: "渊停现鱼龙", title: "渊停无迹", process: "到坐标<span class='coord'>(441 901)</span>触发任务，到<span class='coord'>(442 905)</span>瀑布中停留几秒完成任务，获得称号“渊停无迹”" }, { attr: "物防+4<br>生命+3", task: "红尘拂剑仙", title: "剑仙拂尘", process: "从瀑布原地起飞触发任务，飞到顶端挖“碎晶·剑仙城”完成任务，获得称号“剑仙拂尘”" } ] },
+            { category: "积羽城", list: [ { attr: "无", task: "暮云阡陌处", title: "无", process: "等级大于60级，传送到积羽城触发任务，与守卫暮云泽对话完成任务，触发任务“红线系白羽”" }, { attr: "物防+2<br>法防+4", task: "红线系白羽", title: "红线白羽", process: "未触发则到<span class='coord'>(321 419)</span>，到<span class='coord'>(312 435)</span>杀死“翼清铃的灵魂”，获得称号“红线白羽”，触发任务“隔岸无旧情”" }, { attr: "防等+3", task: "隔岸无旧情", title: "隔岸旧情", process: "未触发则到<span class='coord'>(314 435)</span>，到<span class='coord'>(316 451)</span>水下挖“奇怪的瓶子”，获得称号“隔岸旧情”" }, { attr: "无", task: "桥畔有钟声", title: "无", process: "浮出水面触发任务，寻找NPC卫兵冰刃对话完成，触发任务“冥火千江”" }, { attr: "法攻+1<br>法防+4", task: "冥火掩千江", title: "冥火千江", process: "击杀三个“幽冥火”完成任务，获得称号“冥火千江”" }, { attr: "防等+3<br>真气+3", task: "梦曲幻流星", title: "渺渺幻星", process: "到<span class='coord'>(347 435)</span>附近，采摘花蜜获得3个蜂蜜完成任务，获得称号“渺渺幻星”" }, { attr: "物防+4<br>生命+2", task: "积羽藏金铃", title: "积羽金铃", process: "到<span class='coord'>(355 431)</span>附近，到<span class='coord'>(351 428)</span>挖“人族战士之墓”完成任务，获得称号“积羽金铃”" } ] },
+            { category: "万化城", list: [ { attr: "法防+4<br>法穿+1", task: "巨吼惊魂", title: "神兽之慑", process: "等级大于60级，飞到<span class='coord'>(242 652)</span>建筑最高处落下触发任务，与NPC吉化对话完成，获得称号“神兽之慑”" }, { attr: "法攻+1<br>物防+4", task: "妖族古卷", title: "学究天人", process: "与书商琥珀对话，击杀3个碧磷火，完成万兽图录全卷，到<span class='coord'>(267 660)</span>挖取，回禀吉化获得称号“学究天人”" }, { attr: "法防+4<br>真气+4", task: "暂缓之法", title: "如癫如狂", process: "击杀5个绝地灵狐，回禀吉化完成任务，获得称号“如癫如狂”" }, { attr: "无", task: "直面心障", title: "无", process: "与看护族人狰狞对话完成任务，触发任务“杀伐一道”" }, { attr: "物防+4<br>生命+4<br>坚韧+1", task: "杀伐一道", title: "万化存焉", process: "到<span class='coord'>(238 653)</span>挖祭台，击杀“心之戾障”完成任务，获得称号“万化存焉”" } ] },
+            { category: "寻梦港", list: [ { attr: "物防+5<br>生命+1", task: "寻梦轶事", title: "热心肠的", process: "等级大于30级，传送到寻梦港，与织女若旨冰对话完成任务，获得称号“热心肠的”" }, { attr: "真气+5", task: "打探事件始末", title: "珍珠梦", process: "到<span class='coord'>(663 364)</span>黑市商人童无欺处触发并完成任务，获得称号“珍珠梦”" }, { attr: "攻等+2<br>防等+4", task: "寻找珍珠", title: "童叟无欺", process: "无妄海“妄”字下方下水，击杀龙宫蚌精获得5珍珠，交任务获得称号“童叟无欺”" }, { attr: "物攻+2<br>物穿+1", task: "新的线索", title: "深海旋涡", process: "到<span class='coord'>(661 375)</span>将军杜言附近触发并完成任务，获得称号“深海旋涡”" }, { attr: "法攻+2<br>法穿+1", task: "惩治偷盗者", title: "大开杀戒", process: "到<span class='coord'>(643 383)</span>击杀5个望海刀狼，完成任务获得称号“大开杀戒”" }, { attr: "生命+6", task: "真相浮现", title: "成就感爆棚", process: "到<span class='coord'>(654 368)</span>与如云对话完成任务，获得称号“成就感爆棚”" }, { attr: "罡气+3", task: "任务达成", title: "破案专家", process: "与织女若旨冰对话完成任务，获得称号“破案专家”" } ] },
+            { category: "雪霏村", list: [ { attr: "生命+3<br>真气+5", task: "雪霏之难", title: "雪域奇缘", process: "等级大于90级，传送到雪霏村，与村长对话完成任务，获得称号“雪域奇缘”" }, { attr: "物攻+1", task: "消失的救援队", title: "白首人", process: "与冰女阿采对话完成任务，获得称号“白首人”" }, { attr: "法攻+1", task: "破碎衣物", title: "一梦千寻", process: "到<span class='coord'>(122 965)</span>高度24，击杀冰凤获得5件碎衣，交任务获得称号“一梦千寻”" }, { attr: "法防+6<br>生命+2", task: "血脚印", title: "碎冰机", process: "到<span class='coord'>(122 985)</span>高度24，与副队长对话完成任务，获得称号“碎冰机”" }, { attr: "物防+6", task: "生命迹象", title: "冰封尘心", process: "到<span class='coord'>(122 965)</span>高度24，挖取泥土交任务，获得称号“冰封尘心”" }, { attr: "罡气+2", task: "救援", title: "妙手回春的", process: "到<span class='coord'>(139 932)</span>挖碎冰，与医官妙手对话，获得称号“妙手回春的”" }, { attr: "碎骨+2", task: "为害一方", title: "神志不清的", process: "到<span class='coord'>(180 980)</span>击杀千年冰灵，交任务获得称号“神志不清的”" }, { attr: "防等+3", task: "后顾之忧", title: "浮光掠影", process: "与医官妙手对话完成任务，获得称号“浮光掠影”" }, { attr: "真气+3", task: "相思成疾", title: "飞雪融情", process: "到<span class='coord'>(195 950)</span>挖相思草芯，交任务获得称号“飞雪融情”" } ] },
+            { category: "碎冰村", list: [ { attr: "物穿+1<br>真气+3", task: "误杀", title: "稳准狠", process: "等级大于90级，上古冰河“古”字跳水，水下击杀3冰鲛，交任务获得称号“稳准狠”" }, { attr: "物攻+2<br>生命+2", task: "弄巧成拙", title: "大杀特杀", process: "上古冰河跳水，击杀3雪鲛，交任务获得称号“大杀特杀”" }, { attr: "法攻+3<br>真气+2", task: "一点心意(2选1)", title: "吝啬鬼", process: "到<span class='coord'>(256 987)</span>与宠物商贩对话选“太贵了”，获得称号“吝啬鬼”" }, { attr: "法攻+3<br>真气+2", task: "一点心意(2选1)", title: "不差钱", process: "到<span class='coord'>(256 987)</span>花费2500W购买，获得称号“不差钱”" }, { attr: "罡气+3", task: "势利眼的商人", title: "小心机", process: "继续对话完成任务，获得称号“小心机”" }, { attr: "生命+2<br>法穿+2", task: "自食恶果", title: "令人头秃", process: "击杀3冰川之子，完成任务获得称号“令人头秃”" }, { attr: "物防+3<br>防等+2", task: "寻求助攻", title: "在危险的边缘反复试", process: "挖5千金子+10蜂蜜，交任务获得称号“在危险的边缘反复试”" }, { attr: "法防+3<br>真气+4", task: "成功弥补", title: "不是任性小孩", process: "传送到碎冰村对话完成，获得称号“不是任性小孩”" } ] },
+            { category: "信风镇", list: [ { attr: "无", task: "信风镇", title: "无", process: "等级100级，传送到信风镇自动触发，完成后触发祭奠任务" }, { attr: "物攻+2<br>法攻+2", task: "信风镇-祭奠", title: "信风望故人", process: "与百草仙对话，完成祭奠流程，获得称号“信风望故人”" }, { attr: "物防+3<br>法防+3", task: "信风镇西-解密", title: "解密大师", process: "按任务坐标（亥时到<span class='coord'>(441 736)</span>高度24）完成解密，获得称号“解密大师”" }, { attr: "生命+3<br>真气+5", task: "信风镇-真相", title: "真相只有一个", process: "根据竹片提示前往对应坐标触发任务，完成后获得称号“真相只有一个”" } ] },
+            { category: "桃园镇", list: [ { attr: "物攻+2<br>物防+2", task: "仙人迷路应有术", title: "桃源隐仙踪", process: "等级100级，到<span class='coord'>(644 562)</span>触发，击杀怪物完成任务，获得称号“桃源隐仙踪”" }, { attr: "法防+2<br>真气+2", task: "环佩空响桃花源", title: "荧火亦可耀", process: "到<span class='coord'>(647 540)</span>触发，击杀抱抱兔完成任务，获得称号“荧火亦可耀”" }, { attr: "生命+3<br>生命恢复+1", task: "菩萨扫雪万恶消", title: "雪涛渡恶尽", process: "到<span class='coord'>(656 566)</span>挖3千金子完成任务，获得称号“雪涛渡恶尽”" }, { attr: "法攻+2<br>真气恢复+2", task: "云化路岐月尽明", title: "灵犀脱樊笼", process: "到<span class='coord'>(642 572)</span>触发，水底挖桃源心完成任务，获得称号“灵犀脱樊笼”" } ] },
+            { category: "副本", list: [ { attr: "物防+4<br>生命+2<br>罡气+2<br>坚韧+1", task: "副本·初阶", title: "探路者", process: "进入火岩洞穴/蛇蝎谷/狂狼巢穴/青衣冢，击杀BOSS完成任务" }, { attr: "物防+5<br>攻等+2<br>真气+2", task: "副本·进阶", title: "怨灵宿敌", process: "进入幽冥居/履霜秘境，击杀BOSS完成任务" }, { attr: "法攻+2<br>法防+4<br>生命+4", task: "副本·高阶", title: "专业收割者", process: "进入怨灵之门/秘宝窟，击杀BOSS完成任务" }, { attr: "物防+6<br>防等+2<br>真气+4", task: "副本·幻天", title: "混合双打", process: "进入仙幻天/魔幻天，击杀BOSS完成任务" }, { attr: "法防+5<br>生命+2<br>罡气+5<br>碎骨+1", task: "副本·仙魔界", title: "仙魔制霸者", process: "进入天界炼狱/魔域桃源，击杀BOSS完成任务" } ] },
+            { category: "探索", list: [ { attr: "罡气+3<br>攻等+1<br>真气+4", task: "人羽之星", title: "人羽之星", process: "完成剑仙城+积羽城称号自动获得" }, { attr: "物防+4<br>法防+4<br>生命+4", task: "不负相逢", title: "不负相逢", process: "完成剑仙城+积羽城+万化城称号自动获得" }, { attr: "罡气+6", task: "天空之臣", title: "天空之臣", process: "任意地图飞到高度79停留几秒自动获得" } ] },
+            { category: "时装", list: [ { attr: "生命+1<br>真气+1", task: "竹篁闲云客", title: "竹篁闲云客", process: "时装包裹每行放1件时装即可解锁" }, { attr: "生命+2<br>真气+2", task: "青羽少年游", title: "青羽少年游", process: "时装包裹每行放1件时装即可解锁" }, { attr: "生命+3<br>真气+3", task: "银朱锦衣郎", title: "银朱锦衣郎", process: "时装包裹每行放1件时装即可解锁" }, { attr: "生命+4<br>真气+4", task: "金紫富贵侯", title: "金紫富贵侯", process: "时装包裹每行放1件时装即可解锁" } ] },
+            { category: "挑战", list: [ { attr: "物防+8<br>攻等+1<br>真气+4", task: "熔岩之王", title: "熔岩之王", process: "传送到洒火村，按顺序击杀怪物完成任务" }, { attr: "法防+6<br>罡气+5<br>物穿+2<br>坚韧+1", task: "冰雪之王", title: "冰雪之王", process: "传送到碎冰村，按顺序击杀怪物完成任务" } ] },
+            { category: "军衔", list: [ { attr: "生命+10<br>攻等+4<br>防等+4<br>真气+10", task: "二级军衔", title: "突击队长", process: "声望1000点，幽兰谷击杀15反戈蜴完成任务" }, { attr: "生命+10<br>攻等+4<br>防等+4<br>真气+10", task: "四级军衔", title: "疾行先锋", process: "声望5000点，云梦村击杀15啮甲冥鼠完成任务" } ] }
+        ];
+
+        const categoryColors = [ "#fef0f0", "#f0f7fe", "#f0fff4", "#fff8e8", "#f5f0ff", "#fff0f6", "#f0fcff", "#f8f0e8" ];
+        const select = document.getElementById('category-select');
+        const searchInput = document.getElementById('search-input');
+        const emptyTip = document.getElementById('empty-tip');
+        const dataTable = document.getElementById('data-table');
+        const tableBody = document.getElementById('table-body');
+        const thCategory = document.getElementById('th-category');
+        const copyTip = document.getElementById('copyTip');
+
+        select.addEventListener('change', renderTable);
+        searchInput.addEventListener('input', renderTable);
+        window.addEventListener('load', renderTable);
+
+        function renderTable() {
+            const category = select.value;
+            const keyword = searchInput.value.trim().toLowerCase();
+            tableBody.innerHTML = '';
+            let filteredList = [];
+
+            if (category === 'all' && !keyword) {
+                data.forEach(cate => { cate.list.forEach(item => { filteredList.push({ ...item, category: cate.category }); }); });
+            } else {
+                let allItems = [];
+                data.forEach(cate => { cate.list.forEach(item => { allItems.push({ ...item, category: cate.category }); }); });
+                filteredList = allItems.filter(item => {
+                    const matchCate = category === 'all' || item.category === category;
+                    const matchSearch = !keyword || (item.title && item.title.toLowerCase().includes(keyword));
+                    return matchCate && matchSearch;
+                });
+            }
+
+            if (filteredList.length === 0) { emptyTip.classList.remove('hidden'); dataTable.classList.add('hidden'); return; }
+            emptyTip.classList.add('hidden'); dataTable.classList.remove('hidden');
+            thCategory.classList.toggle('hidden', category !== 'all');
+            category === 'all' && !keyword ? renderMergedTable(filteredList) : renderNormalTable(filteredList, category);
+            bindCopyEvents();
+        }
+
+        function renderMergedTable(list) {
+            const groups = {}; list.forEach(item => { if (!groups[item.category]) groups[item.category] = []; groups[item.category].push(item); });
+            const cateKeys = Object.keys(groups); let globalRowIndex = 0;
+            cateKeys.forEach((cate, idx) => {
+                const items = groups[cate]; const baseColor = categoryColors[idx % categoryColors.length];
+                items.forEach((item, itemIdx) => {
+                    const tr = document.createElement('tr');
+                    const isEvenRow = globalRowIndex % 2 === 0;
+                    const finalBg = isEvenRow ? baseColor : `color-mix(in srgb, ${baseColor} 85%, #dcd9d0)`;
+                    tr.style.backgroundColor = finalBg;
+                    const titleHtml = item.title === '无' ? '无' : `<span class="copy-title">${item.title}</span>`;
+                    const attrHtml = renderAttrHtml(item.attr);
+                    let cateTd = '';
+                    if (itemIdx === 0) cateTd = `<td rowspan="${items.length}" style="vertical-align:middle; font-weight:bold; color:#2d2d2d; background:${baseColor}">${cate}</td>`;
+                    tr.innerHTML = `${cateTd}<td>${item.task}</td><td>${titleHtml}</td><td class="attr-box">${attrHtml}</td><td>${item.process}</td>`;
+                    tableBody.appendChild(tr); globalRowIndex++;
+                });
+            });
+        }
+
+        function renderNormalTable(list, category) {
+            list.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                if (index % 2 === 1) tr.style.backgroundColor = '#f3f1ec';
+                const titleHtml = item.title === '无' ? '无' : `<span class="copy-title">${item.title}</span>`;
+                const attrHtml = renderAttrHtml(item.attr);
+                tr.innerHTML = `${category === 'all' ? `<td>${item.category}</td>` : ''}<td>${item.task}</td><td>${titleHtml}</td><td class="attr-box">${attrHtml}</td><td>${item.process}</td>`;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        function renderAttrHtml(attrStr) {
+            if (!attrStr || attrStr === '无') return '无';
+            return attrStr
+                .replace(/物攻\+(\d+)/g, '<span class="attr-wugong">物攻+$1</span>')
+                .replace(/法攻\+(\d+)/g, '<span class="attr-fagong">法攻+$1</span>')
+                .replace(/物防\+(\d+)/g, '<span class="attr-wufang">物防+$1</span>')
+                .replace(/法防\+(\d+)/g, '<span class="attr-fafang">法防+$1</span>')
+                .replace(/生命\+(\d+)/g, '<span class="attr-shengming">生命+$1</span>')
+                .replace(/真气\+(\d+)/g, '<span class="attr-zhenqi">真气+$1</span>')
+                .replace(/坚韧\+(\d+)/g, '<span class="attr-jianren">坚韧+$1</span>')
+                .replace(/[法物]穿\+(\d+)/g, '<span class="attr-chuan">$&</span>')
+                .replace(/罡气\+(\d+)/g, '<span class="attr-gangqi">罡气+$1</span>')
+                .replace(/碎骨\+(\d+)/g, '<span class="attr-suiji">碎骨+$1</span>')
+                .replace(/[攻防]等\+(\d+)/g, '<span class="attr-dengji">$&</span>')
+                .replace(/(生命|真气)恢复\+(\d+)/g, '<span class="attr-huifu">$1恢复+$2</span>')
+                .replace(/速度\+(\d+)/g, '<span class="attr-other">速度+$1</span>');
+        }
+
+        function copyText(text) {
+            if (!text || text === '无') return;
+            navigator.clipboard.writeText(text).then(showCopyTip).catch(() => {
+                const input = document.createElement('input'); input.value = text; document.body.appendChild(input); input.select(); document.execCommand('copy'); document.body.removeChild(input); showCopyTip();
+            });
+        }
+
+        function showCopyTip() {
+            copyTip.classList.add('show'); setTimeout(() => copyTip.classList.remove('show'), 1500);
+        }
+
+        function bindCopyEvents() {
+            document.querySelectorAll('.coord,.copy-title').forEach(el => {
+                el.onclick = () => copyText(el.innerText.trim().replace(/[()]/g, ''));
+            });
+        }
+    </script>
+</body>
+</html>
