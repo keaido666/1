@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>完美世界经典服 时装颜色识别</title>
+    <title>完美世界 活动分配匹配器</title>
     <style>
         * {
             margin: 0;
@@ -18,7 +18,7 @@
             position: relative;
         }
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 30px auto;
             background: #f8f7f4;
             border-radius: 12px;
@@ -57,146 +57,125 @@
 
         .tool-wrap {
             padding: 30px;
+        }
+
+        /* 功能1：金额区 */
+        .money-row {
             display: flex;
-            flex-direction: column;
             gap: 20px;
-            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
-
-        .upload-box {
+        .money-item {
+            flex: 1;
+            min-width: 250px;
+        }
+        .money-item label {
+            font-size: 15px;
+            color: #333;
+            margin-right: 8px;
+        }
+        .money-item input {
             width: 100%;
-            padding: 20px;
-            background: #f1efe9;
-            border: 2px dashed #d1cec7;
-            border-radius: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .upload-box:hover {
-            border-color: #91aecf;
-            background: #f7f6f2;
-        }
-        .upload-box input {
-            display: none;
-        }
-        .upload-box label {
-            font-size: 16px;
-            color: #555;
-            cursor: pointer;
-        }
-
-        /* 固定在图片上方的结果栏 */
-        .result-bar {
-            width: 100%;
-            padding: 16px 20px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 16px;
-            display: none;
-        }
-        .result-bar.show {
-            display: flex;
-        }
-        .result-rgb {
-            font-weight: bold;
-            color: #c95d56;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .result-color {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
+            padding: 10px;
             border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
         }
-        .copy-btn {
-            padding: 6px 14px;
+
+        /* 左右两栏 */
+        .row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .col {
+            flex: 1;
+            min-width: 350px;
+        }
+        .col-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .col-tip {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+        textarea {
+            width: 100%;
+            height: 300px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            resize: none;
+            font-size: 15px;
+            background: #fff;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .btn {
+            padding: 8px 16px;
             background: #91aecf;
             color: #fff;
             border: none;
             border-radius: 6px;
             cursor: pointer;
+            font-size: 14px;
             transition: background 0.2s;
         }
-        .copy-btn:hover {
+        .btn:hover {
             background: #7a96b7;
         }
+        .btn.danger {
+            background: #c95d56;
+        }
+        .btn.danger:hover {
+            background: #b64444;
+        }
 
-        #preview {
-            max-width: 100%;
-            max-height: 500px;
-            border: 1px solid #ddd;
+        /* 结果区 */
+        .result-box {
+            margin-top: 20px;
+            padding: 16px;
+            background: #fff;
             border-radius: 8px;
-            display: none;
-            cursor: crosshair;
-            position: relative;
+            border: 1px solid #eee;
+        }
+        .result-item {
+            margin: 8px 0;
+            font-size: 15px;
+        }
+        .gray {
+            color: #999;
         }
 
-        /* 实时取色信息条 */
-        #colorInfo {
+        /* 右键菜单 */
+        .right-menu {
             position: absolute;
-            background: rgba(0,0,0,0.7);
-            color: #fff;
-            padding: 6px 12px;
+            background: #fff;
+            border: 1px solid #ccc;
             border-radius: 6px;
-            font-size: 14px;
-            font-weight: bold;
-            display: none;
-            z-index: 99;
-            align-items: center;
-            gap: 8px;
-            pointer-events: none;
-        }
-        .color-block {
-            width: 16px;
-            height: 16px;
-            border-radius: 3px;
-            border: 1px solid #fff;
-        }
-
-        /* 放大镜 */
-        #magnifier {
-            position: absolute;
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 3px solid #fff;
-            box-shadow: 0 0 0 2px #91aecf, 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            padding: 6px 0;
             display: none;
             z-index: 999;
-            pointer-events: none;
-            overflow: hidden;
         }
-
-        .tip {
-            color: #888;
+        .right-menu div {
+            padding: 6px 12px;
+            cursor: pointer;
             font-size: 14px;
         }
-
-        .copy-tip {
-            position: fixed;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #96b886;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-size: 14px;
-            z-index: 9999;
-            opacity: 0;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 10px rgba(150,184,134,0.25);
-        }
-        .copy-tip.show {
-            opacity: 1;
-            top: 40px;
+        .right-menu div:hover {
+            background: #f0f4fa;
         }
 
         /* ====================== 右侧浮动菜单 ====================== */
@@ -266,7 +245,7 @@
             color: #91aecf;
         }
         .menu-link.active {
-            background: linear-gradient(135deg, #91aecf, #aabfdf);
+            background: linear-gradient(135deg, #91aecf);
             color: #fff;
             font-weight: bold;
             border-left: 4px solid #fff;
@@ -289,10 +268,10 @@
                 <a href="https://keaido666.github.io/1/dy.html" class="menu-link">丹药生产</a>
             </li>
             <li class="menu-item">
-                <a href="https://keaido666.github.io/1/ys.html" class="menu-link active">时装颜色识别</a>
+                <a href="https://keaido666.github.io/1/ys.html" class="menu-link">时装颜色识别</a>
             </li>
             <li class="menu-item">
-                <a href="#" class="menu-link">页面4（待填）</a>
+                <a href="https://keaido666.github.io/1/bh.html" class="menu-link active">活动匹配</a>
             </li>
             <li class="menu-item">
                 <a href="#" class="menu-link">页面5（待填）</a>
@@ -301,39 +280,67 @@
     </div>
 </div>
 
-<div class="copy-tip" id="copyTip">复制成功！</div>
-<div id="colorInfo">
-    <span id="infoText">RGB(0,0,0)</span>
-    <div id="colorBlock" class="color-block"></div>
-</div>
-<div id="magnifier"></div>
-
 <div class="container">
     <div class="header">
         <img src="https://keaido666.github.io/1/keai1.jpg" alt="头像" class="header-avatar">
         <div class="header-sub">抖音：可爱多完美</div>
-        <div class="header-main">时装颜色识别</div>
+        <div class="header-main">活动分配匹配器</div>
     </div>
 
     <div class="tool-wrap">
-        <div class="upload-box">
-            <input type="file" id="imgInput" accept="image/*">
-            <label for="imgInput">📷 点击上传图片 或 直接粘贴图片</label>
-        </div>
-
-        <div class="tip">💡 提示：加载图片后，点击图片任意位置即可获取RGB</div>
-
-        <!-- 结果固定显示在这里 → 图片正上方 -->
-        <div class="result-bar" id="resultBar">
-            <div class="result-rgb">
-                当前 RGB：<span id="finalRgb">rgb(0,0,0)</span>
-                <div class="result-color" id="finalColor"></div>
+        <!-- 功能1：金额 -->
+        <div class="money-row">
+            <div class="money-item">
+                <label>活动总金额（金币）：</label>
+                <input type="number" id="totalMoney" placeholder="输入总金额">
             </div>
-            <button class="copy-btn" id="copyBtn">复制</button>
+            <div class="money-item">
+                <label>每人分配金额：</label>
+                <input type="number" id="perMoney" placeholder="输入每人金额">
+            </div>
         </div>
 
-        <img id="preview" alt="预览图">
+        <!-- 左右输入区 -->
+        <div class="row">
+            <!-- 左边：活动人员 -->
+            <div class="col">
+                <div class="col-title">
+                    <span>参加活动人员</span>
+                    <span id="leftCount">数量：0</span>
+                </div>
+                <div class="col-tip">右键名字可删除；去重后删除人员变灰色</div>
+                <textarea id="leftArea" placeholder="每行一个名字，可粘贴，回车分隔"></textarea>
+                <div class="btn-group">
+                    <button class="btn" id="dedupeBtn">去重</button>
+                    <button class="btn danger" id="clearLeftBtn">清空</button>
+                </div>
+            </div>
+
+            <!-- 右边：帮派人员 -->
+            <div class="col">
+                <div class="col-title">
+                    <span>帮派人员表</span>
+                    <span id="rightCount">数量：0</span>
+                </div>
+                <textarea id="rightArea" placeholder="每行一个名字，可粘贴，回车分隔"></textarea>
+                <div class="btn-group">
+                    <button class="btn" id="matchBtn">匹配</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 结果区 -->
+        <div class="result-box" id="resultBox">
+            <div class="result-item" id="unmatchLeft"></div>
+            <div class="result-item" id="matchRight"></div>
+            <div class="result-item" id="moneyResult"></div>
+        </div>
     </div>
+</div>
+
+<!-- 右键菜单 -->
+<div class="right-menu" id="rightMenu">
+    <div id="delItem">删除此行</div>
 </div>
 
 <script>
@@ -343,121 +350,157 @@
         floatMenu.classList.toggle('collapsed');
     });
 
-    const imgInput = document.getElementById('imgInput');
-    const preview = document.getElementById('preview');
-    const resultBar = document.getElementById('resultBar');
-    const finalRgb = document.getElementById('finalRgb');
-    const finalColor = document.getElementById('finalColor');
-    const copyBtn = document.getElementById('copyBtn');
-    const copyTip = document.getElementById('copyTip');
-    const magnifier = document.getElementById('magnifier');
-    const colorInfo = document.getElementById('colorInfo');
-    const infoText = document.getElementById('infoText');
-    const colorBlock = document.getElementById('colorBlock');
+    // 元素
+    const totalMoney = document.getElementById('totalMoney');
+    const perMoney = document.getElementById('perMoney');
+    const leftArea = document.getElementById('leftArea');
+    const rightArea = document.getElementById('rightArea');
+    const leftCount = document.getElementById('leftCount');
+    const rightCount = document.getElementById('rightCount');
+    const dedupeBtn = document.getElementById('dedupeBtn');
+    const clearLeftBtn = document.getElementById('clearLeftBtn');
+    const matchBtn = document.getElementById('matchBtn');
+    const resultBox = document.getElementById('resultBox');
+    const unmatchLeft = document.getElementById('unmatchLeft');
+    const matchRight = document.getElementById('matchRight');
+    const moneyResult = document.getElementById('moneyResult');
+    const rightMenu = document.getElementById('rightMenu');
+    const delItem = document.getElementById('delItem');
 
-    let canvas = document.createElement('canvas');
-    let ctx = canvas.getContext('2d');
-    let currentRgb = '';
-    const scale = 2.5;
+    let leftLines = [];
+    let clickLineIndex = -1;
 
-    // 上传
-    imgInput.addEventListener('change', (e) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-        handleImageFile(file);
+    // 更新数量
+    function updateLeftCount() {
+        const lines = leftArea.value.split('\n').filter(x => x.trim() !== '');
+        leftCount.textContent = `数量：${lines.length}`;
+    }
+    function updateRightCount() {
+        const lines = rightArea.value.split('\n').filter(x => x.trim() !== '');
+        rightCount.textContent = `数量：${lines.length}`;
+    }
+
+    leftArea.addEventListener('input', updateLeftCount);
+    rightArea.addEventListener('input', updateRightCount);
+
+    // 去重
+    dedupeBtn.addEventListener('click', () => {
+        const lines = leftArea.value.split('\n');
+        const seen = new Set();
+        const newLines = [];
+        lines.forEach(line => {
+            const t = line.trim();
+            if (!t) { newLines.push(line); return; }
+            const key = t.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]/g, '');
+            if (!seen.has(key)) {
+                seen.add(key);
+                newLines.push(line);
+            } else {
+                newLines.push(line + ' （已去重）');
+            }
+        });
+        leftArea.value = newLines.join('\n');
+        updateLeftCount();
     });
 
-    // 粘贴
-    document.addEventListener('paste', (e) => {
-        if (!e.clipboardData) return;
-        const items = e.clipboardData.items;
-        if (!items) return;
-        for (let i = 0; i < items.length; i++) {
-            const item = items[i];
-            if (item.kind === 'file' && item.type.includes('image')) {
-                const file = item.getAsFile();
-                if (file) {
-                    handleImageFile(file);
-                    break;
-                }
-            }
+    // 清空左边
+    clearLeftBtn.addEventListener('click', () => {
+        leftArea.value = '';
+        updateLeftCount();
+    });
+
+    // 右键删除
+    leftArea.addEventListener('contextmenu', e => {
+        e.preventDefault();
+        const rect = leftArea.getBoundingClientRect();
+        const y = e.clientY - rect.top;
+        const lineHeight = parseInt(getComputedStyle(leftArea).lineHeight);
+        clickLineIndex = Math.floor(y / lineHeight);
+        const lines = leftArea.value.split('\n');
+        if (clickLineIndex >= 0 && clickLineIndex < lines.length) {
+            rightMenu.style.left = e.clientX + 'px';
+            rightMenu.style.top = e.clientY + 'px';
+            rightMenu.style.display = 'block';
         }
     });
 
-    function handleImageFile(file) {
-        const reader = new FileReader();
-        reader.onload = e => {
-            const img = new Image();
-            img.onload = () => {
-                canvas.width = img.width;
-                canvas.height = img.height;
-                ctx.drawImage(img, 0, 0);
-                preview.src = img.src;
-                preview.style.display = 'block';
-            };
-            img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-
-    // 鼠标移动：放大镜 + 实时色值 + 色块
-    preview.addEventListener('mousemove', e => {
-        const rect = preview.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const ix = x * canvas.width / rect.width;
-        const iy = y * canvas.height / rect.height;
-
-        try {
-            const p = ctx.getImageData(ix, iy, 1, 1).data;
-            const r = p[0], g = p[1], b = p[2];
-            const rgbStr = `RGB(${r}, ${g}, ${b})`;
-
-            colorInfo.style.left = (e.clientX + 15) + 'px';
-            colorInfo.style.top = (e.clientY - 30) + 'px';
-            colorInfo.style.display = 'flex';
-            infoText.textContent = rgbStr;
-            colorBlock.style.backgroundColor = `rgb(${r},${g},${b})`;
-
-            magnifier.style.display = 'block';
-            magnifier.style.left = (e.clientX + 30) + 'px';
-            magnifier.style.top = (e.clientY + 20) + 'px';
-            magnifier.style.backgroundImage = `url(${canvas.toDataURL()})`;
-            magnifier.style.backgroundSize = `${canvas.width * scale}px ${canvas.height * scale}px`;
-            magnifier.style.backgroundPosition = `-${ix * scale - 50}px -${iy * scale - 50}px`;
-        } catch (e) {}
+    document.addEventListener('click', () => {
+        rightMenu.style.display = 'none';
     });
 
-    preview.addEventListener('mouseleave', () => {
-        magnifier.style.display = 'none';
-        colorInfo.style.display = 'none';
+    delItem.addEventListener('click', () => {
+        if (clickLineIndex === -1) return;
+        const lines = leftArea.value.split('\n');
+        if (lines[clickLineIndex]) {
+            lines[clickLineIndex] = '';
+        }
+        leftArea.value = lines.join('\n');
+        updateLeftCount();
+        rightMenu.style.display = 'none';
     });
 
-    // 点击取色 → 结果显示在图片上方
-    preview.addEventListener('click', e => {
-        const rect = preview.getBoundingClientRect();
-        const x = (e.clientX - rect.left) * canvas.width / rect.width;
-        const y = (e.clientY - rect.top) * canvas.height / rect.height;
-        try {
-            const p = ctx.getImageData(x, y, 1, 1).data;
-            const r = p[0], g = p[1], b = p[2];
-            currentRgb = `rgb(${r}, ${g}, ${b})`;
+    // 匹配（相似度80%，忽略大小写符号）
+    matchBtn.addEventListener('click', () => {
+        const leftNames = leftArea.value.split('\n').map(x => x.trim()).filter(x);
+        const rightNames = rightArea.value.split('\n').map(x => x.trim()).filter(x);
 
-            // 显示到图片上方
-            finalRgb.textContent = currentRgb;
-            finalColor.style.backgroundColor = currentRgb;
-            resultBar.classList.add('show');
-        } catch (e) {}
-    });
+        const clean = s => s.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]/g, '');
 
-    // 复制
-    copyBtn.addEventListener('click', () => {
-        if (!currentRgb) return;
-        navigator.clipboard.writeText(currentRgb).then(() => {
-            copyTip.classList.add('show');
-            setTimeout(() => copyTip.classList.remove('show'), 1500);
+        // 匹配成功的右边名单
+        const matchedRight = [];
+        // 未匹配的左边名单
+        const unmatchedLeft = [];
+
+        leftNames.forEach(l => {
+            const cl = clean(l);
+            let found = false;
+            for (const r of rightNames) {
+                const cr = clean(r);
+                if (cl === cr) {
+                    matchedRight.push(r);
+                    found = true;
+                    break;
+                }
+                // 简单相似度（字符重叠）
+                let same = 0;
+                for (let i = 0; i < Math.min(cl.length, cr.length); i++) {
+                    if (cl[i] === cr[i]) same++;
+                }
+                const sim = same / Math.max(cl.length, cr.length);
+                if (sim >= 0.8) {
+                    matchedRight.push(r);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) unmatchedLeft.push(l);
         });
+
+        // 去重匹配结果
+        const uniqueMatched = [...new Set(matchedRight)];
+        const finalRightText = uniqueMatched.join('\n');
+        rightArea.value = finalRightText;
+        updateRightCount();
+
+        // 显示结果
+        unmatchLeft.textContent = `未匹配活动人员：${unmatchedLeft.length}人 → ${unmatchedLeft.join('、')}`;
+        matchRight.textContent = `匹配成功帮派人员：${uniqueMatched.length}人`;
+
+        // 金额统计
+        const t = parseFloat(totalMoney.value) || 0;
+        const p = parseFloat(perMoney.value) || 0;
+        const num = uniqueMatched.length;
+        const actual = p * num;
+        if (t > 0 || p > 0) {
+            moneyResult.textContent = `活动人数：${num}｜每人${p}金币｜筹备${t}金币｜派发${actual}金币`;
+        } else {
+            moneyResult.textContent = '';
+        }
     });
+
+    // 初始化
+    updateLeftCount();
+    updateRightCount();
 </script>
 </body>
 </html>
