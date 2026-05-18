@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>完美世界经典服 时装颜色识别</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
+        }
+        body {
+            background-color: #ebebe7;
+            padding: 20px;
+            min-height: 100vh;
+            position: relative;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            background: #f8f7f4;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #91aecf, #aabfdf);
+            color: #ffffff;
+            padding: 24px 24px;
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 1px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        .header-avatar {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 4px solid #ffffff;
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .header-sub {
+            font-size: 18px;
+            font-weight: normal;
+        }
+        .header-main {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .tool-wrap {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .upload-box {
+            width: 100%;
+            padding: 20px;
+            background: #f1efe9;
+            border: 2px dashed #d1cec7;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .upload-box:hover {
+            border-color: #91aecf;
+            background: #f7f6f2;
+        }
+        .upload-box input {
+            display: none;
+        }
+        .upload-box label {
+            font-size: 16px;
+            color: #555;
+            cursor: pointer;
+        }
+
+        /* 固定在图片上方的结果栏 */
+        .result-bar {
+            width: 100%;
+            padding: 16px 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 16px;
+            display: none;
+        }
+        .result-bar.show {
+            display: flex;
+        }
+        .result-rgb {
+            font-weight: bold;
+            color: #c95d56;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .result-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .copy-btn {
+            padding: 6px 14px;
+            background: #91aecf;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .copy-btn:hover {
+            background: #7a96b7;
+        }
+
+        #preview {
+            max-width: 100%;
+            max-height: 500px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            display: none;
+            cursor: crosshair;
+            position: relative;
+        }
+
+        /* 实时取色信息条 */
+        #colorInfo {
+            position: absolute;
+            background: rgba(0,0,0,0.7);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            display: none;
+            z-index: 99;
+            align-items: center;
+            gap: 8px;
+            pointer-events: none;
+        }
+        .color-block {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            border: 1px solid #fff;
+        }
+
+        /* 放大镜 */
+        #magnifier {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 2px #91aecf, 0 4px 10px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 999;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .tip {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .copy-tip {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #96b886;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(150,184,134,0.25);
+        }
+        .copy-tip.show {
+            opacity: 1;
+            top: 40px;
+        }
+
+        /* ====================== 右侧浮动菜单 ====================== */
+        .float-menu {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            z-index: 999;
+            width: 220px;
+            transition: all 0.3s ease;
+        }
+        .float-menu.collapsed {
+            transform: translateY(-50%) translateX(calc(100% - 25px));
+        }
+        .menu-toggle {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 25px;
+            height: 60px;
+            background: linear-gradient(135deg, #91aecf, #aabfdf);
+            border-radius: 12px 0 0 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+            user-select: none;
+        }
+        .menu-content {
+            width: 170px;
+            background: #fff;
+            margin-left: 25px;
+            border-radius: 12px 0 0 12px;
+            box-shadow: -2px 2px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .menu-header {
+            background: linear-gradient(135deg, #91aecf, #aabfdf);
+            color: #fff;
+            padding: 14px 16px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 15px;
+        }
+        .menu-list {
+            list-style: none;
+            padding: 8px 0;
+        }
+        .menu-item {
+            padding: 0;
+        }
+        .menu-link {
+            display: block;
+            padding: 12px 18px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .menu-link:hover {
+            background: #f0f4fa;
+            color: #91aecf;
+        }
+        .menu-link.active {
+            background: linear-gradient(135deg, #91aecf, #aabfdf);
+            color: #fff;
+            font-weight: bold;
+            border-left: 4px solid #fff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="float-menu collapsed" id="floatMenu">
+    <div class="menu-toggle" id="menuToggle">
+        <span>≡</span>
+    </div>
+    <div class="menu-content">
+        <div class="menu-header">完美国服</div>
+        <ul class="menu-list">
+            <li class="menu-item">
+                <a href="https://keaido666.github.io/1/ch.html" class="menu-link">永久称号大全</a>
+            </li>
+            <li class="menu-item">
+                <a href="https://keaido666.github.io/1/dy.html" class="menu-link">丹药生产</a>
+            </li>
+            <li class="menu-item">
+                <a href="https://keaido666.github.io/1/ys.html" class="menu-link active">时装颜色识别</a>
+            </li>
+            <li class="menu-item">
+                <a href="#" class="menu-link">页面4（待填）</a>
+            </li>
+            <li class="menu-item">
+                <a href="#" class="menu-link">页面5（待填）</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="copy-tip" id="copyTip">复制成功！</div>
+<div id="colorInfo">
+    <span id="infoText">RGB(0,0,0)</span>
+    <div id="colorBlock" class="color-block"></div>
+</div>
+<div id="magnifier"></div>
+
+<div class="container">
+    <div class="header">
+        <img src="https://keaido666.github.io/1/keai1.jpg" alt="头像" class="header-avatar">
+        <div class="header-sub">抖音：可爱多完美</div>
+        <div class="header-main">时装颜色识别</div>
+    </div>
+
+    <div class="tool-wrap">
+        <div class="upload-box">
+            <input type="file" id="imgInput" accept="image/*">
+            <label for="imgInput">📷 点击上传图片 或 直接粘贴图片</label>
+        </div>
+
+        <div class="tip">💡 提示：加载图片后，点击图片任意位置即可获取RGB</div>
+
+        <!-- 结果固定显示在这里 → 图片正上方 -->
+        <div class="result-bar" id="resultBar">
+            <div class="result-rgb">
+                当前 RGB：<span id="finalRgb">rgb(0,0,0)</span>
+                <div class="result-color" id="finalColor"></div>
+            </div>
+            <button class="copy-btn" id="copyBtn">复制</button>
+        </div>
+
+        <img id="preview" alt="预览图">
+    </div>
+</div>
+
+<script>
+    const floatMenu = document.getElementById('floatMenu');
+    const menuToggle = document.getElementById('menuToggle');
+    menuToggle.addEventListener('click', () => {
+        floatMenu.classList.toggle('collapsed');
+    });
+
+    const imgInput = document.getElementById('imgInput');
+    const preview = document.getElementById('preview');
+    const resultBar = document.getElementById('resultBar');
+    const finalRgb = document.getElementById('finalRgb');
+    const finalColor = document.getElementById('finalColor');
+    const copyBtn = document.getElementById('copyBtn');
+    const copyTip = document.getElementById('copyTip');
+    const magnifier = document.getElementById('magnifier');
+    const colorInfo = document.getElementById('colorInfo');
+    const infoText = document.getElementById('infoText');
+    const colorBlock = document.getElementById('colorBlock');
+
+    let canvas = document.createElement('canvas');
+    let ctx = canvas.getContext('2d');
+    let currentRgb = '';
+    const scale = 2.5;
+
+    // 上传
+    imgInput.addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        handleImageFile(file);
+    });
+
+    // 粘贴
+    document.addEventListener('paste', (e) => {
+        if (!e.clipboardData) return;
+        const items = e.clipboardData.items;
+        if (!items) return;
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+            if (item.kind === 'file' && item.type.includes('image')) {
+                const file = item.getAsFile();
+                if (file) {
+                    handleImageFile(file);
+                    break;
+                }
+            }
+        }
+    });
+
+    function handleImageFile(file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const img = new Image();
+            img.onload = () => {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                preview.src = img.src;
+                preview.style.display = 'block';
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // 鼠标移动：放大镜 + 实时色值 + 色块
+    preview.addEventListener('mousemove', e => {
+        const rect = preview.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const ix = x * canvas.width / rect.width;
+        const iy = y * canvas.height / rect.height;
+
+        try {
+            const p = ctx.getImageData(ix, iy, 1, 1).data;
+            const r = p[0], g = p[1], b = p[2];
+            const rgbStr = `RGB(${r}, ${g}, ${b})`;
+
+            colorInfo.style.left = (e.clientX + 15) + 'px';
+            colorInfo.style.top = (e.clientY - 30) + 'px';
+            colorInfo.style.display = 'flex';
+            infoText.textContent = rgbStr;
+            colorBlock.style.backgroundColor = `rgb(${r},${g},${b})`;
+
+            magnifier.style.display = 'block';
+            magnifier.style.left = (e.clientX + 30) + 'px';
+            magnifier.style.top = (e.clientY + 20) + 'px';
+            magnifier.style.backgroundImage = `url(${canvas.toDataURL()})`;
+            magnifier.style.backgroundSize = `${canvas.width * scale}px ${canvas.height * scale}px`;
+            magnifier.style.backgroundPosition = `-${ix * scale - 50}px -${iy * scale - 50}px`;
+        } catch (e) {}
+    });
+
+    preview.addEventListener('mouseleave', () => {
+        magnifier.style.display = 'none';
+        colorInfo.style.display = 'none';
+    });
+
+    // 点击取色 → 结果显示在图片上方
+    preview.addEventListener('click', e => {
+        const rect = preview.getBoundingClientRect();
+        const x = (e.clientX - rect.left) * canvas.width / rect.width;
+        const y = (e.clientY - rect.top) * canvas.height / rect.height;
+        try {
+            const p = ctx.getImageData(x, y, 1, 1).data;
+            const r = p[0], g = p[1], b = p[2];
+            currentRgb = `rgb(${r}, ${g}, ${b})`;
+
+            // 显示到图片上方
+            finalRgb.textContent = currentRgb;
+            finalColor.style.backgroundColor = currentRgb;
+            resultBar.classList.add('show');
+        } catch (e) {}
+    });
+
+    // 复制
+    copyBtn.addEventListener('click', () => {
+        if (!currentRgb) return;
+        navigator.clipboard.writeText(currentRgb).then(() => {
+            copyTip.classList.add('show');
+            setTimeout(() => copyTip.classList.remove('show'), 1500);
+        });
+    });
+</script>
+</body>
+</html>
