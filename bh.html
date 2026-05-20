@@ -32,6 +32,7 @@
             font-size: 22px;
             font-weight: bold;
             text-align: center;
+            position: relative;
         }
         .header-avatar {
             width: 160px;
@@ -43,28 +44,46 @@
         }
         .tool-wrap { padding: 30px; }
 
-        /* 金额输入区 */
+        /* 金额选择区 */
         .money-box {
             display: flex;
+            align-items: center;
+            justify-content: space-between;
             gap: 20px;
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
+        .money-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
         .money-item {
-            flex: 1;
-            min-width: 200px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         .money-item label {
             font-size: 14px;
             font-weight: bold;
-            margin-right: 8px;
         }
         .money-item input {
-            width: 100%;
+            width: 180px;
             padding: 8px 12px;
             border: 1px solid #ddd;
             border-radius: 6px;
             font-size: 14px;
+        }
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
         }
 
         .row { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
@@ -80,7 +99,6 @@
         .duplicate-item { color: #888; margin: 4px 0; font-size: 14px; }
         .money-result { font-size: 15px; color: #b94539; font-weight: bold; margin: 8px 0; }
 
-        /* 右侧浮动导航 */
         .float-menu {
             position: fixed;
             top: 50%;
@@ -102,80 +120,44 @@
             height: 60px;
             background: linear-gradient(135deg, #91aecf, #aabfdf);
             border-radius: 12px 0 0 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-            box-shadow: -2px 0 8px rgba(0,0,0,0.1);
-            user-select: none;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 16px; cursor: pointer;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.1); user-select: none;
         }
         .menu-content {
-            width: 170px;
-            background: #fff;
-            margin-left: 25px;
+            width: 170px; background: #fff; margin-left: 25px;
             border-radius: 12px 0 0 12px;
-            box-shadow: -2px 2px 12px rgba(0,0,0,0.1);
-            overflow: hidden;
+            box-shadow: -2px 2px 12px rgba(0,0,0,0.1); overflow: hidden;
         }
         .menu-header {
             background: linear-gradient(135deg, #91aecf, #aabfdf);
-            color: #fff;
-            padding: 14px 16px;
-            font-weight: bold;
-            text-align: center;
-            font-size: 15px;
+            color: #fff; padding: 14px 16px;
+            font-weight: bold; text-align: center; font-size: 15px;
         }
-        .menu-list {
-            list-style: none;
-            padding: 8px 0;
-        }
+        .menu-list { list-style: none; padding: 8px 0; }
         .menu-link {
-            display: block;
-            padding: 12px 18px;
-            color: #333;
-            text-decoration: none;
-            font-size: 14px;
-            transition: all 0.2s;
+            display: block; padding: 12px 18px; color: #333;
+            text-decoration: none; font-size: 14px; transition: all 0.2s;
         }
-        .menu-link:hover {
-            background: #f0f4fa;
-            color: #91aecf;
-        }
+        .menu-link:hover { background: #f0f4fa; color: #91aecf; }
         .menu-link.active {
             background: linear-gradient(135deg, #91aecf, #aabfdf);
-            color: #fff;
-            font-weight: bold;
-            border-left: 4px solid #fff;
+            color: #fff; font-weight: bold; border-left: 4px solid #fff;
         }
     </style>
 </head>
 <body>
 
-<!-- 右侧悬浮导航菜单 -->
 <div class="float-menu collapsed" id="floatMenu">
-    <div class="menu-toggle" id="menuToggle">
-        <span>≡</span>
-    </div>
+    <div class="menu-toggle" id="menuToggle"><span>≡</span></div>
     <div class="menu-content">
         <div class="menu-header">完美国服</div>
         <ul class="menu-list">
-            <li class="menu-item">
-                <a href="https://keaido666.github.io/1/ch.html" class="menu-link">永久称号大全</a>
-            </li>
-            <li class="menu-item">
-                <a href="https://keaido666.github.io/1/dy.html" class="menu-link">丹药生产</a>
-            </li>
-            <li class="menu-item">
-                <a href="https://keaido666.github.io/1/ys.html" class="menu-link">时装颜色识别</a>
-            </li>
-            <li class="menu-item">
-                <a href="https://keaido666.github.io/1/bh.html" class="menu-link active">帮会统计</a>
-            </li>
-            <li class="menu-item">
-                <a href="#" class="menu-link">页面5（待填）</a>
-            </li>
+            <li><a href="https://keaido666.github.io/1/ch.html" class="menu-link">永久称号大全</a></li>
+            <li><a href="https://keaido666.github.io/1/dy.html" class="menu-link">丹药生产</a></li>
+            <li><a href="https://keaido666.github.io/1/ys.html" class="menu-link">时装颜色识别</a></li>
+            <li><a href="https://keaido666.github.io/1/bh.html" class="menu-link active">帮会统计</a></li>
+            <li><a href="#" class="menu-link">页面5（待填）</a></li>
         </ul>
     </div>
 </div>
@@ -188,23 +170,32 @@
     </div>
 
     <div class="tool-wrap">
-        <!-- 金额输入 -->
+        <!-- 金额二选一 + 帮会KPI按钮 -->
         <div class="money-box">
-            <div class="money-item">
-                <label>筹备总金额（金币）</label>
-                <input type="number" id="totalMoney" placeholder="填写总金额">
+            <div class="money-left">
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" name="moneyType" id="totalType" checked>
+                        <label for="totalType">按总金额分配</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="moneyType" id="perType">
+                        <label for="perType">按每人金额分配</label>
+                    </div>
+                </div>
+                <div class="money-item">
+                    <label id="moneyLabel">筹备总金额（金币）</label>
+                    <input type="number" id="moneyInput" placeholder="填写金额">
+                </div>
             </div>
-            <div class="money-item">
-                <label>每人分配金额</label>
-                <input type="number" id="perMoney" placeholder="填写每人金额">
-            </div>
+            <!-- 帮会KPI 按钮 -->
+            <button class="btn" onclick="window.open('https://keaido666.github.io/1/bhtj.html','_blank')">帮会KPI</button>
         </div>
 
         <div class="row">
             <div class="col">
                 <div class="col-title">
-                    <span>参加活动人员</span>
-                    <span id="leftCount">0</span>
+                    <span>参加活动人员</span><span id="leftCount">0</span>
                 </div>
                 <textarea id="leftArea"></textarea>
                 <div class="btn-group">
@@ -215,8 +206,7 @@
 
             <div class="col">
                 <div class="col-title">
-                    <span>帮派人员表</span>
-                    <span id="rightCount">0</span>
+                    <span>帮派人员表</span><span id="rightCount">0</span>
                 </div>
                 <textarea id="rightArea"></textarea>
                 <div class="btn-group">
@@ -235,140 +225,162 @@
 </div>
 
 <script>
-// 右侧菜单展开/收起
+// 菜单
 const floatMenu = document.getElementById('floatMenu');
-const menuToggle = document.getElementById('menuToggle');
-menuToggle.addEventListener('click', () => {
-    floatMenu.classList.toggle('collapsed');
+document.getElementById('menuToggle').onclick = () => floatMenu.classList.toggle('collapsed');
+
+// 金额类型切换
+const totalType = document.getElementById('totalType');
+const perType = document.getElementById('perType');
+const moneyLabel = document.getElementById('moneyLabel');
+const moneyInput = document.getElementById('moneyInput');
+
+totalType.addEventListener('change', () => {
+    moneyLabel.textContent = '筹备总金额（金币）';
+    moneyInput.placeholder = '填写总金额';
+    moneyInput.value = '';
+});
+perType.addEventListener('change', () => {
+    moneyLabel.textContent = '每人分配金额（金币）';
+    moneyInput.placeholder = '填写每人金额';
+    moneyInput.value = '';
 });
 
-// ===================== 核心过滤：只留中文 =====================
-function pureName(s) {
-    return s.trim().replace(/[^\u4e00-\u9fa5]/g, '');
+// ==============================================
+// 核心1：清理名字（去掉所有符号）
+// ==============================================
+function cleanName(str) {
+    if (!str) return '';
+    let s = str.trim();
+    s = s.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, '');
+    return s;
 }
 
-// ===================== 字符串相似度（60% 即匹配）=====================
+// ==============================================
+// 核心2：相似度计算（≥65% 匹配成功）
+// ==============================================
 function getSimilarity(a, b) {
-    let len = Math.max(a.length, b.length);
-    if (len === 0) return 1;
+    a = a.toLowerCase();
+    b = b.toLowerCase();
+    const len = Math.max(a.length, b.length);
+    if (len === 0) return 100;
     let same = 0;
-    for (let c of a) {
-        if (b.includes(c)) same++;
+    for (let c of a) if (b.includes(c)) same++;
+    return (same / len) * 100;
+}
+
+// ==============================================
+// 去重（忽略符号）
+// ==============================================
+document.getElementById('dedupeBtn').onclick = () => {
+    const area = document.getElementById('leftArea');
+    const lines = area.value.split('\n').map(line => line.trim()).filter(Boolean);
+    
+    const keyCount = {};
+    const keyMap = {};
+    const res = [];
+    const dupTexts = [];
+
+    lines.forEach(line => {
+        const key = cleanName(line);
+        keyCount[key] = (keyCount[key] || 0) + 1;
+        if (!keyMap[key]) keyMap[key] = line;
+    });
+
+    const addedKeys = new Set();
+    lines.forEach(line => {
+        const key = cleanName(line);
+        if (!addedKeys.has(key)) {
+            addedKeys.add(key);
+            res.push(line);
+        }
+    });
+
+    for (const key in keyCount) {
+        if (keyCount[key] > 1) {
+            dupTexts.push(`${keyMap[key]}(${keyCount[key]}次)`);
+        }
     }
-    return same / len;
-}
 
-// ===================== 匹配规则：≥60% 相同 就成功！=====================
-function isMatch(a, b) {
-    const pa = pureName(a);
-    const pb = pureName(b);
-    const sim = getSimilarity(pa, pb);
-    return sim >= 0.6;
-}
+    area.value = res.join('\n');
+    updateLeftCount();
+    const tips = document.getElementById('duplicateTips');
+    tips.textContent = dupTexts.length ? `去重剔除：${dupTexts.join('、')}` : '去重剔除：无重复';
+};
 
-// ===================== 元素获取 =====================
+// ==============================================
+// 匹配（相似度≥65% 即成功 + 忽略符号）
+// ==============================================
+document.getElementById('matchBtn').onclick = () => {
+    const L = document.getElementById('leftArea').value.split('\n').map(line => line.trim()).filter(Boolean);
+    const R = document.getElementById('rightArea').value.split('\n').map(line => line.trim()).filter(Boolean);
+    
+    const matched = [];
+    const unmatched = [];
+    const used = new Array(R.length).fill(false);
+
+    L.forEach(a => {
+        let ok = false;
+        const pureA = cleanName(a);
+        for (let i = 0; i < R.length; i++) {
+            if (used[i]) continue;
+            const pureB = cleanName(R[i]);
+            const sim = getSimilarity(pureA, pureB);
+            if (sim >= 65) {
+                used[i] = true;
+                matched.push(R[i]);
+                ok = true;
+                break;
+            }
+        }
+        if (!ok) unmatched.push(a);
+    });
+
+    const rightArea = document.getElementById('rightArea');
+    rightArea.value = matched.join('\n');
+    updateRightCount();
+
+    document.getElementById('unmatchLeft').textContent = `未匹配：${unmatched.length}人 → ${unmatched.join('、') || '无'}`;
+    document.getElementById('matchRight').textContent = `匹配成功：${matched.length}人`;
+
+    // 金额智能计算
+    const val = +moneyInput.value || 0;
+    const num = matched.length;
+    let resultText = '';
+
+    if (totalType.checked) {
+        const perMoney = num > 0 ? (val / num).toFixed(2) : 0;
+        resultText = `总金额：${val}金币 | 人数：${num}人 | 每人可分：${perMoney}金币`;
+    } else {
+        const totalMoney = val * num;
+        resultText = `每人：${val}金币 | 人数：${num}人 | 总发放：${totalMoney}金币`;
+    }
+
+    document.getElementById('moneyResult').textContent = resultText;
+};
+
+// 计数 + 清空
 const leftArea = document.getElementById('leftArea');
 const rightArea = document.getElementById('rightArea');
 const leftCount = document.getElementById('leftCount');
 const rightCount = document.getElementById('rightCount');
-const dedupeBtn = document.getElementById('dedupeBtn');
-const clearLeftBtn = document.getElementById('clearLeftBtn');
-const matchBtn = document.getElementById('matchBtn');
-const unmatchLeft = document.getElementById('unmatchLeft');
-const matchRight = document.getElementById('matchRight');
-const duplicateTips = document.getElementById('duplicateTips');
-const totalMoney = document.getElementById('totalMoney');
-const perMoney = document.getElementById('perMoney');
-const moneyResult = document.getElementById('moneyResult');
 
-// 计数
 function updateLeftCount() {
-    let n = leftArea.value.split('\n').filter(x => x.trim()).length;
-    leftCount.textContent = n;
+    leftCount.textContent = leftArea.value.split('\n').map(line => line.trim()).filter(Boolean).length;
 }
 function updateRightCount() {
-    let n = rightArea.value.split('\n').filter(x => x.trim()).length;
-    rightCount.textContent = n;
+    rightCount.textContent = rightArea.value.split('\n').map(line => line.trim()).filter(Boolean).length;
 }
 
 leftArea.addEventListener('input', updateLeftCount);
 rightArea.addEventListener('input', updateRightCount);
 
-// ===================== 去重（显示重复项） =====================
-dedupeBtn.onclick = () => {
-    let lines = leftArea.value.split('\n').map(x => x.trim()).filter(x => x);
-    let pureArr = [];
-    let result = [];
-    let duplicates = [];
-
-    lines.forEach(line => {
-        let p = pureName(line);
-        if (!pureArr.includes(p)) {
-            pureArr.push(p);
-            result.push(line);
-        } else {
-            duplicates.push(line);
-        }
-    });
-
-    leftArea.value = result.join('\n');
-    updateLeftCount();
-
-    if (duplicates.length > 0) {
-        duplicateTips.textContent = `去重剔除：${duplicates.join('、')}`;
-    } else {
-        duplicateTips.textContent = '去重剔除：无重复';
-    }
-};
-
-// 清空
-clearLeftBtn.onclick = () => {
+document.getElementById('clearLeftBtn').onclick = () => {
     leftArea.value = '';
     updateLeftCount();
-    duplicateTips.textContent = '';
+    document.getElementById('duplicateTips').textContent = '';
 };
 
-// ===================== 匹配 + 金额统计 =====================
-matchBtn.onclick = () => {
-    let L = leftArea.value.split('\n').map(x => x.trim()).filter(x => x);
-    let R = rightArea.value.split('\n').map(x => x.trim()).filter(x => x);
-    let match = [];
-    let no = [];
-
-    L.forEach(l => {
-        let found = false;
-        for (let r of R) {
-            if (isMatch(l, r)) {
-                match.push(r);
-                found = true;
-                break;
-            }
-        }
-        if (!found) no.push(l);
-    });
-
-    let finalMatch = [...new Set(match)];
-    rightArea.value = finalMatch.join('\n');
-    updateRightCount();
-
-    unmatchLeft.textContent = `未匹配：${no.length}人 → ${no.join('、') || '无'}`;
-    matchRight.textContent = `匹配成功：${finalMatch.length}人`;
-
-    // 金额统计
-    let t = Number(totalMoney.value) || 0;
-    let p = Number(perMoney.value) || 0;
-    let num = finalMatch.length;
-    let realTotal = num * p;
-
-    if (t > 0 || p > 0) {
-        moneyResult.textContent =
-            `活动人数：${num}人 | 每人发放：${p}金币 | 筹备总金额：${t}金币 | 实际派发：${realTotal}金币`;
-    } else {
-        moneyResult.textContent = '';
-    }
-};
-
-// 初始化
 updateLeftCount();
 updateRightCount();
 </script>
