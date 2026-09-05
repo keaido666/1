@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF‑8">
 <meta name="viewport" content="width=device‑width, initial‑scale=1.0">
-<title>完美世界人物代码调色工具</title>
+<title>完美世界 完美国际 人物代码调色工具</title>
+<!-- 引入公共头部导航样式 -->
+<link rel="stylesheet" href="common/header-nav.css">
 <style>
 *{box-sizing:border-box;font-family:system-ui,"Microsoft YaHei",sans-serif;margin:0;padding:0;}
 body{background:#ebebe7;color:#eee;padding:20px;position:relative;}
-
 /* ======== 100%复制 ys.html 原版外层容器container ======== */
 .container {
     max-width: 1000px;
@@ -17,39 +18,9 @@ body{background:#ebebe7;color:#eee;padding:20px;position:relative;}
     box-shadow: 0 4px 20px rgba(0,0,0,0.06);
     overflow: hidden;
 }
-
-/* ======== 完全复制 ys.html原版header，一字不改！ ======== */
-.header {
-    background: linear-gradient(135deg, #91aecf, #aabfdf);
-    color: #ffffff;
-    padding: 24px 24px;
-    font-size: 22px;
-    font-weight: bold;
-    text-align: center;
-    letter-spacing: 1px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-}
-.header-images {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 10px;
-}
-.header-avatar {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    border: 4px solid #fff;
-    object-fit: cover;
-}
-
 .tool-wrap {
     padding:30px;
 }
-
 .wrap{max-width:920px;margin:0 auto;}
 h2{margin-bottom:16px;font-size:20px;color:#222;}
 .container-color{display:flex;gap:16px;flex-wrap:wrap;}
@@ -106,124 +77,31 @@ button{
 }
 button:active{background:#1b5e20;}
 .note{margin-top:10px;font-size:12px;color:#999;line-height:1.4;}
-
-/* ========== 右侧悬浮导航【完全复制 ys.html原版CSS】 ========== */
-.float-menu {
-    position: fixed;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-    z-index: 999;
-    width: 220px;
-    transition: all 0.3s ease;
-}
-.float-menu.collapsed {
-    transform: translateY(-50%) translateX(calc(100% - 25px));
-}
-.menu-toggle {
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 25px;
-    height: 60px;
-    background: linear-gradient(135deg, #91aecf, #aabfdf);
-    border-radius: 12px 0 0 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    box-shadow: -2px 0 8px rgba(0,0,0,0.1);
-    user-select: none;
-}
-.menu-content {
-    width: 170px;
-    background: #fff;
-    margin-left: 25px;
-    border-radius: 12px 0 0 12px;
-    box-shadow: -2px 2px 12px rgba(0,0,0,0.1);
-    overflow: hidden;
-}
-.menu-header {
-    background: linear-gradient(135deg, #91aecf, #aabfdf);
-    color: #fff;
-    padding: 14px 16px;
-    font-weight: bold;
-    text-align: center;
-    font-size: 15px;
-}
-.menu-list {
-    list-style: none;
-    padding: 8px 0;
-}
-.menu-item {
-    padding:0;
-}
-.menu-link {
-    display: block;
-    padding: 12px 18px;
-    color: #333;
-    text-decoration: none;
-    font-size: 14px;
-    transition: all 0.2s;
-}
-.menu-link:hover {
-    background: #f0f4fa;
-    color: #91aecf;
-}
-.menu-link.active {
-    background: linear-gradient(135deg, #91aecf, #aabfdf);
-    color: #fff;
-    font-weight: bold;
-    border-left: 4px solid #fff;
-}
 </style>
 </head>
 <body>
-
-<!-- 右侧悬浮导航 HTML（与ys.html完全一致） -->
-<div class="float-menu collapsed" id="floatMenu">
-    <div class="menu-toggle" id="menuToggle">
-        <span>≡</span>
-    </div>
-    <div class="menu-content">
-        <div class="menu-header">完美国服</div>
-        <ul class="menu-list">
-            <li class="menu-item">
-                <a href="https://keaido666.github.io/1/ch.html" class="menu-link">永久称号大全</a>
-            </li>
-            <li class="menu-item">
-                <a href="https://keaido666.github.io/1/dy.html" class="menu-link">丹药生产</a>
-            </li>
-            <li class="menu-item">
-                <a href="https://keaido666.github.io/1/ys.html" class="menu-link">时装颜色识别</a>
-            </li>
-            <li class="menu-item">
-                <a href="https://keaido666.github.io/1/bh.html" class="menu-link">帮会统计</a>
-            </li>
-            <li class="menu-item">
-                <a href="https://keaido666.github.io/1/cdcol.html" class="menu-link active">代码调色</a>
-            </li>
-            <li class="menu-item"><a href="https://keaido666.github.io/1/colnew.html" class="menu-link">代码调色新手</a></li>
-                <li class="menu-item">
-                    <a href="https://keaido666.github.io/1/1.html" class="menu-link">国际</a>
-                </li> 
-        </ul>
-    </div>
-</div>
+<!--公共头部导航占位容器-->
+<div id="globalHeaderNav"></div>
+<div class="header">人物代码调色工具｜HSV取色 / RGB/HEX转十进制</div>
+<!--公共导航JS，提供initNav()-->
+<script src="common/nav.js"></script>
+<script>
+(async function loadGlobalComponent(){
+    try{
+        const res = await fetch('common/header-nav.html');
+        if(!res.ok) throw new Error("加载失败");
+        const html = await res.text();
+        document.querySelector('#globalHeaderNav').innerHTML = html;
+        initNav();
+        document.body.classList.add("ready");
+    }catch(err){
+        console.error(err);
+        document.body.classList.add("ready");
+    }
+})();
+</script>
 
 <div class="container">
-    <div class="header">
-        <div class="header-images">
-            <img src="https://keaido666.github.io/1/keai1.jpg" class="header-avatar">
-            <img src="https://keaido666.github.io/1/keavx.png" class="header-avatar">
-        </div>
-        抖音：可爱多完美<br>
-        完美世界人物代码调色工具｜HSV取色 / RGB/HEX转十进制
-    </div>
-
     <div class="tool-wrap">
         <div class="wrap">
             <div class="container-color">
@@ -260,13 +138,6 @@ button:active{background:#1b5e20;}
 </div>
 
 <script>
-// 悬浮菜单切换JS
-const floatMenu = document.getElementById('floatMenu');
-const menuToggle = document.getElementById('menuToggle');
-menuToggle.addEventListener('click', () => {
-    floatMenu.classList.toggle('collapsed');
-});
-
 const canvas = document.getElementById('pickerCanvas');
 const ctx = canvas.getContext('2d');
 const hueCanvas = document.getElementById('hueBar');
@@ -286,7 +157,6 @@ let val = 0.5;
 let dragMain = false;
 let dragHue = false;
 let lockInputUpdate = false;
-
 //绘制色相竖条
 function drawHueBar(){
     const grad = hueCtx.createLinearGradient(0,0,0,hueCanvas.height);
@@ -406,7 +276,6 @@ function updateAllFromHsv(){
     setTimeout(()=>lockInputUpdate=false,0);
     updateAllRender(r,g,b);
 }
-
 // 通用：处理pickerCanvas坐标
 function handlePickerPos(e){
     const rect = canvas.getBoundingClientRect();
@@ -426,7 +295,6 @@ function handleHuePos(e){
     hue = 360 * (y / hueCanvas.height);
     updateAllFromHsv();
 }
-
 // ========== 【修改：同时支持单击 + 按住拖动】 ==========
 // 主画布：按下开启拖动
 canvas.addEventListener('mousedown',e=>{
@@ -447,7 +315,6 @@ canvas.addEventListener('mousemove',e=>{
     if(!dragMain) return;
     handlePickerPos(e);
 });
-
 //色相条：按下开启拖动
 hueCanvas.addEventListener('mousedown',e=>{
     dragHue = true;
@@ -461,7 +328,6 @@ hueCanvas.addEventListener('mousemove',e=>{
     if(!dragHue) return;
     handleHuePos(e);
 });
-
 //输入框事件
 [inR,inG,inB].forEach(el=>{
     el.addEventListener('input',()=>{
@@ -482,7 +348,6 @@ inHex.addEventListener('input',()=>{
         setByRgb(rgb[0],rgb[1],rgb[2]);
     }
 })
-
 copyBtn.onclick = async ()=>{
     const num = iniDecVal.textContent.trim();
     await navigator.clipboard.writeText(num);
