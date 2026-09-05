@@ -459,6 +459,21 @@ function bindCopyEvents() {
     });
 }
 </script>
-    <script src="common/nav.js"></script>
+   <script src="common/nav.js"></script>
+<script>
+(async function loadGlobalComponent(){
+    try{
+        const res = await fetch('common/header-nav.html');
+        if(!res.ok) throw new Error("加载失败");
+        const html = await res.text();
+        document.querySelector('#globalHeaderNav').innerHTML = html;
+        initNav();  // DOM插入完毕再绑定点击事件
+        document.body.classList.add("ready");
+    }catch(err){
+        console.error(err);
+        document.body.classList.add("ready");
+    }
+})();
+</script>
 </body>
 </html>
