@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>完美世界经典服 丹药生产</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
+        }
+        body {
+            background-color: #ebebe7;
+            padding: 20px;
+            min-height: 100vh;
+            position: relative;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            background: #f8f7f4;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #91aecf, #aabfdf);
+            color: #ffffff;
+            padding: 24px 24px;
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 1px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+         .header-images {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+        .header-avatar {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            object-fit: cover;
+        }
+        .header-sub {
+            font-size: 18px;
+            font-weight: normal;
+        }
+        .header-main {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .filter-bar {
+            padding: 18px 24px;
+            background-color: #f1efe9;
+            border-bottom: 1px solid #e0ded7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .filter-bar label {
+            font-size: 16px;
+            margin-right: 8px;
+            color: #5c5c5c;
+            font-weight: 500;
+        }
+        .filter-bar select,
+        .filter-bar input {
+            padding: 8px 16px;
+            font-size: 15px;
+            border: 1px solid #d1cec7;
+            border-radius: 6px;
+            outline: none;
+            transition: all 0.2s;
+            min-width: 180px;
+            background: #fff;
+        }
+        .filter-bar select:focus,
+        .filter-bar input:focus {
+            border-color: #91aecf;
+            box-shadow: 0 0 0 2px rgba(145,174,207,0.15);
+        }
+        .table-wrapper {
+            padding: 24px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #f8f7f4;
+            border-radius: 8px;
+            overflow: hidden;
+            table-layout: auto;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 14px;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        th {
+            background: linear-gradient(135deg, #d8d9e0, #c8c9d2);
+            color: #2d2d2d;
+            font-weight: 700;
+            border: none;
+            border-bottom: 2px solid #b5b7c3;
+            text-shadow: 0 1px 1px rgba(255,255,255,0.3);
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        td {
+            background: transparent;
+            border-bottom: 1px solid #e8e6e0;
+            transition: background-color 0.2s ease;
+        }
+
+        td:last-child {
+            white-space: normal !important;
+            width: 9999px;
+        }
+
+        tr:hover {
+            background-color: #e6eaf1 !important;
+            transition: background-color 0.2s;
+        }
+        .pill-img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+            border-radius: 6px;
+            border: 1px solid #e0ded7;
+            background: #fff;
+        }
+        .attr-box {
+            background: transparent !important;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+        .attr-wugong { color: #c95d56; }
+        .attr-fagong { color: #9359b5; }
+        .attr-wufang  { color: #4b8ac9; }
+        .attr-fafang { color: #59886b; }
+        .attr-shengming{ color: #c9884b; }
+        .attr-zhenqi { color: #8883c1; }
+        .attr-jianren { color: #869897; }
+        .attr-chuan  { color: #b25978; }
+        .attr-other  { color: #666666; }
+        .attr-gangqi { color: #c95d56; }
+        .attr-suiji { color: #b25978; }
+        .attr-dengji { color: #9359b5; }
+        .attr-huifu { color: #59886b; }
+
+        .coord, .copy-title {
+            color: #c95d56;
+            cursor: pointer;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+        .coord:hover, .copy-title:hover {
+            color: #b64444;
+        }
+        .hidden {
+            display: none !important;
+        }
+        #empty-tip {
+            text-align: center;
+            padding: 60px 20px;
+            color: #a8a59e;
+            font-size: 16px;
+        }
+        .copy-tip {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #96b886;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(150,184,134,0.25);
+        }
+        .copy-tip.show {
+            opacity: 1;
+            top: 40px;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d1cec7;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #b8b4ac;
+        }
+
+        /* ====================== 右侧浮动菜单 ====================== */
+        .float-menu {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            z-index: 999;
+            width: 220px;
+            transition: all 0.3s ease;
+        }
+        .float-menu.collapsed {
+            transform: translateY(-50%) translateX(calc(100% - 25px));
+        }
+        .menu-toggle {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 25px;
+            height: 60px;
+            background: linear-gradient(135deg, #91aecf, #aabfdf);
+            border-radius: 12px 0 0 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+            user-select: none;
+        }
+        .menu-content {
+            width: 170px;
+            background: #fff;
+            margin-left: 25px;
+            border-radius: 12px 0 0 12px;
+            box-shadow: -2px 2px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .menu-header {
+            background: linear-gradient(135deg, #91aecf, #aabfdf);
+            color: #fff;
+            padding: 14px 16px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 15px;
+        }
+        .menu-list {
+            list-style: none;
+            padding: 8px 0;
+        }
+        .menu-item {
+            padding: 0;
+        }
+        .menu-link {
+            display: block;
+            padding: 12px 18px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .menu-link:hover {
+            background: #f0f4fa;
+            color: #91aecf;
+        }
+        .menu-link.active {
+            background: linear-gradient(135deg, #91aecf, #aabfdf);
+            color: #fff;
+            font-weight: bold;
+            border-left: 4px solid #fff;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ====================== 右侧浮动菜单 默认已收起 ====================== -->
+<div class="float-menu collapsed" id="floatMenu">
+    <div class="menu-toggle" id="menuToggle">
+        <span>≡</span>
+    </div>
+    <div class="menu-content">
+        <div class="menu-header">完美国服</div>
+        <ul class="menu-list">
+            <li class="menu-item">
+                <a href="https://keaido666.github.io/1/ch.html" class="menu-link">永久称号大全</a>
+            </li>
+            <li class="menu-item">
+                <a href="https://keaido666.github.io/1/dy.html" class="menu-link active">丹药生产</a>
+            </li>
+            <li class="menu-item">
+                <a href="https://keaido666.github.io/1/ys.html" class="menu-link">时装颜色识别</a>
+            </li>
+            <li class="menu-item">
+                <a href="https://keaido666.github.io/1/bh.html" class="menu-link">帮会统计</a>
+            </li>
+            <li class="menu-item">
+                <a href="https://keaido666.github.io/1/cdcol.html" class="menu-link">代码调色</a>
+            </li>
+            <li class="menu-item"><a href="https://keaido666.github.io/1/colnew.html" class="menu-link">代码调色新手</a></li>
+            <li class="menu-item">
+                 <a href="https://keaido666.github.io/1/1.html" class="menu-link">国际</a>
+            </li>
+             
+        </ul>
+    </div>
+</div>
+
+<div class="copy-tip" id="copyTip">复制成功！</div>
+<div class="container">    
+    <div class="header">
+        <div class="header-images">
+            <img src="https://keaido666.github.io/1/keai1.jpg" class="header-avatar">
+            <img src="https://keaido666.github.io/1/keavx.png" class="header-avatar">
+        </div>
+        抖音：可爱多完美<br>
+        完美世界经典服 丹药生产
+    </div>
+    <div class="filter-bar">
+        <div>
+            <label for="category-select">丹药类型：</label>
+            <select id="category-select">
+                <option value="all">全部</option>
+                <option value="免疫无敌">免疫/无敌</option>
+                <option value="移动速度">移动速度</option>
+                <option value="吟唱加速">吟唱加速</option>
+                <option value="元气真元">元气/真元</option>
+                <option value="回血回真气">回血/回真气</option>
+                <option value="伤害减免">伤害减免</option>
+                <option value="属性伤害">属性伤害</option>
+                <option value="属性互换">属性互换</option>
+            </select>
+        </div>
+        <div>
+            <label for="search-input">搜索丹药：</label>
+            <input type="text" id="search-input" placeholder="输入丹药名称搜索..." />
+        </div>
+    </div>
+    <div class="table-wrapper">
+        <div id="empty-tip">请选择类型或搜索丹药查看信息</div>
+        <table id="data-table" class="hidden">
+            <thead>
+                <tr>
+                    <th id="th-category" class="hidden">类型</th>
+                    <th>丹药名称</th>
+                    <th>仙丹品级</th>
+                    <th>预览</th>
+                    <th>药效效果</th>
+                    <th>合成配方</th>
+                    <th>产地</th>
+                </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // 浮动菜单展开/收起
+    const floatMenu = document.getElementById('floatMenu');
+    const menuToggle = document.getElementById('menuToggle');
+    menuToggle.addEventListener('click', () => {
+        floatMenu.classList.toggle('collapsed');
+    });
+
+    // 最终整理版：无重复 + 全材料替换 + 化淤丹已补回 + 会神丹已补回
+    const data = [
+        { category: "免疫无敌", list: [
+            { name: "龟蛇静丸", level: "★★★", effect: "8秒内无法移动，但免疫所有伤害", material: "紫丹参10 阴阳符10 钻杆虫20 木蝴蝶10 地仙石3 幻仙石1", place: "剑仙城" },
+            { name: "铜墙铁壁散", level: "★★★★★", effect: "12秒内无法移动，但免疫所有伤害", material: "紫丹参10 阴阳符25 九香虫20 木蝴蝶30 地仙石3 幻仙石3", place: "万流城" },
+            { name: "金刚附体丸", level: "★★★★★", effect: "6秒内无敌，无视所有伤害", material: "阴阳符10 人仙石1 天仙石1 地仙石1 幻仙石3", place: "万流城、摩天崖" },
+        ]},
+        { category: "移动速度", list: [
+            { name: "乘风追月散", level: "★", effect: "15秒内提升40%移动速度", material: "千金子10 佛手5 地仙石3 一元石10", place: "所有药师和郡守" },
+            { name: "渠黄散", level: "★★", effect: "15秒内提升70%移动速度", material: "婆罗子10 百草露5 地仙石3 两仪石10", place: "刺骨之地、碧涛林、惊鸿岭" },
+            { name: "紫飒露", level: "★★★", effect: "15秒内提升100%移动速度", material: "天仙子20 紫琉璃5 地仙石3 幻仙石1", place: "四方寨、无忧小道、禹王鼎" },
+            { name: "盗骊丹", level: "★★★★★", effect: "15秒内提升200%移动速度，最多15米/秒", material: "天仙子10 蟠桃果5 地仙石3 幻仙石3", place: "祖龙城" },
+            { name: "神行散", level: "★★★", effect: "8秒内自由移动，免疫各类行动阻碍状态", material: "蜂蜜10 幽冥之血10 地仙石3 幻仙石1", place: "残山、沐火村、桃花坞" },
+            { name: "天机散", level: "★★★★", effect: "12秒内自由移动，免疫各类行动阻碍状态", material: "芙苓10 阴阳符10 地仙石3 幻仙石1", place: "寻梦港" },
+            { name: "无极散", level: "★★★★★", effect: "20秒内自由移动，免疫各类行动阻碍状态", material: "首乌10 阴阳符20 地仙石3 幻仙石3", place: "古长城、盘丝岭、通天湖" },
+            { name: "捕风捉影散", level: "★★★★★", effect: "15秒内自由移动，并提升100%移动速度", material: "芙苓10 天仙子20 阴阳符10 蟠桃果5 地仙石3 幻仙石3", place: "摩天崖、白岭" },
+        ]},
+        { category: "吟唱加速", list: [
+            { name: "风怒香", level: "★★★", effect: "3秒内吟唱加速一倍", material: "元素结晶10 利爪10 人仙石3 幻仙石1", place: "幽冥古道、疾风草原、摩天崖" },
+            { name: "雷厉风行散", level: "★★★★★", effect: "3秒内施法不用吟唱", material: "元素精华10 尖牙10 人仙石3 幻仙石3", place: "祖龙城、弱水之源" },
+        ]},
+        { category: "元气真元", list: [
+            { name: "碧螺春", level: "★★", effect: "立刻增加50点元气", material: "钝爪10 仙石碎片10 人仙石3 三才石3", place: "残山、盘丝岭、埋骨之地" },
+            { name: "金镶玉", level: "★★★", effect: "立刻增加一点真元", material: "利爪10 仙石碎片10 人仙石3 幻仙石1", place: "冰封古道、灯笼山、迷雾丛林" },
+            { name: "神仙茶", level: "★★★★", effect: "立刻增加一点真元和50点元气", material: "软筋10 仙石碎片15 人仙石3 幻仙石2", place: "碧涛林、寻梦港" },
+            { name: "白毫银针", level: "★★★★★", effect: "立刻增加两点真元", material: "尖牙10 仙石碎片20 人仙石3 幻仙石3", place: "万流城、祖龙城" },
+            { name: "会神丹", level: "★★★", effect: "使用后自身3次内施法不用吟唱", material: "元素精华10 软筋5 人仙石3 幻仙石1", place: "万流城" },
+        ]},
+        { category: "回血回真气", list: [
+            { name: "百转丹", level: "★★", effect: "立刻回复1-2000点生命", material: "紫丹参15 芙苓15 木蝴蝶15 天仙石3 两仪石10", place: "雪崩峡谷、信风镇、幽兰谷" },
+            { name: "千机丸", level: "★★★", effect: "立刻回复1-4000点生命", material: "紫丹参5 芙苓5 木蝴蝶5 天仙石3 三才石10", place: "四方寨、信风镇、落日高原" },
+            { name: "万化散", level: "★★★★", effect: "立刻回复1-6000点生命", material: "紫丹参10 芙苓10 木蝴蝶10 天仙石3 幻仙石1", place: "剑仙城" },
+            { name: "玉壶散", level: "★★", effect: "30秒内回复2000点真气", material: "雄黄5 千金子5 天仙石3 两仪石10", place: "所有药师和郡守" },
+            { name: "冰心丸", level: "★★★", effect: "30秒内回复4000点真气", material: "牛黄5 婆罗子5 天仙石3 幻仙石1", place: "幽冥古道、碧涛林、通天湖" },
+            { name: "惊寒丹", level: "★★★★", effect: "30秒内回复6000点真气", material: "牛黄10 天仙子5 天仙石3 幻仙石1", place: "剑仙城、绝龙坡" },
+            { name: "归心散", level: "★★", effect: "立刻回复30%生命和真气", material: "紫丹参5 牛黄5 木蝴蝶5 天仙石3 幻仙石1", place: "万劫城、龙战之野、无忧小道" },
+            { name: "轮回盘", level: "★★★★", effect: "立刻回复60%生命和真气", material: "紫丹参12 牛黄12 木蝴蝶12 天仙石3 幻仙石2", place: "万劫城、灯笼山、南屏山" },
+            { name: "清寂露", level: "★★★★★", effect: "立刻回复90%生命和真气", material: "紫丹参20 牛黄20 木蝴蝶20 天仙石3 幻仙石3", place: "万流城" },
+            { name: "化淤丹", level: "★★", effect: "使用后立刻解除自身所有负面状态", material: "紫丹参5 雄黄5 千金子5 天仙石3 幻仙石1", place: "祖龙城、剑仙城" },
+        ]},
+        { category: "伤害减免", list: [
+            { name: "铁甲散", level: "★★★", effect: "15秒内减少物理伤害", material: "接骨木5 幽冥之血10 地仙石3 幻仙石1", place: "破阵平原、绝龙坡、黑山" },
+            { name: "磐石散", level: "★★★★", effect: "15秒内较大减少物理伤害", material: "紫丹参10 阴阳符5 地仙石3 幻仙石2", place: "积羽城" },
+            { name: "寸草不生丸", level: "★★★★", effect: "15秒内极大减少木系伤害", material: "元素精华5 猛毒液5 九香虫5 绿萼梅5 地仙石3 幻仙石1", place: "冰封古道、暗香坡、怨灵沼泽" },
+            { name: "牵脊丸", level: "★★", effect: "15秒内较大减少水系伤害", material: "元素结晶5 海胆5 钻杆虫5 白萼梅5 地仙石3 两仪石10", place: "所有郡守" },
+            { name: "中流砥柱丸", level: "★★★★", effect: "15秒内极大减少水系伤害", material: "元素精华5 磁器碎片5 九香虫5 白萼梅5 地仙石3 幻仙石1", place: "刺骨之地、万劫城、弱水之源" },
+            { name: "獬豸丸", level: "★★", effect: "15秒内较大减少火系伤害", material: "元素结晶5 火石5 钻杆虫5 红萼梅5 地仙石3 两仪石10", place: "所有郡守" },
+            { name: "浴火重生丸", level: "★★★★", effect: "15秒内极大减少火系伤害", material: "元素精华5 金项圈5 九香虫5 红萼梅5 地仙石3 幻仙石1", place: "灯笼山、沐火村、沙漠海" },
+            { name: "饕餮丸", level: "★★", effect: "15秒内较大减少土系伤害", material: "元素结晶5 绛珠草5 钻杆虫5 郁金香5 地仙石3 两仪石10", place: "所有郡守" },
+            { name: "皇天后土丸", level: "★★★★", effect: "15秒内极大减少土系伤害", material: "元素精华5 蟠桃果5 九香虫5 郁金香5 地仙石3 幻仙石1", place: "古长城、落日高原、沙漠海" },
+        ]},
+        { category: "属性伤害", list: [
+            { name: "红磷丹", level: "★", effect: "1分钟攻击附少量火伤害", material: "元素粉末5 火石5 钝爪5 人仙石3 一元石10", place: "所有药师和郡守" },
+            { name: "赤焰丹", level: "★★", effect: "1分钟攻击附中量火伤害", material: "元素碎片5 铜项圈5 利爪5 人仙石3 两仪石10", place: "龙战之野、南屏山、白岭" },
+            { name: "烈阳焚空丹", level: "★★★", effect: "1分钟攻击附大量火伤害", material: "元素之石5 银项圈5 兽骨5 人仙石3 幻仙石1", place: "沐火村、龙战之野、落日高原" },
+            { name: "碧波丹", level: "★", effect: "1分钟攻击附少量水伤害", material: "元素粉末5 水草5 钝爪5 人仙石3 一元石10", place: "所有药师和郡守" },
+            { name: "青霜丹", level: "★★", effect: "1分钟攻击附中量水伤害", material: "元素碎片5 海胆5 利爪5 人仙石3 两仪石10", place: "邻水镇、弱水之源、白岭" },
+            { name: "万载玄冰丹", level: "★★★", effect: "1分钟攻击附大量水伤害", material: "元素之石5 海星5 兽骨5 人仙石3 幻仙石1", place: "冰封古道、盘丝岭、摩天崖" },
+            { name: "乌藤木", level: "★", effect: "1分钟攻击附少量木伤害", material: "元素粉末5 触角5 钝爪5 人仙石3 一元石10", place: "所有药师和郡守" },
+            { name: "鹤顶红", level: "★★", effect: "1分钟攻击附中量木伤害", material: "元素碎片5 强酸5 利爪5 人仙石3 两仪石10", place: "桃花坞、埋骨之地、黑山" },
+            { name: "碧落黄泉瘴", level: "★★★", effect: "1分钟攻击附大量木伤害", material: "元素之石5 毒液5 兽骨5 人仙石3 幻仙石1", place: "幽冥古道、邻水镇、怨灵沼泽" },
+        ]},
+        { category: "属性互换", list: [
+            { name: "豹胎易筋丸", level: "★★★", effect: "30秒内提升法防降低物防", material: "紫丹参5 蟠桃果5 木蝴蝶5 地仙石3 幻仙石1", place: "万化城" },
+            { name: "虎鞭洗髓露", level: "★★★", effect: "30秒内提升物防降低法防", material: "牛黄5 蟠桃果5 木蝴蝶5 地仙石3 幻仙石1", place: "万化城" },
+        ]}
+    ];
+
+    const categoryColors = [ "#fef0f0", "#f0f7fe", "#f0fff4", "#fff8e8", "#f5f0ff", "#fff0f6", "#f0fcff", "#f8f0e8" ];
+    const select = document.getElementById('category-select');
+    const searchInput = document.getElementById('search-input');
+    const emptyTip = document.getElementById('empty-tip');
+    const dataTable = document.getElementById('data-table');
+    const tableBody = document.getElementById('table-body');
+    const thCategory = document.getElementById('th-category');
+    const copyTip = document.getElementById('copyTip');
+
+    select.addEventListener('change', renderTable);
+    searchInput.addEventListener('input', renderTable);
+    window.addEventListener('load', renderTable);
+
+    function renderTable() {
+        const category = select.value;
+        const keyword = searchInput.value.trim().toLowerCase();
+        tableBody.innerHTML = '';
+        let filteredList = [];
+
+        if (category === 'all' && !keyword) {
+            data.forEach(cate => { cate.list.forEach(item => { filteredList.push({ ...item, category: cate.category }); }); });
+        } else {
+            let allItems = [];
+            data.forEach(cate => { cate.list.forEach(item => { allItems.push({ ...item, category: cate.category }); }); });
+            filteredList = allItems.filter(item => {
+                const matchCate = category === 'all' || item.category === category;
+                const matchSearch = !keyword || (item.name && item.name.toLowerCase().includes(keyword));
+                return matchCate && matchSearch;
+            });
+        }
+
+        if (filteredList.length === 0) { emptyTip.classList.remove('hidden'); dataTable.classList.add('hidden'); return; }
+        emptyTip.classList.add('hidden'); dataTable.classList.remove('hidden');
+        thCategory.classList.toggle('hidden', category !== 'all');
+        category === 'all' && !keyword ? renderMergedTable(filteredList) : renderNormalTable(filteredList, category);
+        bindCopyEvents();
+    }
+
+    function renderMergedTable(list) {
+        const groups = {}; list.forEach(item => { if (!groups[item.category]) groups[item.category] = []; groups[item.category].push(item); });
+        const cateKeys = Object.keys(groups); let globalRowIndex = 0;
+        cateKeys.forEach((cate, idx) => {
+            const items = groups[cate]; const baseColor = categoryColors[idx % categoryColors.length];
+            items.forEach((item, itemIdx) => {
+                const tr = document.createElement('tr');
+                const isEvenRow = globalRowIndex % 2 === 0;
+                const finalBg = isEvenRow ? baseColor : `color-mix(in srgb, ${baseColor} 85%, #dcd9d0)`;
+                tr.style.backgroundColor = finalBg;
+                let cateTd = '';
+                if (itemIdx === 0) cateTd = `<td rowspan="${items.length}" style="vertical-align:middle; font-weight:bold; color:#2d2d2d; background:${baseColor}">${cate}</td>`;
+                tr.innerHTML = `${cateTd}
+                <td class="copy-title">${item.name}</td>
+                <td style="color:#c95d56; font-weight:bold">${item.level}</td>
+                <td><img src="https://world2.wanmei.com/hd/lingtu/lingtu/images/sdjs/xd_img.png" class="pill-img" alt="丹药"></td>
+                <td>${item.effect}</td>
+                <td>${item.material}</td>
+                <td>${item.place}</td>`;
+                tableBody.appendChild(tr); globalRowIndex++;
+            });
+        });
+    }
+
+    function renderNormalTable(list, category) {
+        list.forEach((item, index) => {
+            const tr = document.createElement('tr');
+            if (index % 2 === 1) tr.style.backgroundColor = '#f3f1ec';
+            tr.innerHTML = `${category === 'all' ? `<td>${item.category}</td>` : ''}
+            <td class="copy-title">${item.name}</td>
+            <td style="color:#c95d56; font-weight:bold">${item.level}</td>
+            <td><img src="https://world2.wanmei.com/hd/lingtu/lingtu/images/sdjs/xd_img.png" class="pill-img" alt="丹药"></td>
+            <td>${item.effect}</td>
+            <td>${item.material}</td>
+            <td>${item.place}</td>`;
+            tableBody.appendChild(tr);
+        });
+    }
+
+    function copyText(text) {
+        if (!text || text === '无') return;
+        navigator.clipboard.writeText(text).then(showCopyTip).catch(() => {
+            const input = document.createElement('input'); input.value = text; document.body.appendChild(input); input.select(); document.execCommand('copy'); document.body.removeChild(input); showCopyTip();
+        });
+    }
+
+    function showCopyTip() {
+        copyTip.classList.add('show'); setTimeout(() => copyTip.classList.remove('show'), 1500);
+    }
+
+    function bindCopyEvents() {
+        document.querySelectorAll('.copy-title').forEach(el => {
+            el.onclick = () => copyText(el.innerText.trim());
+        });
+    }
+</script>
+</body>
+</html>
