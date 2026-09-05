@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>完美世界人物代码调色工具-新手版</title>
+<style>
+*{box-sizing:border-box;font-family:system-ui,"Microsoft YaHei",sans-serif;margin:0;padding:0;}
+body{background:#ebebe7;color:#222;padding:20px;position:relative;}
+
+.container {
+    max-width: 1000px;
+    margin: 30px auto;
+    background: #f8f7f4;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    overflow: hidden;
+}
+.header {
+    background: linear-gradient(135deg, #91aecf, #aabfdf);
+    color: #ffffff;
+    padding: 24px 24px;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: 1px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+.header-images {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+.header-avatar {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 4px solid #fff;
+    object-fit: cover;
+}
+.tool-wrap { padding:30px; }
+.wrap{ max-width:920px; margin:0 auto; }
+h2{ margin-bottom:16px; font-size:20px; color:#222; }
+
+.main-row{ display:flex; gap:24px; }
+.col-left{ width:48%; }
+.col-right{
+    width:52%;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+#codeInput{
+    width:100%;
+    min-height:500px;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    resize:vertical;
+    font-size:13px;
+    background:#fff;
+}
+.btn-group-right{ display:flex; gap:10px; justify-content:flex-end; }
+.sync-bar-bottom{ margin-top:16px; }
+button{
+    background:#2e7d32;
+    color:#fff;
+    border:0;
+    padding:8px 12px;
+    border-radius:6px;
+    cursor:pointer;
+}
+button:active{ background:#1b5e20; }
+
+.color-item{ display:flex; flex-direction:column; gap:4px; margin-bottom:14px; }
+.color-item-row{ display:flex; align-items:flex-start; gap:10px; }
+.color-item .label-text{ width:86px; flex-shrink:0; padding-top:6px; }
+.color-item input{
+    width:200px !important;
+    flex-shrink:0;
+    padding:6px 8px;
+    border:1px solid #bbb;
+    border-radius:4px;
+    background:#fff;
+}
+.color-wrap-block{ display:flex; flex-direction:column; align-items:center; }
+.color-block{
+    width:36px;
+    height:36px;
+    border:1px solid #999;
+    border-radius:4px;
+    cursor:pointer;
+    flex-shrink:0;
+}
+.hex-readonly{ font-size:11px; color:#555; margin-top:3px; }
+
+/* ========== 取色器弹窗 ========== */
+.hsv-modal{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:10000;
+}
+.hsv-modal-box{ background:#fff; padding:20px; border-radius:10px; }
+.hsv-picker-row{ display:flex; gap:12px; align-items:flex-start; }
+.sv-panel-wrap{ position:relative; }
+#svCanvas{ width:420px; height:420px; cursor:crosshair; border-radius:6px; border:1px solid #ddd; display:block; }
+#hueCanvas{ width:40px; height:420px; cursor:pointer; border-radius:6px; border:1px solid #ddd; display:block; }
+.sv-pointer{
+    position:absolute; width:14px; height:14px; border-radius:50%;
+    border:2px solid #fff; background:transparent; pointer-events:none;
+    transform:translate(-50%,-50%); box-shadow:0 0 0 1px rgba(0,0,0,0.4);
+}
+.hue-pointer{
+    position:absolute; left:0; width:40px; height:4px; background:#fff;
+    border:1px solid #999; pointer-events:none; transform:translateY(-50%);
+}
+.preview-panel{ width:140px; height:420px; border-radius:6px; border:1px solid #ddd; }
+.hsv-info{ margin-top:14px; display:flex; gap:16px; align-items:center; }
+.hsv-text-info{ font-size:14px; line-height:1.8; }
+.modal-btn-row{ margin-top:14px; display:flex; gap:8px; justify-content:flex-end; }
+
+/* 右侧悬浮导航 */
+.float-menu {
+    position: fixed; top: 50%; right: 0;
+    transform: translateY(-50%);
+    z-index: 999; width: 220px; transition: all 0.3s ease;
+}
+.float-menu.collapsed {
+    transform: translateY(-50%) translateX(calc(100% - 25px));
+}
+.menu-toggle {
+    position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+    width: 25px; height: 60px;
+    background: linear-gradient(135deg, #91aecf, #aabfdf);
+    border-radius: 12px 0 0 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 16px; cursor: pointer;
+    box-shadow: -2px 0 8px rgba(0,0,0,0.1); user-select: none;
+}
+.menu-content {
+    width: 170px; background: #fff; margin-left: 25px;
+    border-radius: 12px 0 0 12px;
+    box-shadow: -2px 2px 12px rgba(0,0,0,0.1); overflow: hidden;
+}
+.menu-header {
+    background: linear-gradient(135deg, #91aecf, #aabfdf);
+    color: #fff; padding: 14px 16px; font-weight: bold; text-align: center; font-size: 15px;
+}
+.menu-list { list-style: none; padding: 8px 0; }
+.menu-item { padding:0; }
+.menu-link {
+    display: block; padding: 12px 18px; color: #333; text-decoration: none;
+    font-size: 14px; transition: all 0.2s;
+}
+.menu-link:hover { background: #f0f4fa; color: #91aecf; }
+.menu-link.active {
+    background: linear-gradient(135deg, #91aecf, #aabfdf);
+    color: #fff; font-weight: bold; border-left: 4px solid #fff;
+}
+
+@media(max-width:768px){
+    .main-row{flex-direction:column;}
+    .col-left,.col-right{width:100%;}
+    .hsv-picker-row{flex-wrap:wrap;}
+    .color-item input{width:100% !important;}
+}
+</style>
+</head>
+<body>
+<div class="float-menu collapsed" id="floatMenu">
+    <div class="menu-toggle" id="menuToggle"><span>≡</span></div>
+    <div class="menu-content">
+        <div class="menu-header">完美国服</div>
+        <ul class="menu-list">
+            <li class="menu-item"><a href="https://keaido666.github.io/1/ch.html" class="menu-link">永久称号大全</a></li>
+            <li class="menu-item"><a href="https://keaido666.github.io/1/dy.html" class="menu-link">丹药生产</a></li>
+            <li class="menu-item"><a href="https://keaido666.github.io/1/ys.html" class="menu-link">时装颜色识别</a></li>
+            <li class="menu-item"><a href="https://keaido666.github.io/1/bh.html" class="menu-link">帮会统计</a></li>
+            <li class="menu-item"><a href="https://keaido666.github.io/1/cdcol.html" class="menu-link">代码调色</a></li>
+            <li class="menu-item"><a href="https://keaido666.github.io/1/colnew.html" class="menu-link active">代码调色新手</a></li>
+            <li class="menu-item"><a href="https://keaido666.github.io/1/1.html" class="menu-link">国际</a></li> 
+        </ul>
+    </div>
+</div>
+
+<div class="container">
+    <div class="header">
+        <div class="header-images">
+            <img src="https://keaido666.github.io/1/keai1.jpg" class="header-avatar">
+            <img src="https://keaido666.github.io/1/keavx.png" class="header-avatar">
+        </div>
+        抖音：可爱多完美<br>
+        完美世界人物代码调色工具｜新手版
+    </div>
+    <div class="tool-wrap">
+        <div class="wrap">
+            <div class="main-row">
+                <div class="col-left">
+                    <h2>解析颜色列表</h2>
+                    <div id="colorListBox"></div>
+                    <div class="sync-bar-bottom">
+                        <button id="syncBtn">同步回角色代码</button>
+                    </div>
+                </div>
+                <div class="col-right">
+                    <h2>角色代码（粘贴到此）</h2>
+                    <textarea id="codeInput" placeholder="粘贴完美世界角色INI完整代码..."></textarea>
+                    <div class="btn-group-right">
+                        <button id="parseBtn">解析代码</button>
+                        <button id="copyCodeBtn">复制完整代码</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- HSV取色弹窗 -->
+<div class="hsv-modal" id="hsvModal">
+    <div class="hsv-modal-box">
+        <div class="hsv-picker-row">
+            <div class="sv-panel-wrap">
+                <canvas id="svCanvas" width="420" height="420"></canvas>
+                <div class="sv-pointer" id="svPointer"></div>
+            </div>
+            <div style="position:relative;">
+                <canvas id="hueCanvas" width="40" height="420"></canvas>
+                <div class="hue-pointer" id="huePointer"></div>
+            </div>
+            <div class="preview-panel" id="pickerPreview"></div>
+        </div>
+        <div class="hsv-info">
+            <div class="hsv-text-info" id="hsvTextInfo">
+                <div>HEX：<span id="pickerHex">#FFFFFF</span></div>
+                <div>INI(游戏可用)：<span id="pickerIni">0</span></div>
+            </div>
+        </div>
+        <div class="modal-btn-row">
+            <button id="hsvConfirm">确认选取颜色</button>
+            <button id="hsvClose">关闭</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const floatMenu = document.getElementById('floatMenu');
+const menuToggle = document.getElementById('menuToggle');
+menuToggle.addEventListener('click', () => { floatMenu.classList.toggle('collapsed'); });
+
+const codeInput = document.getElementById('codeInput');
+const parseBtn = document.getElementById('parseBtn');
+const syncBtn = document.getElementById('syncBtn');
+const copyCodeBtn = document.getElementById('copyCodeBtn');
+const colorListBox = document.getElementById('colorListBox');
+
+const hsvModal = document.getElementById('hsvModal');
+const svCanvas = document.getElementById('svCanvas');
+const hueCanvas = document.getElementById('hueCanvas');
+const svCtx = svCanvas.getContext('2d');
+const hueCtx = hueCanvas.getContext('2d');
+const svPointer = document.getElementById('svPointer');
+const huePointer = document.getElementById('huePointer');
+const pickerPreview = document.getElementById('pickerPreview');
+const pickerHex = document.getElementById('pickerHex');
+const pickerIni = document.getElementById('pickerIni');
+const hsvConfirm = document.getElementById('hsvConfirm');
+const hsvClose = document.getElementById('hsvClose');
+
+let currentEditIndex = null;
+let hue = 30, sat = 0.5, val = 0.8;
+let dragSv = false, dragHue = false;
+
+const colorDefine = [
+    {key:"colorHair", name:"头发颜色"},
+    {key:"colorFace", name:"脸部颜色"},
+    {key:"colorEye", name:"眼睛颜色"},
+    {key:"colorBrow", name:"眉毛颜色"},
+    {key:"colorMouth", name:"嘴唇颜色"},
+    {key:"colorEyeBall", name:"眼球颜色"},
+    {key:"colorMoustache", name:"胡须颜色"},
+    {key:"colorBody", name:"身体颜色"},
+];
+let colorDataList = [];
+
+/* ---------- 转换工具 【游戏24位BGR】---------- */
+function toHex2(n){ let s = n.toString(16).toUpperCase(); return s.length===1 ? "0"+s : s; }
+function rgbToHex(r,g,b){ return `#${toHex2(r)}${toHex2(g)}${toHex2(b)}`; }
+
+// 游戏INI：24位 B | G<<8 | R<<16，无Alpha
+function rgbToGameIni(r,g,b){
+    return (b) | (g <<8) | (r <<16);
+}
+// 解析游戏ini数字，直接丢弃高位，只拿RGB
+function gameIniToRgb(iniNum){
+    const u = iniNum >>>0;
+    return {
+        r:(u >>16) &0xff,
+        g:(u >>8) &0xff,
+        b:u &0xff
+    };
+}
+
+function hsv2rgb(h,s,v){
+    let c = v*s;
+    let x = c*(1-Math.abs((h/60)%2-1));
+    let m = v-c;
+    let r,g,b;
+    if(h<60){r=c;g=x;b=0;}
+    else if(h<120){r=x;g=c;b=0;}
+    else if(h<180){r=0;g=c;b=x;}
+    else if(h<240){r=0;g=x;b=c;}
+    else if(h<300){r=x;g=0;b=c;}
+    else {r=c;g=0;b=x;}
+    return {
+        r:Math.round((r+m)*255),
+        g:Math.round((g+m)*255),
+        b:Math.round((b+m)*255)
+    };
+}
+function rgbToHsv(r,g,b){
+    r/=255; g/=255; b/=255;
+    let max=Math.max(r,g,b), min=Math.min(r,g,b);
+    let h,s,v=max, d=max-min;
+    s = max===0 ? 0 : d/max;
+    if(max===min){ h=0; }
+    else{
+        switch(max){
+            case r: h=((g-b)/d)+(g<b?6:0); break;
+            case g: h=((b-r)/d)+2; break;
+            case b: h=((r-g)/d)+4; break;
+        }
+        h*=60;
+    }
+    return [h,s,v];
+}
+
+/* ---------- 取色器绘制 ---------- */
+function drawSvPanel(){
+    const w=svCanvas.width, h=svCanvas.height;
+    svCtx.fillStyle = `hsl(${hue}, 100%, 50%)`;
+    svCtx.fillRect(0,0,w,h);
+    const wg = svCtx.createLinearGradient(0,0,w,0);
+    wg.addColorStop(0,"#ffffff"); wg.addColorStop(1,"rgba(255,255,255,0)");
+    svCtx.fillStyle=wg; svCtx.fillRect(0,0,w,h);
+    const bg = svCtx.createLinearGradient(0,0,0,h);
+    bg.addColorStop(0,"rgba(0,0,0,0)"); bg.addColorStop(1,"#000000");
+    svCtx.fillStyle=bg; svCtx.fillRect(0,0,w,h);
+    svPointer.style.left = (sat*w)+"px";
+    svPointer.style.top = ((1-val)*h)+"px";
+}
+function drawHueBar(){
+    const w=hueCanvas.width, h=hueCanvas.height;
+    const g = hueCtx.createLinearGradient(0,0,0,h);
+    for(let i=0;i<=360;i+=60){ g.addColorStop(i/360, `hsl(${i},100%,50%)`); }
+    hueCtx.fillStyle=g; hueCtx.fillRect(0,0,w,h);
+    huePointer.style.top = (hue/360*h)+"px";
+}
+
+// 更新弹窗，输出游戏可用24位数字
+function updatePickerPreview(){
+    const rgb = hsv2rgb(hue,sat,val);
+    const gameIniVal = rgbToGameIni(rgb.r, rgb.g, rgb.b);
+
+    pickerPreview.style.background = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+    pickerHex.textContent = rgbToHex(rgb.r, rgb.g, rgb.b);
+    pickerIni.textContent = gameIniVal;
+}
+
+function refreshPicker(){ drawSvPanel(); drawHueBar(); updatePickerPreview(); }
+
+function handleSvPos(e){
+    const r = svCanvas.getBoundingClientRect();
+    let x = e.clientX - r.left, y = e.clientY - r.top;
+    x = Math.max(0, Math.min(svCanvas.width, x));
+    y = Math.max(0, Math.min(svCanvas.height, y));
+    sat = x/svCanvas.width;
+    val = 1 - (y/svCanvas.height);
+    refreshPicker();
+}
+function handleHuePos(e){
+    const r = hueCanvas.getBoundingClientRect();
+    let y = e.clientY - r.top;
+    y = Math.max(0, Math.min(hueCanvas.height, y));
+    hue = 360 * (y/hueCanvas.height);
+    refreshPicker();
+}
+svCanvas.addEventListener('mousedown', e=>{ dragSv=true; handleSvPos(e); });
+window.addEventListener('mouseup', ()=>{ dragSv=false; dragHue=false; });
+window.addEventListener('mousemove', e=>{ if(dragSv) handleSvPos(e); if(dragHue) handleHuePos(e); });
+hueCanvas.addEventListener('mousedown', e=>{ dragHue=true; handleHuePos(e); });
+
+//打开弹窗：读取页面的游戏24位数字，转HSV，**不再引入Alpha字节**
+function openHsvModal(idx){
+    currentEditIndex = idx;
+    const c = colorDataList[idx];
+    const [hh,ss,vv] = rgbToHsv(c.r, c.g, c.b);
+    hue=hh; sat=ss; val=vv;
+    refreshPicker();
+    hsvModal.style.display="flex";
+}
+hsvClose.onclick = ()=>{ hsvModal.style.display="none"; };
+hsvConfirm.onclick = ()=>{
+    if(currentEditIndex===null) return;
+    const rgb = hsv2rgb(hue,sat,val);
+    const gameIniVal = rgbToGameIni(rgb.r, rgb.g, rgb.b);
+
+    colorDataList[currentEditIndex].iniRaw = gameIniVal;
+    colorDataList[currentEditIndex].r = rgb.r;
+    colorDataList[currentEditIndex].g = rgb.g;
+    colorDataList[currentEditIndex].b = rgb.b;
+
+    renderColorList();
+    hsvModal.style.display="none";
+};
+
+/* ---------- 解析 ---------- */
+parseBtn.onclick = ()=>{
+    const raw = codeInput.value.trim();
+    if(!raw){ alert("请粘贴角色代码"); return; }
+    colorDataList = [];
+    colorDefine.forEach(item=>{
+        colorDataList.push({
+            key:item.key, name:item.name,
+            iniRaw:0,
+            r:0,g:0,b:0
+        });
+    });
+
+    colorDataList.forEach(cd=>{
+        const reg = new RegExp(`${cd.key}\\s*=\\s*([-+]?\\d+)`);
+        const m = raw.match(reg);
+        if(m){
+            const num = parseInt(m[1],10);
+            cd.iniRaw = num;
+            const rgb = gameIniToRgb(num);
+            cd.r = rgb.r;
+            cd.g = rgb.g;
+            cd.b = rgb.b;
+        }
+    });
+    renderColorList();
+};
+
+function renderColorList(){
+    colorListBox.innerHTML = "";
+    colorDataList.forEach((item,idx)=>{
+        const div = document.createElement('div');
+        div.className = "color-item";
+        div.innerHTML = `
+            <div class="color-item-row">
+                <span class="label-text">${item.name}</span>
+                <input class="color-input" type="text" value="${item.iniRaw}" data-idx="${idx}">
+                <div class="color-wrap-block">
+                    <div class="color-block" data-idx="${idx}" style="background:rgb(${item.r},${item.g},${item.b});"></div>
+                    <div class="hex-readonly">${rgbToHex(item.r,item.g,item.b)}</div>
+                </div>
+            </div>`;
+        colorListBox.appendChild(div);
+    });
+
+    document.querySelectorAll('.color-block').forEach(el=>{
+        el.onclick = ()=> openHsvModal(Number(el.dataset.idx));
+    });
+
+    document.querySelectorAll('.color-input').forEach(el=>{
+        const updateFn = ()=>{
+            const i = Number(el.dataset.idx);
+            const inputText = el.value.trim();
+            const val = parseInt(inputText, 10);
+            if(isNaN(val)) return;
+            colorDataList[i].iniRaw = val;
+            const rgb = gameIniToRgb(val);
+            colorDataList[i].r = rgb.r;
+            colorDataList[i].g = rgb.g;
+            colorDataList[i].b = rgb.b;
+
+            const row = el.closest('.color-item-row');
+            const block = row.querySelector('.color-block');
+            const hex = row.querySelector('.hex-readonly');
+            block.style.background = `rgb(${colorDataList[i].r},${colorDataList[i].g},${colorDataList[i].b})`;
+            hex.textContent = rgbToHex(colorDataList[i].r, colorDataList[i].g, colorDataList[i].b);
+        };
+        el.oninput = updateFn;
+        el.onchange = updateFn;
+    });
+}
+
+/* ---------- 同步回代码 ---------- */
+syncBtn.onclick = ()=>{
+    if(!colorDataList.length){ alert("请先解析代码"); return; }
+    let text = codeInput.value;
+    colorDataList.forEach(cd=>{
+        const outNum = cd.iniRaw;
+        const newLine = `${cd.key} = ${outNum}`;
+        const reg = new RegExp(`${cd.key}\\s*=\\s*[-+]?\\d+`);
+        if(text.match(reg)){
+            text = text.replace(reg, newLine);
+        } else {
+            text += "\n" + newLine;
+        }
+    });
+    codeInput.value = text;
+    alert("已同步颜色修改回角色代码");
+};
+
+copyCodeBtn.onclick = async ()=>{
+    try{
+        await navigator.clipboard.writeText(codeInput.value);
+        alert("已复制完整代码");
+    }catch(err){
+        codeInput.select();
+        document.execCommand("copy");
+        alert("已复制完整代码");
+    }
+};
+
+refreshPicker();
+</script>
+</body>
+</html>
