@@ -1,5 +1,5 @@
-// common/nav.js 悬浮导航公共脚本
-document.addEventListener('DOMContentLoaded', function () {
+// common/nav.js
+function initNav(){
     const floatMenu = document.getElementById('floatMenu');
     const menuToggle = document.getElementById('menuToggle');
     if (menuToggle && floatMenu) {
@@ -7,4 +7,4 @@ document.addEventListener('DOMContentLoaded', function () {
             floatMenu.classList.toggle('collapsed');
         });
     }
-});
+}
