@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>完美世界经典服 时装颜色识别</title>
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>完美世界 完美国际 时装颜色识别</title>
+<!--公共样式由header‑nav.html自带，本页只写业务样式-->
+<style>
         * {
             margin: 0;
             padding: 0;
@@ -24,32 +25,6 @@
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.06);
             overflow: hidden;
-        }
-        .header {
-            background: linear-gradient(135deg, #91aecf, #aabfdf);
-            color: #ffffff;
-            padding: 24px 24px;
-            font-size: 22px;
-            font-weight: bold;
-            text-align: center;
-            letter-spacing: 1px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-        }
-        .header-images {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 10px;
-        }
-        .header-avatar {
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
-            border: 4px solid #fff;
-            object-fit: cover;
         }
         .tool-wrap {
             padding: 30px;
@@ -80,7 +55,6 @@
             color: #555;
             cursor: pointer;
         }
-
         /* ==========结果栏 ========== */
         .result-bar {
             width: 100%;
@@ -97,14 +71,12 @@
         .result-bar.show {
             display: flex;
         }
-
         .result-bar-middle-wrap{
             display:flex;
             gap:24px;
             align-items:flex-start;
             flex:1;
         }
-
         /* 左侧：HSV可视化画布区域 */
         .result-left-hsv {
             flex-shrink: 0;
@@ -127,7 +99,6 @@
             border-radius: 6px;
             pointer-events: none;
         }
-
         /* 中间：颜色方块 + 全部色值文本 */
         .result-right-info {
             display: flex;
@@ -149,8 +120,7 @@
             color: #c95d56;
             padding-top: 4px;
         }
-
-        /* 复制按钮：放在容器右下角 align-self:flex‑end 交叉轴靠底部 */
+        /* 复制按钮：容器右下角 */
         .copy-btn {
             padding: 6px 14px;
             background: #91aecf;
@@ -165,7 +135,6 @@
         .copy-btn:hover {
             background: #7a96b7;
         }
-
         #preview {
             max-width: 100%;
             max-height: 500px;
@@ -232,144 +201,53 @@
             opacity: 1;
             top: 40px;
         }
-
-        /* ====================== 右侧浮动菜单 ====================== */
-        .float-menu {
-            position: fixed;
-            top: 50%;
-            right: 0;
-            transform: translateY(-50%);
-            z-index: 999;
-            width: 220px;
-            transition: all 0.3s ease;
-        }
-        .float-menu.collapsed {
-            transform: translateY(-50%) translateX(calc(100% - 25px));
-        }
-        .menu-toggle {
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 25px;
-            height: 60px;
-            background: linear-gradient(135deg, #91aecf, #aabfdf);
-            border-radius: 12px 0 0 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-            box-shadow: -2px 0 8px rgba(0,0,0,0.1);
-            user-select: none;
-        }
-        .menu-content {
-            width: 170px;
-            background: #fff;
-            margin-left: 25px;
-            border-radius: 12px 0 0 12px;
-            box-shadow: -2px 2px 12px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        .menu-header {
-            background: linear-gradient(135deg, #91aecf, #aabfdf);
-            color: #fff;
-            padding: 14px 16px;
-            font-weight: bold;
-            text-align: center;
-            font-size: 15px;
-        }
-        .menu-list {
-            list-style: none;
-            padding: 8px 0;
-        }
-        .menu-item {
-            padding: 0;
-        }
-        .menu-link {
-            display: block;
-            padding: 12px 18px;
-            color: #333;
-            text-decoration: none;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-        .menu-link:hover {
-            background: #f0f4fa;
-            color: #91aecf;
-        }
-        .menu-link.active {
-            background: linear-gradient(135deg, #91aecf, #aabfdf);
-            color: #fff;
-            font-weight: bold;
-            border-left: 4px solid #fff;
-        }
-    </style>
+</style>
 </head>
 <body>
-<div class="float-menu collapsed" id="floatMenu">
-    <div class="menu-toggle" id="menuToggle">
-        <span>≡</span>
-    </div>
-    <div class="menu-content">
-        <div class="menu-header">完美国服</div>
-        <ul class="menu-list">
-            <li class="menu-item">
-                <a href="https://keaido666.github.io/1/ch.html" class="menu-link">永久称号大全</a>
-            </li>
-            <li class="menu-item">
-                <a href="https://keaido666.github.io/1/dy.html" class="menu-link">丹药生产</a>
-            </li>
-            <li class="menu-item">
-                <a href="https://keaido666.github.io/1/ys.html" class="menu-link active">时装颜色识别</a>
-            </li>
-            <li class="menu-item">
-                <a href="https://keaido666.github.io/1/bh.html" class="menu-link">帮会统计</a>
-            </li>
-            <li class="menu-item">
-                <a href="https://keaido666.github.io/1/cdcol.html" class="menu-link">代码调色</a>
-            </li>
-            <li class="menu-item"><a href="https://keaido666.github.io/1/colnew.html" class="menu-link">代码调色新手</a></li>
-                <li class="menu-item">
-                    <a href="https://keaido666.github.io/1/1.html" class="menu-link">国际</a>
-                </li> 
-        </ul>
-    </div>
-</div>
+<!--公共头部导航占位容器-->
+<div id="globalHeaderNav"></div>
+    <div class="header">时装颜色识别</div>
+
+<!--公共导航JS，提供initNav()-->
+<script src="common/nav.js"></script>
+<script>
+(async function loadGlobalComponent(){
+    try{
+        const res = await fetch('common/header-nav.html');
+        if(!res.ok) throw new Error("加载失败");
+        const html = await res.text();
+        document.querySelector('#globalHeaderNav').innerHTML = html;
+        initNav(); // DOM插入完毕再绑定点击事件
+        document.body.classList.add("ready");
+    }catch(err){
+        console.error(err);
+        document.body.classList.add("ready");
+    }
+})();
+</script>
+
 <div class="copy-tip" id="copyTip">复制成功！</div>
 <div id="colorInfo">
     <span id="infoText">RGB(0,0,0)</span>
     <div id="colorBlock" class="color-block"></div>
 </div>
 <div id="magnifier"></div>
+
 <div class="container">
-    <div class="header">
-        <div class="header-images">
-            <img src="https://keaido666.github.io/1/keai1.jpg" class="header-avatar">
-            <img src="https://keaido666.github.io/1/keavx.png" class="header-avatar">
-        </div>
-        抖音：可爱多完美<br>
-        时装颜色识别
-    </div>
     <div class="tool-wrap">
         <div class="upload-box">
             <input type="file" id="imgInput" accept="image/*">
             <label for="imgInput">📷 点击上传图片 或 直接粘贴图片</label>
         </div>
         <div class="tip">💡 提示：加载图片后，点击图片任意位置获取颜色</div>
-
         <div class="result-bar" id="resultBar">
             <div class="result-bar-middle-wrap">
-                <!-- 左栏：HSV可视化画布 -->
                 <div class="result-left-hsv">
                     <div class="hsv-canvas-wrap">
                         <canvas id="svCanvas" width="360" height="360"></canvas>
                         <canvas id="hueCanvas" width="44" height="360"></canvas>
                     </div>
                 </div>
-
-                <!-- 中间：颜色方块 + 全部色值文本 -->
                 <div class="result-right-info">
                     <div class="result-color" id="finalColor"></div>
                     <div class="result-text-group">
@@ -380,21 +258,13 @@
                     </div>
                 </div>
             </div>
-
-            <!-- 复制按钮，现在位于result‑bar右下角 -->
             <button class="copy-btn" id="copyBtn">复制</button>
         </div>
-
         <img id="preview" alt="预览图">
     </div>
 </div>
-<script>
-    const floatMenu = document.getElementById('floatMenu');
-    const menuToggle = document.getElementById('menuToggle');
-    menuToggle.addEventListener('click', () => {
-        floatMenu.classList.toggle('collapsed');
-    });
 
+<script>
     const imgInput = document.getElementById('imgInput');
     const preview = document.getElementById('preview');
     const resultBar = document.getElementById('resultBar');
@@ -408,7 +278,6 @@
     const colorInfo = document.getElementById('colorInfo');
     const infoText = document.getElementById('infoText');
     const colorBlock = document.getElementById('colorBlock');
-
     const svCanvas = document.getElementById('svCanvas');
     const svCtx = svCanvas.getContext('2d');
     const hueCanvas = document.getElementById('hueCanvas');
@@ -416,7 +285,6 @@
     const showH = document.getElementById('showH');
     const showS = document.getElementById('showS');
     const showV = document.getElementById('showV');
-
     let canvas = document.createElement('canvas');
     let ctx = canvas.getContext('2d');
     let currentCopyText = '';
@@ -447,7 +315,6 @@
         let argb=(0xFF<<24)|(r<<16)|(g<<8)|b;
         return argb|0;
     }
-
     function drawHsvPanel(h,s,v){
         const sw=svCanvas.width;
         const sh=svCanvas.height;
@@ -465,7 +332,6 @@
         hueCtx.moveTo(0,hy);
         hueCtx.lineTo(hw,hy);
         hueCtx.stroke();
-
         svCtx.clearRect(0,0,sw,sh);
         svCtx.fillStyle=`hsl(${h},100%,50%)`;
         svCtx.fillRect(0,0,sw,sh);
@@ -475,7 +341,6 @@
         const g2=svCtx.createLinearGradient(0,0,0,sh);
         g2.addColorStop(0,"transparent");g2.addColorStop(1,"#000000");
         svCtx.fillStyle=g2; svCtx.fillRect(0,0,sw,sh);
-
         const mx = s * sw;
         const my = (1 - v) * sh;
         svCtx.beginPath();
@@ -483,12 +348,10 @@
         svCtx.strokeStyle="#ffffff";
         svCtx.lineWidth=3;
         svCtx.stroke();
-
         showH.textContent = Math.round(h);
         showS.textContent = Math.round(s*100);
         showV.textContent = Math.round(v*100);
     }
-
     imgInput.addEventListener('change', (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -524,7 +387,6 @@
         };
         reader.readAsDataURL(file);
     }
-
     preview.addEventListener('mousemove', e => {
         const rect = preview.getBoundingClientRect();
         const x = e.clientX - rect.left;
@@ -552,7 +414,6 @@
         magnifier.style.display = 'none';
         colorInfo.style.display = 'none';
     });
-
     preview.addEventListener('click', e => {
         const rect = preview.getBoundingClientRect();
         const x = (e.clientX - rect.left) * canvas.width / rect.width;
@@ -564,18 +425,15 @@
             const hexStr = rgb2hex(r,g,b);
             const decVal = rgbToIniDec(r,g,b);
             const [h,s,v] = rgbToHsv(r,g,b);
-
             finalRgb.textContent = rgbStr;
             finalHex.textContent = hexStr;
             finalDec.textContent = decVal;
             finalColor.style.backgroundColor = rgbStr;
             resultBar.classList.add('show');
-
             drawHsvPanel(h,s,v);
             currentCopyText = `RGB(${r}, ${g}, ${b}) ${hexStr} INI:${decVal} HSV:H${Math.round(h)}° S${Math.round(s*100)}% V${Math.round(v*100)}%`;
         } catch (e) {}
     });
-
     copyBtn.addEventListener('click', () => {
         if (!currentCopyText) return;
         navigator.clipboard.writeText(currentCopyText).then(() => {
@@ -583,7 +441,6 @@
             setTimeout(() => copyTip.classList.remove('show'), 1500);
         });
     });
-
     drawHsvPanel(0,0,0);
 </script>
 </body>
