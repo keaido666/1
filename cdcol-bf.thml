@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh‑CN">
+<head>
+<meta charset="UTF‑8">
+<meta name="viewport" content="width=device‑width, initial‑scale=1.0">
+<title>完美世界人物代码调色工具</title>
+<style>
+*{box-sizing:border-box;font-family:system-ui,"Microsoft YaHei",sans-serif;margin:0;padding:0;}
+body{background:#ebebe7;color:#eee;padding:20px;position:relative;}
+
+/* ======== 100%复制 ys.html 原版外层容器container ======== */
+.container {
+    max-width: 1000px;
+    margin: 30px auto;
+    background: #f8f7f4;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    overflow: hidden;
+}
+
+/* ======== 完全复制 ys.html原版header，一字不改！ ======== */
+.header {
+    background: linear-gradient(135deg, #91aecf, #aabfdf);
+    color: #ffffff;
+    padding: 24px 24px;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: 1px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+.header-images {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+.header-avatar {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 4px solid #fff;
+    object-fit: cover;
+}
+
+.tool-wrap {
+    padding:30px;
+}
+
+.wrap{max-width:920px;margin:0 auto;}
+h2{margin-bottom:16px;font-size:20px;color:#222;}
+.container-color{display:flex;gap:16px;flex-wrap:wrap;}
+#pickerCanvas{
+    width:420px;
+    height:420px;
+    cursor:crosshair;
+    border-radius:8px;
+    border:1px solid #444;
+}
+#hueBar{
+    width:40px;
+    height:420px;
+    cursor:pointer;
+    border-radius:8px;
+    border:1px solid #444;
+}
+.right-panel{
+    flex:1;
+    min-width:280px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+.preview{
+    height:120px;
+    border-radius:8px;
+    border:1px solid #444;
+}
+.info{
+    background:#232332;
+    padding:14px;
+    border-radius:8px;
+}
+.line{margin:8px 0;font-size:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.dec-num{font-family:Consolas;font-size:18px;color:#72d7ff;margin:8px 0;}
+input{
+    background:#2a2a38;
+    color:#fff;
+    border:1px solid #555;
+    border-radius:4px;
+    padding:4px 6px;
+    font-size:14px;
+}
+input.rgb-in{width:55px;}
+input.hex-in{width:130px;}
+button{
+    background:#2e7d32;
+    color:#fff;
+    border:0;
+    padding:8px 12px;
+    border-radius:6px;
+    cursor:pointer;
+}
+button:active{background:#1b5e20;}
+.note{margin-top:10px;font-size:12px;color:#999;line-height:1.4;}
+
+/* ========== 右侧悬浮导航【完全复制 ys.html原版CSS】 ========== */
+.float-menu {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    z-index: 999;
+    width: 220px;
+    transition: all 0.3s ease;
+}
+.float-menu.collapsed {
+    transform: translateY(-50%) translateX(calc(100% - 25px));
+}
+.menu-toggle {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 25px;
+    height: 60px;
+    background: linear-gradient(135deg, #91aecf, #aabfdf);
+    border-radius: 12px 0 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+    user-select: none;
+}
+.menu-content {
+    width: 170px;
+    background: #fff;
+    margin-left: 25px;
+    border-radius: 12px 0 0 12px;
+    box-shadow: -2px 2px 12px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+.menu-header {
+    background: linear-gradient(135deg, #91aecf, #aabfdf);
+    color: #fff;
+    padding: 14px 16px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 15px;
+}
+.menu-list {
+    list-style: none;
+    padding: 8px 0;
+}
+.menu-item {
+    padding:0;
+}
+.menu-link {
+    display: block;
+    padding: 12px 18px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+.menu-link:hover {
+    background: #f0f4fa;
+    color: #91aecf;
+}
+.menu-link.active {
+    background: linear-gradient(135deg, #91aecf, #aabfdf);
+    color: #fff;
+    font-weight: bold;
+    border-left: 4px solid #fff;
+}
+</style>
+</head>
+<body>
+
+<!-- 右侧悬浮导航 HTML（与ys.html完全一致） -->
+<div class="float-menu collapsed" id="floatMenu">
+    <div class="menu-toggle" id="menuToggle">
+        <span>≡</span>
+    </div>
+    <div class="menu-content">
+        <div class="menu-header">完美国服</div>
+        <ul class="menu-list">
+            <li class="menu-item">
+                <a href="https://keaido666.github.io/1/ch.html" class="menu-link">永久称号大全</a>
+            </li>
+            <li class="menu-item">
+                <a href="https://keaido666.github.io/1/dy.html" class="menu-link">丹药生产</a>
+            </li>
+            <li class="menu-item">
+                <a href="https://keaido666.github.io/1/ys.html" class="menu-link">时装颜色识别</a>
+            </li>
+            <li class="menu-item">
+                <a href="https://keaido666.github.io/1/bh.html" class="menu-link">帮会统计</a>
+            </li>
+            <li class="menu-item">
+                <a href="https://keaido666.github.io/1/cdcol.html" class="menu-link active">代码调色</a>
+            </li>
+            <li class="menu-item"><a href="https://keaido666.github.io/1/colnew.html" class="menu-link">代码调色新手</a></li>
+                <li class="menu-item">
+                    <a href="https://keaido666.github.io/1/1.html" class="menu-link">国际</a>
+                </li> 
+        </ul>
+    </div>
+</div>
+
+<div class="container">
+    <div class="header">
+        <div class="header-images">
+            <img src="https://keaido666.github.io/1/keai1.jpg" class="header-avatar">
+            <img src="https://keaido666.github.io/1/keavx.png" class="header-avatar">
+        </div>
+        抖音：可爱多完美<br>
+        完美世界人物代码调色工具｜HSV取色 / RGB/HEX转十进制
+    </div>
+
+    <div class="tool-wrap">
+        <div class="wrap">
+            <div class="container-color">
+                <canvas id="pickerCanvas" width="420" height="420"></canvas>
+                <canvas id="hueBar" width="40" height="420"></canvas>
+                <div class="right-panel">
+                    <div class="preview" id="colorPreview"></div>
+                    <div class="info">
+                        <div class="line">
+                            <span>RGB:</span>
+                            <input class="rgb-in" id="inR" type="number" min="0" max="255" value="255">
+                            <input class="rgb-in" id="inG" type="number" min="0" max="255" value="0">
+                            <input class="rgb-in" id="inB" type="number" min="0" max="255" value="0">
+                        </div>
+                        <div class="line">
+                            <span>HEX:</span>
+                            <input class="hex-in" id="inHex" placeholder="#RRGGBB" value="#FF0000">
+                        </div>
+                        <div class="line">RGB：<span id="rgbText">255,0,0</span></div>
+                        <div class="line">HEX：<span id="hexText">#FF0000</span></div>
+                        <div class="dec-num" id="iniDecVal">-65536</div>
+                        <button id="copyBtn">复制INI十进制数值</button>
+                    </div>
+                    <div class="note">
+                        1.左侧大方块选饱和度亮度，右侧竖条选色相；白色圆圈为选点标记。<br>
+                        2.【支持单击点选 + 按住拖动】，可手动输入 R G B(0‑255) 或 HEX(#RRGGBB)，自动转为游戏INI负十进制。<br>
+                        3.复制结果直接填写：colorHair = 数值；ARGB固定完全不透明。<br>
+                        浏览器预览与游戏内光照会存在轻微色差。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// 悬浮菜单切换JS
+const floatMenu = document.getElementById('floatMenu');
+const menuToggle = document.getElementById('menuToggle');
+menuToggle.addEventListener('click', () => {
+    floatMenu.classList.toggle('collapsed');
+});
+
+const canvas = document.getElementById('pickerCanvas');
+const ctx = canvas.getContext('2d');
+const hueCanvas = document.getElementById('hueBar');
+const hueCtx = hueCanvas.getContext('2d');
+const preview = document.getElementById('colorPreview');
+const rgbText = document.getElementById('rgbText');
+const hexText = document.getElementById('hexText');
+const iniDecVal = document.getElementById('iniDecVal');
+const copyBtn = document.getElementById('copyBtn');
+const inR = document.getElementById('inR');
+const inG = document.getElementById('inG');
+const inB = document.getElementById('inB');
+const inHex = document.getElementById('inHex');
+let hue = 0;
+let sat = 1.0;
+let val = 0.5;
+let dragMain = false;
+let dragHue = false;
+let lockInputUpdate = false;
+
+//绘制色相竖条
+function drawHueBar(){
+    const grad = hueCtx.createLinearGradient(0,0,0,hueCanvas.height);
+    for(let i=0;i<=360;i+=60){
+        grad.addColorStop(i/360,`hsl(${i},100%,50%)`);
+    }
+    hueCtx.fillStyle = grad;
+    hueCtx.fillRect(0,0,hueCanvas.width,hueCanvas.height);
+    const posY = (hue/360)*hueCanvas.height;
+    hueCtx.strokeStyle="#ffffff";
+    hueCtx.lineWidth=2;
+    hueCtx.beginPath();
+    hueCtx.moveTo(0,posY);
+    hueCtx.lineTo(hueCanvas.width,posY);
+    hueCtx.stroke();
+}
+//绘制二维取色面板+选点圆圈标记
+function drawMain(){
+    ctx.fillStyle = `hsl(${hue},100%,50%)`;
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    const g1 = ctx.createLinearGradient(0,0,canvas.width,0);
+    g1.addColorStop(0,"#ffffff");
+    g1.addColorStop(1,"rgba(255,255,255,0)");
+    ctx.fillStyle = g1;
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    const g2 = ctx.createLinearGradient(0,0,0,canvas.height);
+    g2.addColorStop(0,"rgba(0,0,0,0)");
+    g2.addColorStop(1,"#000000");
+    ctx.fillStyle = g2;
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    const px = sat * canvas.width;
+    const py = (1-val)* canvas.height;
+    ctx.beginPath();
+    ctx.arc(px,py,8,0,Math.PI*2);
+    ctx.strokeStyle="#ffffff";
+    ctx.lineWidth=2;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(px,py,3,0,Math.PI*2);
+    ctx.fillStyle="#000000";
+    ctx.fill();
+}
+//HSV转RGB
+function hsvToRgb(h,s,v){
+    let r,g,b;
+    let i = Math.floor(h/60);
+    let f = h/60 - i;
+    let p = v*(1-s);
+    let q = v*(1-f*s);
+    let t = v*(1-(1-f)*s);
+    switch(i%6){
+        case 0:r=v;g=t;b=p;break;
+        case 1:r=q;g=v;b=p;break;
+        case 2:r=p;g=v;b=t;break;
+        case 3:r=p;g=q;b=v;break;
+        case 4:r=t;g=p;b=v;break;
+        case 5:r=v;g=p;b=q;break;
+    }
+    return [Math.round(r*255),Math.round(g*255),Math.round(b*255)];
+}
+//RGB转HSV
+function rgbToHsv(r,g,b){
+    r/=255;g/=255;b/=255;
+    let max=Math.max(r,g,b), min=Math.min(r,g,b);
+    let h,s,v=max;
+    let d=max-min;
+    s = max===0 ? 0 : d/max;
+    if(max===min){
+        h=0;
+    }else{
+        switch(max){
+            case r:h=((g-b)/d)+(g<b?6:0);break;
+            case g:h=((b-r)/d)+2;break;
+            case b:h=((r-g)/d)+4;break;
+        }
+        h*=60;
+    }
+    return [h,s,v];
+}
+function rgb2hex(r,g,b){
+    return "#"+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('').toUpperCase();
+}
+function hexToRgb(hex){
+    let result=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? [
+        parseInt(result[1],16),
+        parseInt(result[2],16),
+        parseInt(result[3],16)
+    ] : null;
+}
+//由 r,g,b 更新全部界面（包含输入框、画布、十进制）
+function setByRgb(r,g,b){
+    lockInputUpdate=true;
+    [hue,sat,val]=rgbToHsv(r,g,b);
+    inR.value=r;inG.value=g;inB.value=b;
+    inHex.value=rgb2hex(r,g,b);
+    updateAllRender(r,g,b);
+    setTimeout(()=>lockInputUpdate=false,0);
+}
+function updateAllRender(r,g,b){
+    const hex=rgb2hex(r,g,b);
+    preview.style.background=`rgb(${r},${g},${b})`;
+    rgbText.textContent=`${r},${g},${b}`;
+    hexText.textContent=hex;
+    let argb=(0xFF<<24)|(r<<16)|(g<<8)|b;
+    let signed=argb|0;
+    iniDecVal.textContent=signed;
+    drawMain();
+    drawHueBar();
+}
+//从画布hsv更新
+function updateAllFromHsv(){
+    const [r,g,b]=hsvToRgb(hue,sat,val);
+    lockInputUpdate=true;
+    inR.value=r;inG.value=g;inB.value=b;
+    inHex.value=rgb2hex(r,g,b);
+    setTimeout(()=>lockInputUpdate=false,0);
+    updateAllRender(r,g,b);
+}
+
+// 通用：处理pickerCanvas坐标
+function handlePickerPos(e){
+    const rect = canvas.getBoundingClientRect();
+    let x = e.clientX - rect.left;
+    let y = e.clientY - rect.top;
+    x = Math.max(0,Math.min(canvas.width,x));
+    y = Math.max(0,Math.min(canvas.height,y));
+    sat = x / canvas.width;
+    val = 1 - (y / canvas.height);
+    updateAllFromHsv();
+}
+// 通用：处理hueBar坐标
+function handleHuePos(e){
+    const rect = hueCanvas.getBoundingClientRect();
+    let y = e.clientY - rect.top;
+    y = Math.max(0,Math.min(hueCanvas.height,y));
+    hue = 360 * (y / hueCanvas.height);
+    updateAllFromHsv();
+}
+
+// ========== 【修改：同时支持单击 + 按住拖动】 ==========
+// 主画布：按下开启拖动
+canvas.addEventListener('mousedown',e=>{
+    dragMain = true;
+    handlePickerPos(e);
+});
+// 单击直接取色
+canvas.addEventListener('click',e=>{
+    handlePickerPos(e);
+});
+// 全局松开，关闭拖动
+window.addEventListener('mouseup',()=>{
+    dragMain = false;
+    dragHue = false;
+});
+// 拖动时更新
+canvas.addEventListener('mousemove',e=>{
+    if(!dragMain) return;
+    handlePickerPos(e);
+});
+
+//色相条：按下开启拖动
+hueCanvas.addEventListener('mousedown',e=>{
+    dragHue = true;
+    handleHuePos(e);
+});
+//色相条单击
+hueCanvas.addEventListener('click',e=>{
+    handleHuePos(e);
+});
+hueCanvas.addEventListener('mousemove',e=>{
+    if(!dragHue) return;
+    handleHuePos(e);
+});
+
+//输入框事件
+[inR,inG,inB].forEach(el=>{
+    el.addEventListener('input',()=>{
+        if(lockInputUpdate) return;
+        let r=Number(inR.value)||0;
+        let g=Number(inG.value)||0;
+        let b=Number(inB.value)||0;
+        r=Math.max(0,Math.min(255,r));
+        g=Math.max(0,Math.min(255,g));
+        b=Math.max(0,Math.min(255,b));
+        setByRgb(r,g,b);
+    })
+})
+inHex.addEventListener('input',()=>{
+    if(lockInputUpdate) return;
+    const rgb=hexToRgb(inHex.value.trim());
+    if(rgb){
+        setByRgb(rgb[0],rgb[1],rgb[2]);
+    }
+})
+
+copyBtn.onclick = async ()=>{
+    const num = iniDecVal.textContent.trim();
+    await navigator.clipboard.writeText(num);
+    alert("已复制INI颜色值："+num);
+};
+//初始化
+drawHueBar();
+drawMain();
+updateAllFromHsv();
+</script>
+</body>
+</html>
