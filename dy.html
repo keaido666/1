@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>完美世界经典服 丹药生产</title>
+    <link rel="stylesheet" href="common/common.css">
     <style>
         * {
             margin: 0;
@@ -24,40 +25,6 @@
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.06);
             overflow: hidden;
-        }
-        .header {
-            background: linear-gradient(135deg, #91aecf, #aabfdf);
-            color: #ffffff;
-            padding: 24px 24px;
-            font-size: 22px;
-            font-weight: bold;
-            text-align: center;
-            letter-spacing: 1px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-        }
-         .header-images {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 10px;
-        }
-        .header-avatar {
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
-            border: 4px solid #fff;
-            object-fit: cover;
-        }
-        .header-sub {
-            font-size: 18px;
-            font-weight: normal;
-        }
-        .header-main {
-            font-size: 24px;
-            font-weight: bold;
         }
         .filter-bar {
             padding: 18px 24px;
@@ -103,7 +70,6 @@
             overflow: hidden;
             table-layout: auto;
         }
-
         th, td {
             padding: 14px 16px;
             text-align: left;
@@ -111,7 +77,6 @@
             vertical-align: middle;
             white-space: nowrap;
         }
-
         th {
             background: linear-gradient(135deg, #d8d9e0, #c8c9d2);
             color: #2d2d2d;
@@ -124,18 +89,15 @@
             top: 0;
             z-index: 10;
         }
-
         td {
             background: transparent;
             border-bottom: 1px solid #e8e6e0;
             transition: background-color 0.2s ease;
         }
-
         td:last-child {
             white-space: normal !important;
             width: 9999px;
         }
-
         tr:hover {
             background-color: #e6eaf1 !important;
             transition: background-color 0.2s;
@@ -148,25 +110,6 @@
             border: 1px solid #e0ded7;
             background: #fff;
         }
-        .attr-box {
-            background: transparent !important;
-            line-height: 1.6;
-            font-weight: 500;
-        }
-        .attr-wugong { color: #c95d56; }
-        .attr-fagong { color: #9359b5; }
-        .attr-wufang  { color: #4b8ac9; }
-        .attr-fafang { color: #59886b; }
-        .attr-shengming{ color: #c9884b; }
-        .attr-zhenqi { color: #8883c1; }
-        .attr-jianren { color: #869897; }
-        .attr-chuan  { color: #b25978; }
-        .attr-other  { color: #666666; }
-        .attr-gangqi { color: #c95d56; }
-        .attr-suiji { color: #b25978; }
-        .attr-dengji { color: #9359b5; }
-        .attr-huifu { color: #59886b; }
-
         .coord, .copy-title {
             color: #c95d56;
             cursor: pointer;
@@ -215,125 +158,14 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #b8b4ac;
         }
-
-        /* ====================== 右侧浮动菜单 ====================== */
-        .float-menu {
-            position: fixed;
-            top: 50%;
-            right: 0;
-            transform: translateY(-50%);
-            z-index: 999;
-            width: 220px;
-            transition: all 0.3s ease;
-        }
-        .float-menu.collapsed {
-            transform: translateY(-50%) translateX(calc(100% - 25px));
-        }
-        .menu-toggle {
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 25px;
-            height: 60px;
-            background: linear-gradient(135deg, #91aecf, #aabfdf);
-            border-radius: 12px 0 0 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-            box-shadow: -2px 0 8px rgba(0,0,0,0.1);
-            user-select: none;
-        }
-        .menu-content {
-            width: 170px;
-            background: #fff;
-            margin-left: 25px;
-            border-radius: 12px 0 0 12px;
-            box-shadow: -2px 2px 12px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        .menu-header {
-            background: linear-gradient(135deg, #91aecf, #aabfdf);
-            color: #fff;
-            padding: 14px 16px;
-            font-weight: bold;
-            text-align: center;
-            font-size: 15px;
-        }
-        .menu-list {
-            list-style: none;
-            padding: 8px 0;
-        }
-        .menu-item {
-            padding: 0;
-        }
-        .menu-link {
-            display: block;
-            padding: 12px 18px;
-            color: #333;
-            text-decoration: none;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-        .menu-link:hover {
-            background: #f0f4fa;
-            color: #91aecf;
-        }
-        .menu-link.active {
-            background: linear-gradient(135deg, #91aecf, #aabfdf);
-            color: #fff;
-            font-weight: bold;
-            border-left: 4px solid #fff;
-        }
     </style>
 </head>
 <body>
-
-<!-- ====================== 右侧浮动菜单 默认已收起 ====================== -->
-<div class="float-menu collapsed" id="floatMenu">
-    <div class="menu-toggle" id="menuToggle">
-        <span>≡</span>
-    </div>
-    <div class="menu-content">
-        <div class="menu-header">完美国服</div>
-        <ul class="menu-list">
-            <li class="menu-item">
-                <a href="https://keaido666.github.io/1/ch.html" class="menu-link">永久称号大全</a>
-            </li>
-            <li class="menu-item">
-                <a href="https://keaido666.github.io/1/dy.html" class="menu-link active">丹药生产</a>
-            </li>
-            <li class="menu-item">
-                <a href="https://keaido666.github.io/1/ys.html" class="menu-link">时装颜色识别</a>
-            </li>
-            <li class="menu-item">
-                <a href="https://keaido666.github.io/1/bh.html" class="menu-link">帮会统计</a>
-            </li>
-            <li class="menu-item">
-                <a href="https://keaido666.github.io/1/cdcol.html" class="menu-link">代码调色</a>
-            </li>
-            <li class="menu-item"><a href="https://keaido666.github.io/1/colnew.html" class="menu-link">代码调色新手</a></li>
-            <li class="menu-item">
-                 <a href="https://keaido666.github.io/1/1.html" class="menu-link">国际</a>
-            </li>
-             
-        </ul>
-    </div>
-</div>
-
+<!--公共头部导航占位，由common/header-nav.html注入-->
+<div id="globalHeaderNav"></div>
+<div class="header">丹药生产</div>
 <div class="copy-tip" id="copyTip">复制成功！</div>
-<div class="container">    
-    <div class="header">
-        <div class="header-images">
-            <img src="https://keaido666.github.io/1/keai1.jpg" class="header-avatar">
-            <img src="https://keaido666.github.io/1/keavx.png" class="header-avatar">
-        </div>
-        抖音：可爱多完美<br>
-        完美世界经典服 丹药生产
-    </div>
+<div class="container">
     <div class="filter-bar">
         <div>
             <label for="category-select">丹药类型：</label>
@@ -351,15 +183,15 @@
         </div>
         <div>
             <label for="search-input">搜索丹药：</label>
-            <input type="text" id="search-input" placeholder="输入丹药名称搜索..." />
+            <input type="text" id="search-input" placeholder="输入丹药名称搜索...">
         </div>
     </div>
     <div class="table-wrapper">
-        <div id="empty-tip">请选择类型或搜索丹药查看信息</div>
-        <table id="data-table" class="hidden">
+        <div id="empty-tip" class="hidden">请选择类型或搜索丹药查看信息</div>
+        <table id="data-table" class="">
             <thead>
                 <tr>
-                    <th id="th-category" class="hidden">类型</th>
+                    <th id="th-category" class="">类型</th>
                     <th>丹药名称</th>
                     <th>仙丹品级</th>
                     <th>预览</th>
@@ -368,19 +200,14 @@
                     <th>产地</th>
                 </tr>
             </thead>
-            <tbody id="table-body"></tbody>
+            <tbody id="table-body">
+            </tbody>
         </table>
     </div>
 </div>
 
+<!--业务JS全部保留，原浮动菜单硬编码JS全部删除，导航逻辑交给initNav()公共脚本-->
 <script>
-    // 浮动菜单展开/收起
-    const floatMenu = document.getElementById('floatMenu');
-    const menuToggle = document.getElementById('menuToggle');
-    menuToggle.addEventListener('click', () => {
-        floatMenu.classList.toggle('collapsed');
-    });
-
     // 最终整理版：无重复 + 全材料替换 + 化淤丹已补回 + 会神丹已补回
     const data = [
         { category: "免疫无敌", list: [
@@ -448,7 +275,6 @@
             { name: "虎鞭洗髓露", level: "★★★", effect: "30秒内提升物防降低法防", material: "牛黄5 蟠桃果5 木蝴蝶5 地仙石3 幻仙石1", place: "万化城" },
         ]}
     ];
-
     const categoryColors = [ "#fef0f0", "#f0f7fe", "#f0fff4", "#fff8e8", "#f5f0ff", "#fff0f6", "#f0fcff", "#f8f0e8" ];
     const select = document.getElementById('category-select');
     const searchInput = document.getElementById('search-input');
@@ -457,17 +283,14 @@
     const tableBody = document.getElementById('table-body');
     const thCategory = document.getElementById('th-category');
     const copyTip = document.getElementById('copyTip');
-
     select.addEventListener('change', renderTable);
     searchInput.addEventListener('input', renderTable);
     window.addEventListener('load', renderTable);
-
     function renderTable() {
         const category = select.value;
         const keyword = searchInput.value.trim().toLowerCase();
         tableBody.innerHTML = '';
         let filteredList = [];
-
         if (category === 'all' && !keyword) {
             data.forEach(cate => { cate.list.forEach(item => { filteredList.push({ ...item, category: cate.category }); }); });
         } else {
@@ -479,14 +302,12 @@
                 return matchCate && matchSearch;
             });
         }
-
         if (filteredList.length === 0) { emptyTip.classList.remove('hidden'); dataTable.classList.add('hidden'); return; }
         emptyTip.classList.add('hidden'); dataTable.classList.remove('hidden');
         thCategory.classList.toggle('hidden', category !== 'all');
         category === 'all' && !keyword ? renderMergedTable(filteredList) : renderNormalTable(filteredList, category);
         bindCopyEvents();
     }
-
     function renderMergedTable(list) {
         const groups = {}; list.forEach(item => { if (!groups[item.category]) groups[item.category] = []; groups[item.category].push(item); });
         const cateKeys = Object.keys(groups); let globalRowIndex = 0;
@@ -510,7 +331,6 @@
             });
         });
     }
-
     function renderNormalTable(list, category) {
         list.forEach((item, index) => {
             const tr = document.createElement('tr');
@@ -525,23 +345,38 @@
             tableBody.appendChild(tr);
         });
     }
-
     function copyText(text) {
         if (!text || text === '无') return;
         navigator.clipboard.writeText(text).then(showCopyTip).catch(() => {
             const input = document.createElement('input'); input.value = text; document.body.appendChild(input); input.select(); document.execCommand('copy'); document.body.removeChild(input); showCopyTip();
         });
     }
-
     function showCopyTip() {
         copyTip.classList.add('show'); setTimeout(() => copyTip.classList.remove('show'), 1500);
     }
-
     function bindCopyEvents() {
         document.querySelectorAll('.copy-title').forEach(el => {
             el.onclick = () => copyText(el.innerText.trim());
         });
     }
 </script>
+
+<!--公共头部导航加载脚本，和ys.html完全一致，放在页面最底部-->
+<script>
+(async function loadGlobalComponent(){
+    try{
+        const res = await fetch('common/header-nav.html');
+        if(!res.ok) throw new Error("加载失败");
+        const html = await res.text();
+        document.querySelector('#globalHeaderNav').innerHTML = html;
+        initNav();  // DOM插入完毕再绑定点击事件
+        document.body.classList.add("ready");
+    }catch(err){
+        console.error(err);
+        document.body.classList.add("ready");
+    }
+})();
+</script>
+
 </body>
 </html>
