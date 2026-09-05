@@ -1,4 +1,3 @@
-// common/nav.js
 function initNav(){
     const floatMenu = document.getElementById('floatMenu');
     const menuToggle = document.getElementById('menuToggle');
